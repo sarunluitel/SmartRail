@@ -1,8 +1,13 @@
+/************************************
+ @author Sarun Luitel
+ ************************************/
+
 package SmartRail;
 
 public class Train implements  Component, Runnable
 {
   private static int totalTrains=0;
+
   private int trainID;
  // private String color;
   private Station Destination;// change string to Station when we define station
@@ -12,11 +17,11 @@ public class Train implements  Component, Runnable
   // made this private to spawn trains only with attributes;
   private Train(){}
 
-  Train(int TrainID, Station Destination, Station spawnStation)
+  Train(Station Destination, Station spawnStation)
   {
 
    totalTrains++;
-   this.trainID=TrainID;
+   this.trainID=totalTrains;
    this.Destination= Destination;// this should be a pointer to a station
    this.spawnStation= spawnStation;
   }
@@ -31,5 +36,9 @@ public class Train implements  Component, Runnable
   public void run()
   {
 
+  }
+  public int getTrainID()
+  {
+    return trainID;
   }
 }
