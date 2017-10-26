@@ -18,7 +18,16 @@ public class main
     track1.giveNeighbors(nextTo);
     track1.start();
 
+    Train t1 = new Train(new Station(),new Station());
+    Train t2 = new Train(new Station(),new Station());
 
+    System.out.println(t1.getTrainID()+ "    "+ t2.getTrainID());
+
+  }
+
+
+  public void run()
+  {
 
   }
 }
