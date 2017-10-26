@@ -7,7 +7,12 @@ public class Track extends Thread implements Component
 {
   ArrayList<Component> neighbors;
 
-  public Track(ArrayList<Component> neighbors)
+  public Track()
+  {
+
+  }
+
+  public void giveNeighbors(ArrayList<Component> neighbors)
   {
     this.neighbors = neighbors;
   }
