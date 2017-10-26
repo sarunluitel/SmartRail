@@ -25,6 +25,18 @@ public class Track extends Thread implements Component
     return message;
   }
 
+  public boolean hasComponent(Component c, String dir)
+  {
+    if(neighbors.contains(c))
+    {
+      return true;
+    }
+    else
+    {
+      return neighbors.get(1).hasComponent(c,dir);
+    }
+  }
+
   @Override
   public void run()
   {
