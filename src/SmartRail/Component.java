@@ -1,11 +1,12 @@
 package SmartRail;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface Component
 {
-  List<Component> neighbors;
-  String message;
+  List<Component> neighbors = new ArrayList<>();
+  String message = "";
 
   public String acceptMessage(String message);
 
