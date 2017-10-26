@@ -6,10 +6,11 @@ import java.util.ArrayList;
 public class Track extends Thread implements Component
 {
   ArrayList<Component> neighbors;
+  String name;
 
-  public Track()
+  public Track(String name)
   {
-
+    this.name = name;
   }
 
   public void giveNeighbors(ArrayList<Component> neighbors)
@@ -19,6 +20,7 @@ public class Track extends Thread implements Component
 
   public String acceptMessage(String message)
   {
+    System.out.println(name);
     System.out.println(message);
     return message;
   }
