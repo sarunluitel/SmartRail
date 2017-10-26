@@ -11,8 +11,8 @@ public class main
   {
     System.out.println("smartRail");
     //Edited by Vincent
-    Track track1 = new Track();
-    Track track2 = new Track();
+    Track track1 = new Track("track1");
+    Track track2 = new Track("track2");
     ArrayList<Component> nextTo = new ArrayList<>();
     nextTo.add(track2);
     track1.giveNeighbors(nextTo);
