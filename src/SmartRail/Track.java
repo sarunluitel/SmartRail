@@ -3,7 +3,7 @@ package SmartRail;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Track implements Component
+public class Track extends Thread implements Component
 {
   ArrayList<Component> neighbors;
 
@@ -16,5 +16,7 @@ public class Track implements Component
   {
     return "";
   }
+
+
 
 }
