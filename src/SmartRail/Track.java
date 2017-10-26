@@ -14,9 +14,17 @@ public class Track extends Thread implements Component
 
   public String acceptMessage(String message)
   {
-    return "";
+    System.out.println(message);
+    return message;
   }
 
-
+  @Override
+  public void run()
+  {
+    if(!neighbors.isEmpty())
+    {
+      neighbors.get(0).acceptMessage("Hi");
+    }
+  }
 
 }
