@@ -1,0 +1,12 @@
+
+
+public interface Component
+{
+  private List<Component> neighbors;
+  private String message;
+
+  public String acceptMessage(String message)
+  {
+
+  }
+}
