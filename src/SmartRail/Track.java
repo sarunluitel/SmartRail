@@ -11,6 +11,7 @@ public class Track extends Thread implements Component
   public Track(String name)
   {
     this.name = name;
+
   }
 
   public void giveNeighbors(ArrayList<Component> neighbors)
