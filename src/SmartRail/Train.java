@@ -5,12 +5,11 @@
 package SmartRail;
 
 // Being edited by sarun.
-public class Train extends Thread implements Component
+public class Train extends Thread
 {
   private static int totalTrains = 0;
 
   private int trainID;
-  // private String color;  // Vizualization part
   private Station Destination;// change string to Station when we define station
   private Component currentComponent; // Train can be currently at station, light switch or track.
   private Station spawnStation; // change string to Station when we define station
@@ -22,24 +21,7 @@ public class Train extends Thread implements Component
     this.trainID = totalTrains;
     this.Destination = Destination;// this should be a pointer to a station
     this.spawnStation = spawnStation;
-  }
-
-  @Override
-  public String acceptMessage(String message)
-  {
-    return null;
-  }
-
-  @Override
-  public boolean hasComponent(Component c, String dir)
-  {
-    return false;
-  }
-
-  @Override
-  public Component nextComponent()
-  {
-    return null;
+    this.currentComponent=spawnStation;
   }
 
   @Override
@@ -60,16 +42,16 @@ public class Train extends Thread implements Component
     {
       System.out.println("chu chu chu chu");
 
-      if (this.currentComponent == null)
+      if(currentComponent instanceof Station)
       {
         System.out.println("All Aboard leaving from !!!!!" + this.spawnStation.getStationName());
-        this.setCurrentComponent(this.currentComponent.nextComponent());
-        System.out.println(this.currentComponent);
-      } else
-      {
+      }
+
+
+        this.setCurrentComponent(this.currentComponent.nextComponent("right"));
         System.out.println("Rolling down track " + this.currentComponent);
         System.out.println();
-      }
+
       try
       {
         Thread.sleep(2000);

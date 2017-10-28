@@ -4,24 +4,28 @@ public class Station extends Thread implements Component
 {
   //adjacent track to the station.
   private static int totalStation=0;
-  private Track adjTrack; //expects pointer to a track
-  private String StationName; //expects Names in format St.15
+  private Track right;//expects pointer to a track
+  private Track left;
+  private String stationName; //expects Names in format St.15
 
-  private Station(){}
 
-  public Station(String StationName,Track adjacentTrack)
+
+  public Station(String stationName,Track leftTrack, Track rightTrack)
   {
     totalStation++;
-    this.adjTrack=adjacentTrack;
-    this.StationName=StationName;
+    this.right =rightTrack;
+    this.left =leftTrack;
+    this.stationName =stationName;
   }
 
-  public Component nextComponent()
+  public Component nextComponent(String Direction)
   {
-    return this.adjTrack;
+    if(Direction.equalsIgnoreCase("right")) return right;
+    return left;
+
   }
   public String getStationName(){
-    return this.StationName;
+    return this.stationName;
   }
 
   @Override
@@ -33,6 +37,31 @@ public class Station extends Thread implements Component
   @Override
   public boolean hasComponent(Component c, String dir)
   {
+    if(dir.equalsIgnoreCase("right"))
+    {
+      if(c.equals(right))
+      {
+        return true;
+      }
+      else if(right.equals(null))
+      {
+        return false;
+      }
+      return right.hasComponent(c, dir);
+    }
+    else if(dir.equalsIgnoreCase("left"))
+    {
+      if(c.equals(left))
+      {
+        return true;
+      }
+      else if(left.equals(null))
+      {
+        return false;
+      }
+      return left.hasComponent(c, dir);
+    }
+
     return false;
   }
 }

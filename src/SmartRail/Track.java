@@ -20,16 +20,23 @@ public class Track extends Thread implements Component
     return right;
   }
 
-  public Track(String name, Component left, Component right)
+  public Track(String name)
   {
     this.name = name;
     this.left=left;
     this.right=right;
   }
 
-  public void giveNeighbors(ArrayList<Component> neighbors)
+  public void setNeighbors(Component c, String dir)
   {
-    this.neighbors = neighbors;
+    if(dir.equalsIgnoreCase("right"))
+    {
+     right = c;
+    }
+    else
+    {
+      left = c;
+    }
   }
 
   public String acceptMessage(String message)
@@ -41,14 +48,32 @@ public class Track extends Thread implements Component
 
   public boolean hasComponent(Component c, String dir)
   {
-    if(neighbors.contains(c))
+    if(dir.equalsIgnoreCase("right"))
     {
-      return true;
+      if(c.equals(right))
+      {
+        return true;
+      }
+      else if(right.equals(null))
+      {
+        return false;
+      }
+      return right.hasComponent(c, dir);
     }
-    else
+    else if(dir.equalsIgnoreCase("left"))
     {
-      return neighbors.get(1).hasComponent(c,dir);
+      if(c.equals(left))
+      {
+        return true;
+      }
+      else if(left.equals(null))
+      {
+        return false;
+      }
+      return left.hasComponent(c, dir);
     }
+
+    return false;
   }
 
   @Override
@@ -60,7 +85,9 @@ public class Track extends Thread implements Component
     }
   }
   @Override
-  public Component nextComponent(){
+  public Component nextComponent(String Direction)
+  {
+    if(Direction.equalsIgnoreCase("right"))return right;
     return left;
   }
 }

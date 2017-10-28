@@ -22,18 +22,23 @@ public class main
   }
   static void instantiate()
   {
-    Track trk1=null;
-    Track trk2= null;
-    Station s2= null;
+    Track trk1=new Track("trk1");
+    Track trk2=new Track("trk2");
+    Station s2;
 
 
-    Station s1 = new Station("Station1",trk1);
-    trk1 = new Track("track1",s1,trk2);
-    trk2 = new Track("track2",trk1,s2);
-    s2 = new Station("Station2",trk2);
+    Station s1 = new Station("Station1",null,trk1);
+    trk1.setNeighbors(trk2, "right");
+    trk1.setNeighbors(s1, "left");
+
+    s2 = new Station("Station2",trk2,null);
+
+    trk2.setNeighbors(trk1, "left");
+    trk2.setNeighbors(s2, "right");
 
 
-    Train t1 = new Train(s1,s2);
+
+    Train t1 = new Train(s2,s1);
 
     t1.start();
   }
