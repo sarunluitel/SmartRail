@@ -7,10 +7,24 @@ public class Track extends Thread implements Component
 {
   ArrayList<Component> neighbors;
   String name;
+  private Component left;
+  private Component right;
 
-  public Track(String name)
+  public Component getLeft()
+  {
+    return left;
+  }
+
+  public Component getRight()
+  {
+    return right;
+  }
+
+  public Track(String name, Component left, Component right)
   {
     this.name = name;
+    this.left=left;
+    this.right=right;
   }
 
   public void giveNeighbors(ArrayList<Component> neighbors)
@@ -45,5 +59,8 @@ public class Track extends Thread implements Component
       neighbors.get(0).acceptMessage("Hi");
     }
   }
-
+  @Override
+  public Component nextComponent(){
+    return left;
+  }
 }

@@ -7,7 +7,8 @@ package SmartRail;
 
 public interface Component
 {
-  public String acceptMessage(String message);
-  public boolean hasComponent(Component c, String dir);
+   String acceptMessage(String message);
+   boolean hasComponent(Component c, String dir);
+   Component nextComponent();
 
 }
