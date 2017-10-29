@@ -4,6 +4,8 @@
 
 package SmartRail;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 // Being edited by sarun.
 public class Train extends Thread
 {
@@ -32,34 +34,43 @@ public class Train extends Thread
       move();
     }
 
-    System.out.println("Arrived at " + this.Destination.getStationName());
+    System.out.println("Arrived at " + this.Destination.getComponentName());
 
   }
 
   private void move()
   {
-    synchronized (this)
-    {
-      System.out.println("chu chu chu chu");
-
-      if(currentComponent instanceof Station)
+    try{
+      synchronized (this)
       {
-        System.out.println("All Aboard leaving from !!!!!" + this.spawnStation.getStationName());
-      }
+        System.out.println("!!!!!chu chu chu chu!!!!!!!! train!!!"+trainID+"\n");
 
+        if(this.currentComponent instanceof Station)
+        {
+          System.out.println("All Aboard train "+trainID+" leaving from " + this.spawnStation.getComponentName());
+        }
+
+
+        while(this.currentComponent.nextComponent("right")==null)
+        {
+          System.out.println("train "+trainID+ " Waiting on red light");
+          Thread.sleep(1000);
+        }
 
         this.setCurrentComponent(this.currentComponent.nextComponent("right"));
-        System.out.println("Rolling down track " + this.currentComponent);
+        System.out.println("train "+trainID+" Rolling down track " + this.currentComponent.getComponentName());
         System.out.println();
 
-      try
-      {
-        Thread.sleep(2000);
-      } catch (InterruptedException e)
-      {
-        e.printStackTrace();
+        try
+        {
+          Thread.sleep(2000);
+        } catch (InterruptedException e)
+        {
+          e.printStackTrace();
+        }
       }
     }
+    catch (Exception e){}
   }
 
   public int getTrainID()

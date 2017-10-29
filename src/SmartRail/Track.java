@@ -82,6 +82,7 @@ public class Track extends Thread implements Component
     if(!neighbors.isEmpty())
     {
       neighbors.get(0).acceptMessage("Hi");
+      System.out.println("inside Track run");
     }
   }
   @Override
@@ -89,5 +90,9 @@ public class Track extends Thread implements Component
   {
     if(Direction.equalsIgnoreCase("right"))return right;
     return left;
+  }
+  public String getComponentName()
+  {
+    return this.name;
   }
 }

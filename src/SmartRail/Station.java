@@ -24,9 +24,6 @@ public class Station extends Thread implements Component
     return left;
 
   }
-  public String getStationName(){
-    return this.stationName;
-  }
 
   @Override
   public String acceptMessage(String message)
@@ -63,5 +60,9 @@ public class Station extends Thread implements Component
     }
 
     return false;
+  }
+  public String getComponentName()
+  {
+    return this.stationName;
   }
 }

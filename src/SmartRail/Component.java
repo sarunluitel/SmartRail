@@ -14,5 +14,6 @@ public interface Component
    // makes component keep track of next node
   // linear tracks.
    Component nextComponent(String direction);
+   String getComponentName();
 
 }
