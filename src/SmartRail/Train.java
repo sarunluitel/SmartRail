@@ -23,7 +23,7 @@ public class Train extends Thread
     this.trainID = totalTrains;
     this.Destination = Destination;// this should be a pointer to a station
     this.spawnStation = spawnStation;
-    this.currentComponent=spawnStation;
+    this.currentComponent = spawnStation;
   }
 
   @Override
@@ -34,31 +34,35 @@ public class Train extends Thread
       move();
     }
 
-    System.out.println("Arrived at " + this.Destination.getComponentName());
+    System.out.println("Train " + trainID+" Arrived at " + this.currentComponent.getComponentName());
 
   }
 
   private void move()
   {
-    try{
+    try
+    {
       synchronized (this)
       {
-        System.out.println("!!!!!chu chu chu chu!!!!!!!! train!!!"+trainID+"\n");
+        System.out.println("!!!!!chu chu chu chu!!!!!!!! train!!!" + trainID + "\n");
 
-        if(this.currentComponent instanceof Station)
+        if (this.currentComponent instanceof Station)
         {
-          System.out.println("All Aboard train "+trainID+" leaving from " + this.spawnStation.getComponentName());
+          System.out.println("All Aboard train " + trainID + " leaving from " + this.spawnStation.getComponentName());
+
         }
 
 
-        while(this.currentComponent.nextComponent("right")==null)
+        while (this.currentComponent.nextComponent("right") == null)
         {
-          System.out.println("train "+trainID+ " Waiting on red light");
+          System.out.println("train " + trainID + " Waiting on red light");
           Thread.sleep(1000);
         }
 
         this.setCurrentComponent(this.currentComponent.nextComponent("right"));
-        System.out.println("train "+trainID+" Rolling down track " + this.currentComponent.getComponentName());
+
+
+        System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());
         System.out.println();
 
         try
@@ -69,8 +73,9 @@ public class Train extends Thread
           e.printStackTrace();
         }
       }
+    } catch (Exception e)
+    {
     }
-    catch (Exception e){}
   }
 
   public int getTrainID()

@@ -37,16 +37,30 @@ public class main
     trk2.setNeighbors(light1, "left");
     trk2.setNeighbors(s2, "right");
 
-
-
-
-
     Train t1 = new Train(s2,s1);
-    Train t2 = new Train(s1,s2);
+
+    light1.start();
+    t1.start();
+
+    Track trk3=new Track("trk3");
+    Track trk4=new Track("trk4");
+    Station s4;
+
+
+    Station s3 = new Station("Station3",null,trk3);
+    trk3.setNeighbors(trk4, "right");
+    trk3.setNeighbors(s3, "left");
+
+    s4 = new Station("Station4",trk4,null);
+
+    trk4.setNeighbors(trk3, "left");
+    trk4.setNeighbors(s4, "right");
+
+    Train t2 = new Train(s4,s3);
 
     // light1.start();
-    t1.start();
     t2.start();
+
   }
 }
 
