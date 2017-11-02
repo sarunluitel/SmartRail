@@ -7,6 +7,7 @@ public class Station extends Thread implements Component
   private Track right;//expects pointer to a track
   private Track left;
   private String stationName; //expects Names in format St.15
+  private String message;
 
 
 
@@ -26,13 +27,13 @@ public class Station extends Thread implements Component
   }
 
   @Override
-  public String acceptMessage(String message)
+  public void acceptMessage(String message)
   {
-    return null;
+    //return null;
   }
 
   @Override
-  public boolean hasComponent(Component c, String dir)
+  public boolean findPath(Component c, String dir)
   {
     if(dir.equalsIgnoreCase("right"))
     {
@@ -44,7 +45,7 @@ public class Station extends Thread implements Component
       {
         return false;
       }
-      return right.hasComponent(c, dir);
+      return right.findPath(c, dir);
     }
     else if(dir.equalsIgnoreCase("left"))
     {
@@ -56,7 +57,7 @@ public class Station extends Thread implements Component
       {
         return false;
       }
-      return left.hasComponent(c, dir);
+      return left.findPath(c, dir);
     }
 
     return false;

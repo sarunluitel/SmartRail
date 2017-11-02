@@ -9,6 +9,7 @@ public class Track extends Thread implements Component
   String name;
   private Component left;
   private Component right;
+  private String message = null;
 
   public Component getLeft()
   {
@@ -39,14 +40,13 @@ public class Track extends Thread implements Component
     }
   }
 
-  public String acceptMessage(String message)
+  public void acceptMessage(String message)
   {
-    System.out.println(name);
-    System.out.println(message);
-    return message;
+    this.message = message;
+    //return message;
   }
 
-  public boolean hasComponent(Component c, String dir)
+  public boolean findPath(Component c, String dir)
   {
     if(dir.equalsIgnoreCase("right"))
     {
@@ -58,7 +58,7 @@ public class Track extends Thread implements Component
       {
         return false;
       }
-      return right.hasComponent(c, dir);
+      return right.findPath(c, dir);
     }
     else if(dir.equalsIgnoreCase("left"))
     {
@@ -70,7 +70,7 @@ public class Track extends Thread implements Component
       {
         return false;
       }
-      return left.hasComponent(c, dir);
+      return left.findPath(c, dir);
     }
 
     return false;
@@ -79,11 +79,7 @@ public class Track extends Thread implements Component
   @Override
   public void run()
   {
-    if(!neighbors.isEmpty())
-    {
-      neighbors.get(0).acceptMessage("Hi");
-      System.out.println("inside Track run");
-    }
+
   }
   @Override
   public Component nextComponent(String Direction)

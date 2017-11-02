@@ -29,6 +29,11 @@ public class Train extends Thread
   @Override
   public void run()
   {
+    //pathFind to Destination
+    //send message to initial Station
+    //spawnStation.acceptMessage(MESSAGE);
+    //notifyAll();
+
     while (this.Destination != this.currentComponent)
     {
       move();
@@ -44,6 +49,7 @@ public class Train extends Thread
     {
       synchronized (this)
       {
+
         System.out.println("!!!!!chu chu chu chu!!!!!!!! train!!!" + trainID + "\n");
 
         if (this.currentComponent instanceof Station)

@@ -42,13 +42,13 @@ public class Light extends Thread implements Component
   }
 
   @Override
-  public String acceptMessage(String message)
+  public void acceptMessage(String message)
   {
-    return null;
+    //return null;
   }
 
   @Override
-  public boolean hasComponent(Component c, String dir)
+  public boolean findPath(Component c, String dir)
   {
     return false;
   }
