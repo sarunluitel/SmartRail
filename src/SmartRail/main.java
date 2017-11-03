@@ -9,15 +9,10 @@ public class main
 {
   public static void main(String[] args)
   {
-    System.out.println("smartRail");
-    //Edited by Vincent
-    //Track track1 = new Track("track1");
-    //Track track2 = new Track("track2");
-    // ArrayList<Component> nextTo = new ArrayList<>();
-    //  nextTo.add(track2);
-    // track1.giveNeighbors(nextTo);
-    //  track1.start();
-    instantiate();
+
+    Configuration c = new Configuration();
+    Map map= new Map(c.getNextLine());
+
 
   }
   static void instantiate()
@@ -55,10 +50,8 @@ public class main
 
     trk4.setNeighbors(trk3, "left");
     trk4.setNeighbors(s4, "right");
-
     Train t2 = new Train(s4,s3);
 
-    // light1.start();
     t2.start();
 
   }

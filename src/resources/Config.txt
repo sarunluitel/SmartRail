@@ -1,0 +1,10 @@
+// Follows similar comment syntax
+// This file gives configuration to build the map
+// (=) indicates a track; (R) Indicates a right Station;
+// (L) indicates a Left Station; (O) indicates a light
+// Switch yet to be implemented
+// Format (R==O==L)
+// DO NOT LEAVE  BLANK LINES.
+//
+//
+R===O==L
