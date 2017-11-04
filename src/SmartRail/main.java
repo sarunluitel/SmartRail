@@ -15,6 +15,10 @@ public class main
     map.setMap(c.getNextLine());
 
 
+    Train t1 = new Train((Station)map.getMap().get(7),(Station) map.getMap().get(0));
+    t1.start();
+
+
   }
   static void instantiate()
   {

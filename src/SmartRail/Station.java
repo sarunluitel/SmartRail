@@ -31,7 +31,7 @@ public class Station extends Thread implements Component
 // code to  determine station
   public Component nextComponent(String Direction)
   {
-    if(Direction.equalsIgnoreCase("right")) return rightTrack;
+    //if(Direction.equalsIgnoreCase("right")) return rightTrack;
     return leftTrack;
 
   }

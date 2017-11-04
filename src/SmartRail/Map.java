@@ -4,46 +4,74 @@ import java.util.ArrayList;
 
 class Map
 {
-  private static int layerCount=-1;
+  private static int layerCount = -1;
   private ArrayList<ArrayList> layers = new ArrayList<>();
-  //private ArrayList<Component> path0 = new ArrayList<>();
 
   void setMap(String config)
   {
     layerCount++;
-    layers.add(layerCount,new ArrayList<Component>());
-    int componentsInLine=-1;
+    layers.add(layerCount, new ArrayList<Component>());
+    int componentsInLine = -1;
     for (char c : config.toCharArray())
     {
       componentsInLine++;
       switch (c)
       {
         case 'R':
-          layers.get(layerCount).add(componentsInLine,new Station());
-          System.out.println("Added staiton in"+ layers.get(layerCount));
+          layers.get(layerCount).add(componentsInLine, new Station());
           break;
 
         case '=':
-          layers.get(layerCount).add(componentsInLine,new Track());
+          layers.get(layerCount).add(componentsInLine, new Track());
           break;
 
         case 'O':
-          layers.get(layerCount).add(componentsInLine,new Light());
+          layers.get(layerCount).add(componentsInLine, new Light());
           break;
 
         case 'L':
-          layers.get(layerCount).add(componentsInLine,new Station());
+          layers.get(layerCount).add(componentsInLine, new Station());
           break;
       }
     }
     assignNeighbour(componentsInLine);
   }
-  private void assignNeighbour(int comInLayer)
+
+  private void assignNeighbour(int compInLayer)
   {
-    for (int i = 0; i < comInLayer; i++)
+    ArrayList temp = layers.get(layerCount);
+    //assign first Track to station.
+
+    Station rightStation = (Station) temp.get(0);
+    rightStation.setLeftTrack((Track) temp.get(1));
+
+    //Assign Last component to left station
+    Station leftStation = (Station) temp.get(compInLayer);
+    leftStation.setRightTrack((Track) temp.get(compInLayer - 1));
+
+    for (int i = 1; i < compInLayer; i++)
     {
 
-     // layers.get(layerCount).get(i).
+      if (temp.get(i) instanceof Track)
+      {
+        ((Track) temp.get(i)).setNeighbors((Component) temp.get(i + 1), "right");
+        ((Track) temp.get(i)).setNeighbors((Component) temp.get(i - 1), "left");
+      }
+
+      if (temp.get(i) instanceof Light)
+      {
+        ((Light) temp.get(i)).setLeftComponent((Component) temp.get(i - 1));
+        ((Light) temp.get(i)).setRightComponent((Component) temp.get(i + 1));
+      }
+
     }
   }
+
+  ArrayList getMap()
+  {
+    return this.layers.get(0);
+  }
+
 }
+
+
