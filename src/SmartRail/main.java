@@ -7,7 +7,10 @@ public class main
 {
   public static void main(String[] args)
   {
-    instantiate();
+    JavaFX GUI = new JavaFX();
+    GUI.runDisplay(args);
+
+    // instantiate();
 
   }
 
