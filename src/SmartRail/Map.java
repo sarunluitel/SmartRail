@@ -1,15 +1,49 @@
 package SmartRail;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 class Map
 {
-  LinkedList<Station> right= new LinkedList<>();
+  private static int layerCount=-1;
+  private ArrayList<ArrayList> layers = new ArrayList<>();
+  //private ArrayList<Component> path0 = new ArrayList<>();
 
-  Map(String config)
+  void setMap(String config)
   {
-    for(char c : config.toCharArray()) {
-     // if(c=='R') right.add(new Station())
+    layerCount++;
+    layers.add(layerCount,new ArrayList<Component>());
+    int componentsInLine=-1;
+    for (char c : config.toCharArray())
+    {
+      componentsInLine++;
+      switch (c)
+      {
+        case 'R':
+          layers.get(layerCount).add(componentsInLine,new Station());
+          System.out.println("Added staiton in"+ layers.get(layerCount));
+          break;
+
+        case '=':
+          layers.get(layerCount).add(componentsInLine,new Track());
+          break;
+
+        case 'O':
+          layers.get(layerCount).add(componentsInLine,new Light());
+          break;
+
+        case 'L':
+          layers.get(layerCount).add(componentsInLine,new Station());
+          break;
+      }
+    }
+    assignNeighbour(componentsInLine);
+  }
+  private void assignNeighbour(int comInLayer)
+  {
+    for (int i = 0; i < comInLayer; i++)
+    {
+
+     // layers.get(layerCount).get(i).
     }
   }
 }

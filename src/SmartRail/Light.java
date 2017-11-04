@@ -1,5 +1,6 @@
 package SmartRail;
 
+
 public class Light extends Thread implements Component
 {
   private String leftLight;
@@ -10,35 +11,29 @@ public class Light extends Thread implements Component
   // Left component has pointer to where the light is.
   private Component leftComponent;
 
-  public Light(Component leftComponent, Component rightComponent)
+  //Setters for data types.
+
+  public void setLeftComponent(Component leftComponent)
   {
-    this.leftComponent=leftComponent;
-    this.rightComponent=rightComponent;
-    this.leftLight="red";
-    this.rightLight="red";
+    this.leftComponent = leftComponent;
+  }
+  public void setRightComponent(Component rightComponent)
+  {
+    this.rightComponent = rightComponent;
+  }
+  public void setLeftLight(String leftLight)
+  {
+    this.leftLight = leftLight;
+  }
+  public void setRightLight(String rightLight)
+  {
+    this.rightLight = rightLight;
   }
 
   @Override
   public void run()
   {
-    synchronized (this)
-    {
-      while(true)
-      {
-        try
-        {
-          Thread.sleep(2000);
-          leftLight = "green";
-          rightLight = "red";
-          Thread.sleep(2000);
-          leftLight = "red";
-          rightLight = "green";
-        } catch (InterruptedException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
+    // make light talk to other components next to it
   }
 
   @Override

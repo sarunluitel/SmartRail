@@ -4,25 +4,35 @@ public class Station extends Thread implements Component
 {
   //adjacent track to the station.
   private static int totalStation=0;
-  private Track right;//expects pointer to a track
-  private Track left;
+  private Track rightTrack;//expects pointer to a track
+  private Track leftTrack;
   private String stationName; //expects Names in format St.15
   private String message;
 
 
-
-  public Station(String stationName,Track leftTrack, Track rightTrack)
+  public Station()
   {
     totalStation++;
-    this.right =rightTrack;
-    this.left =leftTrack;
-    this.stationName =stationName;
+    this.stationName = "station "+totalStation;
   }
 
+
+  // Setters for data types
+  public void setRightTrack(Track rightTrack)
+  {
+    this.rightTrack = rightTrack;
+  }
+
+  public void setLeftTrack(Track leftTrack)
+  {
+    this.leftTrack = leftTrack;
+  }
+
+// code to  determine station
   public Component nextComponent(String Direction)
   {
-    if(Direction.equalsIgnoreCase("right")) return right;
-    return left;
+    if(Direction.equalsIgnoreCase("right")) return rightTrack;
+    return leftTrack;
 
   }
 
@@ -37,27 +47,27 @@ public class Station extends Thread implements Component
   {
     if(dir.equalsIgnoreCase("right"))
     {
-      if(c.equals(right))
+      if(c.equals(rightTrack))
       {
         return true;
       }
-      else if(right.equals(null))
+      else if(rightTrack.equals(null))
       {
         return false;
       }
-      return right.findPath(c, dir);
+      return rightTrack.findPath(c, dir);
     }
     else if(dir.equalsIgnoreCase("left"))
     {
-      if(c.equals(left))
+      if(c.equals(leftTrack))
       {
         return true;
       }
-      else if(left.equals(null))
+      else if(leftTrack.equals(null))
       {
         return false;
       }
-      return left.findPath(c, dir);
+      return leftTrack.findPath(c, dir);
     }
 
     return false;

@@ -11,23 +11,24 @@ public class main
   {
 
     Configuration c = new Configuration();
-    Map map= new Map(c.getNextLine());
+    Map map= new Map();
+    map.setMap(c.getNextLine());
 
 
   }
   static void instantiate()
   {
-    Track trk1=new Track("trk1");
-    Track trk2=new Track("trk2");
-    Light light1 = new Light(trk1,trk2);
+    Track trk1=new Track();
+    Track trk2=new Track();
+    Light light1 = new Light();
     Station s2;
 
 
-    Station s1 = new Station("Station1",null,trk1);
+    Station s1 = new Station();
     trk1.setNeighbors(light1, "right");
     trk1.setNeighbors(s1, "left");
 
-    s2 = new Station("Station2",trk2,null);
+    s2 = new Station();
 
     trk2.setNeighbors(light1, "left");
     trk2.setNeighbors(s2, "right");
@@ -37,16 +38,16 @@ public class main
     light1.start();
     t1.start();
 
-    Track trk3=new Track("trk3");
-    Track trk4=new Track("trk4");
+    Track trk3=new Track();
+    Track trk4=new Track();
     Station s4;
 
 
-    Station s3 = new Station("Station3",null,trk3);
+    Station s3 = new Station();
     trk3.setNeighbors(trk4, "right");
     trk3.setNeighbors(s3, "left");
 
-    s4 = new Station("Station4",trk4,null);
+    s4 = new Station();
 
     trk4.setNeighbors(trk3, "left");
     trk4.setNeighbors(s4, "right");

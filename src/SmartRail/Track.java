@@ -7,10 +7,18 @@ public class Track extends Thread implements Component
 {
   ArrayList<Component> neighbors;
   String name;
+  private static int totalTracks=0;
   private Component left;
   private Component right;
   private String message = null;
 
+  public Track()
+  {
+    totalTracks++;
+    this.name = "Track "+ totalTracks;
+  }
+
+  //Getter methods
   public Component getLeft()
   {
     return left;
@@ -21,13 +29,8 @@ public class Track extends Thread implements Component
     return right;
   }
 
-  public Track(String name)
-  {
-    this.name = name;
-    this.left=left;
-    this.right=right;
-  }
 
+  //Setters for Data
   public void setNeighbors(Component c, String dir)
   {
     if(dir.equalsIgnoreCase("right"))
