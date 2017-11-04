@@ -2,6 +2,7 @@ package SmartRail;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Track extends Thread implements Component
 {
@@ -10,7 +11,7 @@ public class Track extends Thread implements Component
   private static int totalTracks = 0;
   private Component left;
   private Component right;
-  private String message = null;
+  private Message message = null;
 
   public Track()
   {
@@ -42,7 +43,7 @@ public class Track extends Thread implements Component
     }
   }
 
-  public void acceptMessage(String message)
+  public void acceptMessage(Message message)
   {
     this.message = message;
     //return message;
@@ -50,35 +51,58 @@ public class Track extends Thread implements Component
 
   public boolean findPath(Component c, String dir)
   {
+    LinkedList<Component> targetComponent = new LinkedList<>();
+    targetComponent.add(c);
     if (dir.equalsIgnoreCase("right"))
     {
-      if (c.equals(right))
-      {
-        return true;
-      } else if (right.equals(null))
-      {
-        return false;
-      }
-      return right.findPath(c, dir);
-    } else if (dir.equalsIgnoreCase("left"))
+
+      right.acceptMessage(new Message(dir, "findpath", targetComponent));
+      return true;
+    }
+    else if (dir.equalsIgnoreCase("left"))
     {
-      if (c.equals(left))
-      {
-        return true;
-      } else if (left.equals(null))
-      {
-        return false;
-      }
-      return left.findPath(c, dir);
+      left.acceptMessage(new Message(dir, "findpath", targetComponent));
+      return true;
     }
 
     return false;
   }
 
   @Override
+  public Message returnPath(Message m)
+  {
+    return message;
+  }
+
+  @Override
   public void run()
   {
+    while(true)
+    {
+      if (message == null)
+      {
+        try
+        {
+          wait();
+        } catch (Exception ex)
+        {
+          //Print
+        }
+      }
+      else
+      {
+        String action = message.getAction();
+        String direction = message.getDirection();
+        LinkedList<Component> target = message.getTarget();
+        if(action.equalsIgnoreCase("findpath"))
+        {
+          findPath(target.get(0), direction);
+          message = null;
+          notifyAll();
+        }
 
+      }
+    }
   }
 
   @Override

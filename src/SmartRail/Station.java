@@ -1,5 +1,7 @@
 package SmartRail;
 
+import java.util.LinkedList;
+
 public class Station extends Thread implements Component
 {
   //adjacent track to the station.
@@ -7,7 +9,7 @@ public class Station extends Thread implements Component
   private Track rightTrack;//expects pointer to a track
   private Track leftTrack;
   private String stationName; //expects Names in format St.15
-  private String message;
+  private Message message;
 
 
   public Station()
@@ -37,37 +39,71 @@ public class Station extends Thread implements Component
   }
 
   @Override
-  public void acceptMessage(String message)
+  public void acceptMessage(Message message)
   {
-    //return null;
+    this.message = message;
   }
 
   @Override
   public boolean findPath(Component c, String dir)
   {
-    if (dir.equalsIgnoreCase("right"))
-    {
-      if (c.equals(rightTrack))
-      {
-        return true;
-      } else if (rightTrack.equals(null))
-      {
-        return false;
-      }
-      return rightTrack.findPath(c, dir);
-    } else if (dir.equalsIgnoreCase("left"))
-    {
-      if (c.equals(leftTrack))
-      {
-        return true;
-      } else if (leftTrack.equals(null))
-      {
-        return false;
-      }
-      return leftTrack.findPath(c, dir);
-    }
 
-    return false;
+    if (c.getComponentName().equalsIgnoreCase(stationName))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  @Override
+  public Message returnPath(Message m)
+  {
+    return message;
+  }
+
+  @Override
+  public void run()
+  {
+    while(true)
+    {
+      if (message == null)
+      {
+        try
+        {
+          wait();
+        } catch (Exception ex)
+        {
+          //Print
+        }
+      }
+      else
+      {
+        String action = message.getAction();
+        String direction = message.getDirection();
+        LinkedList<Component> target = message.getTarget();
+        if(action.equalsIgnoreCase("findpath"))
+        {
+          if(findPath(target.get(0), direction))
+          {
+            System.out.println(stationName + " found.");
+            if(direction.equalsIgnoreCase("right"))
+            {
+
+            }
+            else
+            {
+              LinkedList<Component> pathList = new LinkedList<>();
+              pathList.add(this);
+              Message path = new Message("right", "returnpath", pathList);
+            }
+          }
+          message = null;
+        }
+      }
+    }
   }
 
   public String getComponentName()
