@@ -1,5 +1,7 @@
 package SmartRail;
 
+import java.util.LinkedList;
+
 public class Station extends Thread implements Component
 {
   //adjacent track to the station.
@@ -57,9 +59,51 @@ public class Station extends Thread implements Component
   }
 
   @Override
+  public Message returnPath(Message m)
+  {
+    return message;
+  }
+
+  @Override
   public void run()
   {
+    while(true)
+    {
+      if (message == null)
+      {
+        try
+        {
+          wait();
+        } catch (Exception ex)
+        {
+          //Print
+        }
+      }
+      else
+      {
+        String action = message.getAction();
+        String direction = message.getDirection();
+        LinkedList<Component> target = message.getTarget();
+        if(action.equalsIgnoreCase("findpath"))
+        {
+          if(findPath(target.get(0), direction))
+          {
+            System.out.println(stationName + " found.");
+            if(direction.equalsIgnoreCase("right"))
+            {
 
+            }
+            else
+            {
+              LinkedList<Component> pathList = new LinkedList<>();
+              pathList.add(this);
+              Message path = new Message("right", "returnpath", pathList);
+            }
+          }
+          message = null;
+        }
+      }
+    }
   }
 
   public String getComponentName()

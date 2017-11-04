@@ -2,6 +2,7 @@ package SmartRail;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Track extends Thread implements Component
 {
@@ -50,18 +51,27 @@ public class Track extends Thread implements Component
 
   public boolean findPath(Component c, String dir)
   {
+    LinkedList<Component> targetComponent = new LinkedList<>();
+    targetComponent.add(c);
     if (dir.equalsIgnoreCase("right"))
     {
-      right.acceptMessage(new Message(dir, "findpath", c));
+
+      right.acceptMessage(new Message(dir, "findpath", targetComponent));
       return true;
     }
     else if (dir.equalsIgnoreCase("left"))
     {
-      left.acceptMessage(new Message(dir, "findpath", c));
+      left.acceptMessage(new Message(dir, "findpath", targetComponent));
       return true;
     }
 
     return false;
+  }
+
+  @Override
+  public Message returnPath(Message m)
+  {
+    return message;
   }
 
   @Override
@@ -83,10 +93,10 @@ public class Track extends Thread implements Component
       {
         String action = message.getAction();
         String direction = message.getDirection();
-        Component target = message.getTarget();
+        LinkedList<Component> target = message.getTarget();
         if(action.equalsIgnoreCase("findpath"))
         {
-          findPath(target, direction);
+          findPath(target.get(0), direction);
           message = null;
           notifyAll();
         }

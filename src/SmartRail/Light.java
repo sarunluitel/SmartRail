@@ -1,5 +1,6 @@
 package SmartRail;
 
+import java.util.LinkedList;
 
 public class Light extends Thread implements Component
 {
@@ -10,6 +11,7 @@ public class Light extends Thread implements Component
   private Component rightComponent;
   // Left component has pointer to where the light is.
   private Component leftComponent;
+  private Message message;
 
   //Setters for data types.
 
@@ -42,13 +44,19 @@ public class Light extends Thread implements Component
   @Override
   public void acceptMessage(Message message)
   {
-    //return null;
+    this.message = message;
   }
 
   @Override
   public boolean findPath(Component c, String dir)
   {
     return false;
+  }
+
+  @Override
+  public Message returnPath(Message m)
+  {
+    return message;
   }
 
   @Override

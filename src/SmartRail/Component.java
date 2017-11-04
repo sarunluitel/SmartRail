@@ -11,6 +11,7 @@ public interface Component
   void acceptMessage(Message message);
 
   boolean findPath(Component c, String dir);
+  Message returnPath(Message m);
 
   // makes component keep track of next node
   //linear tracks.

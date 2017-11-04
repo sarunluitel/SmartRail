@@ -1,12 +1,14 @@
 package SmartRail;
 
+import java.util.LinkedList;
+
 public class Message
 {
   private String direction;
   private String action;
-  private Component intendedTarget;
+  private LinkedList<Component> intendedTarget;
 
-  public Message (String dir, String act, Component c)
+  public Message (String dir, String act, LinkedList<Component> c)
   {
     direction = dir;
     action = act;
@@ -23,7 +25,7 @@ public class Message
     return direction;
   }
 
-  public Component getTarget()
+  public LinkedList<Component> getTarget()
   {
     return intendedTarget;
   }
