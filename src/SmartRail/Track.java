@@ -52,24 +52,13 @@ public class Track extends Thread implements Component
   {
     if (dir.equalsIgnoreCase("right"))
     {
-      if (c.equals(right))
-      {
-        return true;
-      } else if (right.equals(null))
-      {
-        return false;
-      }
-      return right.findPath(c, dir);
-    } else if (dir.equalsIgnoreCase("left"))
+      right.acceptMessage(new Message(dir, "findpath", c));
+      return true;
+    }
+    else if (dir.equalsIgnoreCase("left"))
     {
-      if (c.equals(left))
-      {
-        return true;
-      } else if (left.equals(null))
-      {
-        return false;
-      }
-      return left.findPath(c, dir);
+      left.acceptMessage(new Message(dir, "findpath", c));
+      return true;
     }
 
     return false;
@@ -97,18 +86,9 @@ public class Track extends Thread implements Component
         Component target = message.getTarget();
         if(action.equalsIgnoreCase("findpath"))
         {
-          if(direction.equalsIgnoreCase("right"))
-          {
-            right.acceptMessage(message);
-            message = null;
-            notifyAll();
-          }
-          else if(direction.equalsIgnoreCase("left"))
-          {
-            left.acceptMessage(message);
-            message = null;
-            notifyAll();
-          }
+          findPath(target, direction);
+          message = null;
+          notifyAll();
         }
 
       }
