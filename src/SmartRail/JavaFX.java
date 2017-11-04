@@ -1,5 +1,6 @@
 package SmartRail;
 
+import SmartRail.JavafxRes.TrackView;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -31,13 +32,13 @@ public class JavaFX extends Application
     Group root = new Group();
     root.getChildren().add(test);
 
-    draw();
+
 
 
     Scene testS=new Scene(root);
     primaryStage.setScene(testS);
     primaryStage.show();
-
+    draw();
   }
 
   private void draw()
@@ -69,6 +70,17 @@ public class JavaFX extends Application
     ***/
 
     GraphicsContext gc= test.getGraphicsContext2D();
+    gc.fillRect(101, 100, 100, 30);
+    gc.setFill(Color.LIGHTBLUE);
+    gc.fillRect(110, 95, 80, 25);
+
+    TrackView view = new TrackView();
+
+    gc.drawImage(view.image,10,10);
+    System.out.println("after first fill");
+
+
+
 
 
   }
