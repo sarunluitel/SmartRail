@@ -39,7 +39,7 @@ public class Train extends Thread
       move();
     }
 
-    System.out.println("Train " + trainID+" Arrived at " + this.currentComponent.getComponentName());
+    System.out.println("Train " + trainID + " Arrived at " + this.currentComponent.getComponentName());
 
   }
 
@@ -59,13 +59,13 @@ public class Train extends Thread
         }
 
 
-        while (this.currentComponent.nextComponent("right") == null)
+        while (this.currentComponent.nextComponent("left") == null)
         {
           System.out.println("train " + trainID + " Waiting on red light");
           Thread.sleep(1000);
         }
 
-        this.setCurrentComponent(this.currentComponent.nextComponent("right"));
+        this.setCurrentComponent(this.currentComponent.nextComponent("left"));
 
 
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());

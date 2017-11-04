@@ -17,14 +17,17 @@ public class Light extends Thread implements Component
   {
     this.leftComponent = leftComponent;
   }
+
   public void setRightComponent(Component rightComponent)
   {
     this.rightComponent = rightComponent;
   }
+
   public void setLeftLight(String leftLight)
   {
     this.leftLight = leftLight;
   }
+
   public void setRightLight(String rightLight)
   {
     this.rightLight = rightLight;
@@ -51,19 +54,20 @@ public class Light extends Thread implements Component
   @Override
   public Component nextComponent(String direction)
   {
-    if(direction.equals("right") && leftLight.equals("green"))
+    if (direction.equals("right") && leftLight.equals("green"))
     {
       // green light facing left allows trains to move right
       return rightComponent;
     }
-    if(direction.equals("left") && rightLight.equals("green"))
+    if (direction.equals("left") && rightLight.equals("green"))
     {
       return leftComponent;
     }
     return null;
   }
+
   public String getComponentName()
   {
-    return "light at track : "+this.leftComponent.getComponentName();
+    return "light at track : " + this.leftComponent.getComponentName();
   }
 }

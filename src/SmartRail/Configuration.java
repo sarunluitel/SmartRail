@@ -10,8 +10,8 @@ public class Configuration
 {
   private LinkedList<String> linesOfTracks = new LinkedList<>();
   // index starts with 0
-  private int lineCounter=-1;
-  private int linesSent=-1;
+  private int lineCounter = -1;
+  private int linesSent = -1;
 
   Configuration()
   {
@@ -26,7 +26,7 @@ public class Configuration
       while ((thisLine = buffer.readLine()) != null && !thisLine.trim().isEmpty())
       {
         // Ignore commented lines.
-        if(!thisLine.startsWith("/"))
+        if (!thisLine.startsWith("/"))
         {
           lineCounter++;
           linesOfTracks.addLast(thisLine.trim());
@@ -41,7 +41,7 @@ public class Configuration
 
   String getNextLine()
   {
-    if(lineCounter!=linesSent)
+    if (lineCounter != linesSent)
     {
       linesSent++;
       return linesOfTracks.get(linesSent);

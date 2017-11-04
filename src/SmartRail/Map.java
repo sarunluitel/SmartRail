@@ -42,12 +42,12 @@ class Map
     ArrayList temp = layers.get(layerCount);
     //assign first Track to station.
 
-    Station rightStation = (Station) temp.get(0);
-    rightStation.setLeftTrack((Track) temp.get(1));
+    Station rightStation = (Station) temp.get(compInLayer);
+    rightStation.setLeftTrack((Track) temp.get(compInLayer - 1));
 
     //Assign Last component to left station
-    Station leftStation = (Station) temp.get(compInLayer);
-    leftStation.setRightTrack((Track) temp.get(compInLayer - 1));
+    Station leftStation = (Station) temp.get(0);
+    leftStation.setRightTrack((Track) temp.get(1));
 
     for (int i = 1; i < compInLayer; i++)
     {
@@ -67,9 +67,14 @@ class Map
     }
   }
 
-  ArrayList getMap()
+  ArrayList getMap(int layer)
   {
-    return this.layers.get(0);
+    return this.layers.get(layer);
+  }
+
+  int getcompInLayer(int layer)
+  {
+    return layers.get(layer).size();
   }
 
 }

@@ -7,7 +7,7 @@ public class Track extends Thread implements Component
 {
   ArrayList<Component> neighbors;
   String name;
-  private static int totalTracks=0;
+  private static int totalTracks = 0;
   private Component left;
   private Component right;
   private String message = null;
@@ -15,7 +15,7 @@ public class Track extends Thread implements Component
   public Track()
   {
     totalTracks++;
-    this.name = "Track "+ totalTracks;
+    this.name = "Track " + totalTracks;
   }
 
   //Getter methods
@@ -33,11 +33,10 @@ public class Track extends Thread implements Component
   //Setters for Data
   public void setNeighbors(Component c, String dir)
   {
-    if(dir.equalsIgnoreCase("right"))
+    if (dir.equalsIgnoreCase("right"))
     {
-     right = c;
-    }
-    else
+      right = c;
+    } else
     {
       left = c;
     }
@@ -51,25 +50,22 @@ public class Track extends Thread implements Component
 
   public boolean findPath(Component c, String dir)
   {
-    if(dir.equalsIgnoreCase("right"))
+    if (dir.equalsIgnoreCase("right"))
     {
-      if(c.equals(right))
+      if (c.equals(right))
       {
         return true;
-      }
-      else if(right.equals(null))
+      } else if (right.equals(null))
       {
         return false;
       }
       return right.findPath(c, dir);
-    }
-    else if(dir.equalsIgnoreCase("left"))
+    } else if (dir.equalsIgnoreCase("left"))
     {
-      if(c.equals(left))
+      if (c.equals(left))
       {
         return true;
-      }
-      else if(left.equals(null))
+      } else if (left.equals(null))
       {
         return false;
       }
@@ -84,12 +80,14 @@ public class Track extends Thread implements Component
   {
 
   }
+
   @Override
   public Component nextComponent(String Direction)
   {
-    if(Direction.equalsIgnoreCase("right"))return right;
+    if (Direction.equalsIgnoreCase("right")) return right;
     return left;
   }
+
   public String getComponentName()
   {
     return this.name;
