@@ -84,7 +84,7 @@ public class Track extends Thread implements Component
         try
         {
           wait();
-        } catch (Exception ex)
+        } catch (InterruptedException ex)
         {
           //Print
         }
