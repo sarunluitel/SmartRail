@@ -78,7 +78,41 @@ public class Track extends Thread implements Component
   @Override
   public void run()
   {
+    while(true)
+    {
+      if (message == null)
+      {
+        try
+        {
+          wait();
+        } catch (Exception ex)
+        {
+          //Print
+        }
+      }
+      else
+      {
+        String action = message.getAction();
+        String direction = message.getDirection();
+        Component target = message.getTarget();
+        if(action.equalsIgnoreCase("findpath"))
+        {
+          if(direction.equalsIgnoreCase("right"))
+          {
+            right.acceptMessage(message);
+            message = null;
+            notifyAll();
+          }
+          else if(direction.equalsIgnoreCase("left"))
+          {
+            left.acceptMessage(message);
+            message = null;
+            notifyAll();
+          }
+        }
 
+      }
+    }
   }
 
   @Override

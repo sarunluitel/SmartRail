@@ -4,11 +4,13 @@ public class Message
 {
   private String direction;
   private String action;
+  private Component intendedTarget;
 
-  public Message (String dir, String act)
+  public Message (String dir, String act, Component c)
   {
     direction = dir;
     action = act;
+    intendedTarget = c;
   }
 
   public String getAction()
@@ -19,5 +21,10 @@ public class Message
   public String getDirection()
   {
     return direction;
+  }
+
+  public Component getTarget()
+  {
+    return intendedTarget;
   }
 }
