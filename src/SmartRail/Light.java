@@ -40,7 +40,7 @@ public class Light extends Thread implements Component
   }
 
   @Override
-  public void acceptMessage(String message)
+  public void acceptMessage(Message message)
   {
     //return null;
   }

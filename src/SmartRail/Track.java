@@ -10,7 +10,7 @@ public class Track extends Thread implements Component
   private static int totalTracks = 0;
   private Component left;
   private Component right;
-  private String message = null;
+  private Message message = null;
 
   public Track()
   {
@@ -42,7 +42,7 @@ public class Track extends Thread implements Component
     }
   }
 
-  public void acceptMessage(String message)
+  public void acceptMessage(Message message)
   {
     this.message = message;
     //return message;

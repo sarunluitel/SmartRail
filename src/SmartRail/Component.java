@@ -8,7 +8,7 @@ package SmartRail;
 public interface Component
 {
   //
-  void acceptMessage(String message);
+  void acceptMessage(Message message);
 
   boolean findPath(Component c, String dir);
 
