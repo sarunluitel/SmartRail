@@ -1,5 +1,9 @@
 package SmartRail;
 
+import SmartRail.JavafxRes.MapView;
+
+import java.util.ArrayList;
+
 /************************************
  @author Sarun Luitel
  ************************************/
@@ -18,9 +22,10 @@ public class main
       if (temp.equals("EOF")) break;
       map.setMap(temp);
     }
+    MapView.setEntireMap(map.getEntireMap());
 
     JavaFX GUI = new JavaFX();
-    GUI.runDisplay(args, map.getEntireMap());
+    GUI.runDisplay(args);
 
     // instantiate();
 

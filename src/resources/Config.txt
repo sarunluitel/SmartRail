@@ -8,6 +8,6 @@
 //
 //
 L======R
-L====R
+L======R
 
 //How will we make trains spawn at what location from this configuration file.

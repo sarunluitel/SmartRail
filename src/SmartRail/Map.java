@@ -2,7 +2,7 @@ package SmartRail;
 
 import java.util.ArrayList;
 
-class Map
+public class Map
 {
   private static int layerCount = -1;
   private ArrayList<ArrayList> layers = new ArrayList<>();
