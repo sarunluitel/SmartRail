@@ -72,10 +72,17 @@ class Map
     return this.layers.get(layer);
   }
 
+  ArrayList getEntireMap()
+  {
+    return this.layers;
+  }
+
+  //Number of components in an array.
   int getcompInLayer(int layer)
   {
     return layers.get(layer).size();
   }
+
 
 }
 

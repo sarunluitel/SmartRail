@@ -7,10 +7,23 @@ public class main
 {
   public static void main(String[] args)
   {
+    Configuration c = new Configuration();
+    Map map = new Map();
+
+    String temp;
+
+    while (true)
+    {
+      temp=c.getNextLine();
+      if (temp.equals("EOF")) break;
+      map.setMap(temp);
+    }
+
     JavaFX GUI = new JavaFX();
-    GUI.runDisplay(args);
+    GUI.runDisplay(args, map.getEntireMap());
 
     // instantiate();
+
 
   }
 
