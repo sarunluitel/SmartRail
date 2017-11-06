@@ -1,17 +1,36 @@
 package SmartRail.JavafxRes;
 
+
 import java.util.ArrayList;
 
 public class MapView
 {
-  private static ArrayList<ArrayList> entireMap;
+  private static MapView mapView=null;
+  private  ArrayList<ArrayList> entireMap;
 
-  public static void setEntireMap(ArrayList<ArrayList> a)
+
+  private MapView()
+  {
+  }
+
+  public static MapView getInstance()
+  {
+    if(mapView==null)
+    {
+      mapView= new MapView();
+    }
+    return mapView;
+
+  }
+
+
+
+  public  void setEntireMap(ArrayList<ArrayList> a)
   {
     entireMap = a;
   }
 
-  public static ArrayList<ArrayList> getEntireMap()
+  public  ArrayList<ArrayList> getEntireMap()
   {
     return entireMap;
   }

@@ -7,7 +7,10 @@
 // DO NOT LEAVE  BLANK LINES.
 //
 //
-L======R
-L======R
+L=========R
+L====R
+L==========R
+L=========R
 
-//How will we make trains spawn at what location from this configuration file.
+
+//Train spawn will be from GUI input

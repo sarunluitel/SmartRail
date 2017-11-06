@@ -1,7 +1,6 @@
 package SmartRail.JavafxRes;
 
 import SmartRail.Light;
-import SmartRail.Map;
 import SmartRail.Station;
 import SmartRail.Track;
 import javafx.fxml.FXML;
@@ -14,18 +13,18 @@ public class XMLController
 {
   private ArrayList<ArrayList> entireMap;
 
+
   @FXML
   private Canvas canvas;
 
-@FXML
-  private void draw()
+
+  @FXML
+  void initialize()
   {
-
-    entireMap= MapView.getEntireMap();
-
+    final int DISTANCE=60;
+    entireMap = MapView.getInstance().getEntireMap();
 
     GraphicsContext gc = canvas.getGraphicsContext2D();
-
 
     for (int i = 0; i < entireMap.size(); i++)
     {
@@ -36,26 +35,28 @@ public class XMLController
 
         if (temp.get(j) instanceof Station)
         {
-          gc.fillRect(100 + 100 * j, 100+ 100*i, 80, 80);
+          gc.fillOval(DISTANCE * (j+1), DISTANCE * (i+2), 50, 50);
         }
 
         if (temp.get(j) instanceof Track)
         {
-          gc.fillRect(100 * j + 100, 100+ 100*i, 100, 30);
+
+          gc.fillRect(DISTANCE * (j+1), DISTANCE * (i+2), 50, 15);
         }
 
-        if (temp.get(i) instanceof Light)
+        if (temp.get(j) instanceof Light)
         {
-          gc.fillRect(100 * j + 100, 100+ 100*i, 100, 30);
+          gc.fillRect(DISTANCE * (j+1), DISTANCE * (i+2), 50, 15);
         }
-
-
-        System.out.println("after first fill");
-
 
       }
     }
+
   }
 
-
 }
+
+
+
+
+
