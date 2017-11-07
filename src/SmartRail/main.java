@@ -22,7 +22,7 @@ public class main
     }
     MapView.getInstance().setEntireMap(map.getEntireMap());
 
-    //instantiate(map);
+    instantiate(map);
 
     JavaFX GUI = new JavaFX();
     GUI.runDisplay(args);
@@ -39,8 +39,10 @@ public class main
     Train t1 = new Train((Station) map.getMap(0).get(0), (Station) map.getMap(0).get(map.getcompInLayer(0) - 1));
 
     Train t2 = new Train((Station) map.getMap(1).get(0), (Station) map.getMap(1).get(map.getcompInLayer(1) - 1));
+
     t1.start();
     t2.start();
+
   }
 }
 

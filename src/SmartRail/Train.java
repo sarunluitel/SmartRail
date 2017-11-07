@@ -4,7 +4,6 @@
 
 package SmartRail;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 
 // Being edited by sarun.
 public class Train extends Thread
@@ -15,6 +14,9 @@ public class Train extends Thread
   private Station Destination;// change string to Station when we define station
   private Component currentComponent; // Train can be currently at station, light switch or track.
   private Station spawnStation; // change string to Station when we define station
+  private int xPos=0; // increase as train moves forward.
+  private int yPos=0; // increase as train moves down a track
+
 
 
   Train(Station Destination, Station spawnStation)
@@ -94,5 +96,14 @@ public class Train extends Thread
     this.currentComponent = curComp;
   }
 
+  public int getxPos()
+  {
+    return xPos;
+  }
 
+
+  public int getyPos()
+  {
+    return yPos;
+  }
 }
