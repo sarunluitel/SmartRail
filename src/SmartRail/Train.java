@@ -14,8 +14,8 @@ public class Train extends Thread
   private Station Destination;// change string to Station when we define station
   private Component currentComponent; // Train can be currently at station, light switch or track.
   private Station spawnStation; // change string to Station when we define station
-  private int xPos=0; // increase as train moves forward.
-  private int yPos=0; // increase as train moves down a track
+  private int xPos=100; // increase as train moves forward.
+  private int yPos=100; // increase as train moves down a track
 
 
 
@@ -57,6 +57,7 @@ public class Train extends Thread
         if (this.currentComponent instanceof Station)
         {
           System.out.println("All Aboard train " + trainID + " leaving from " + this.spawnStation.getComponentName());
+          xPos+= 100;
 
         }
 
@@ -71,6 +72,7 @@ public class Train extends Thread
 
 
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());
+        xPos+= 100;
         System.out.println();
 
         try

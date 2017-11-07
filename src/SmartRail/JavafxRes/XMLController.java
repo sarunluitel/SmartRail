@@ -3,28 +3,29 @@ package SmartRail.JavafxRes;
 import SmartRail.Light;
 import SmartRail.Station;
 import SmartRail.Track;
+import SmartRail.Train;
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.ArrayList;
 
-public class XMLController
+public class XMLController extends AnimationTimer
 {
   private ArrayList<ArrayList> entireMap;
-
+  final int DISTANCE=60;
 
   @FXML
   private Canvas canvas;
-
+  private GraphicsContext gc = canvas.getGraphicsContext2D();
 
   @FXML
   void initialize()
   {
-    final int DISTANCE=60;
+
     entireMap = MapView.getInstance().getEntireMap();
 
-    GraphicsContext gc = canvas.getGraphicsContext2D();
 
     for (int i = 0; i < entireMap.size(); i++)
     {
@@ -51,9 +52,19 @@ public class XMLController
 
       }
     }
+    this.start();
 
   }
 
+  private TrainView trainView=TrainView.getInstance();
+  @Override
+  public void handle(long now)
+  {
+    Train t1 = (Train) trainView.getList().get(0);
+    gc.fillOval(t1.getxPos(), t1.getyPos(), 50, 50);
+
+
+  }
 }
 
 
