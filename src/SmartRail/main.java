@@ -1,6 +1,6 @@
 package SmartRail;
 
-import java.util.ArrayList;
+import SmartRail.JavafxRes.MapView;
 
 /************************************
  @author Sarun Luitel
@@ -9,26 +9,38 @@ public class main
 {
   public static void main(String[] args)
   {
-    System.out.println("smartRail");
-    //Edited by Vincent
-    Track track1 = new Track("track1");
-    Track track2 = new Track("track2");
-    ArrayList<Component> nextTo = new ArrayList<>();
-    nextTo.add(track2);
-    track1.giveNeighbors(nextTo);
-    track1.start();
+    Configuration c = new Configuration();
+    Map map = new Map();
 
-    Train t1 = new Train(new Station(),new Station());
-    Train t2 = new Train(new Station(),new Station());
+    String temp;
 
-    System.out.println(t1.getTrainID()+ "    "+ t2.getTrainID());
+    while (true)
+    {
+      temp = c.getNextLine();
+      if (temp.equals("EOF")) break;
+      map.setMap(temp);
+    }
+    MapView.getInstance().setEntireMap(map.getEntireMap());
+
+    //instantiate(map);
+
+    JavaFX GUI = new JavaFX();
+    GUI.runDisplay(args);
+
+
+
 
   }
 
-
-  public void run()
+  static void instantiate(Map map)
   {
 
+
+    Train t1 = new Train((Station) map.getMap(0).get(0), (Station) map.getMap(0).get(map.getcompInLayer(0) - 1));
+
+    Train t2 = new Train((Station) map.getMap(1).get(0), (Station) map.getMap(1).get(map.getcompInLayer(1) - 1));
+    t1.start();
+    t2.start();
   }
 }
 
