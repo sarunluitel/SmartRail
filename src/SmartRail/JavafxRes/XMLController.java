@@ -53,7 +53,6 @@ public class XMLController extends AnimationTimer
 
       }
     }
-
     this.start();
 
   }
@@ -63,10 +62,14 @@ public class XMLController extends AnimationTimer
   @Override
   public void handle(long now)
   {
+
+
     for (Train t :
         trainList)
     {
-      gc.fillRect(t.getXPos()*DISTANCE,t.getYPos()*DISTANCE,50,50);
+
+      gc.fillRect((t.getXPos()+1)*DISTANCE,(t.getYPos()+1.5)*DISTANCE,30,30);
+
 
     }
 

@@ -48,10 +48,9 @@ public class main
     trainView.addTrain(t1);
     trainView.addTrain(t2);
 
-
-
     t1.start();
     t2.start();
+
 
   }
 }
