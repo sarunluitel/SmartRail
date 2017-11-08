@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class XMLController extends AnimationTimer
 {
-  private final int DISTANCE=60;
-
+  private final int DISTANCE = 60;
+  private int frameCounter = 0;
   @FXML
   private Canvas canvas;
   private GraphicsContext gc;
@@ -37,43 +37,47 @@ public class XMLController extends AnimationTimer
 
         if (temp.get(j) instanceof Station)
         {
-          gc.fillOval(DISTANCE * (j+1), DISTANCE * (i+2), 50, 50);
+          gc.fillOval(DISTANCE * (j + 1), DISTANCE * (i + 2), 50, 50);
         }
 
         if (temp.get(j) instanceof Track)
         {
 
-          gc.fillRect(DISTANCE * (j+1), DISTANCE * (i+2), 50, 15);
+          gc.fillRect(DISTANCE * (j + 1), DISTANCE * (i + 2), 50, 15);
         }
 
         if (temp.get(j) instanceof Light)
         {
-          gc.fillRect(DISTANCE * (j+1), DISTANCE * (i+2), 50, 15);
+          gc.fillRect(DISTANCE * (j + 1), DISTANCE * (i + 2), 50, 15);
         }
 
       }
     }
     this.start();
 
+
   }
 
-  private ArrayList<Train> trainList=TrainView.getInstance().getList();
+  private ArrayList<Train> trainList = TrainView.getInstance().getList();
 
   @Override
   public void handle(long now)
   {
+   // frameCounter++;
 
-
-    for (Train t :
-        trainList)
+   // if (frameCounter == 60)
     {
+      for (Train t :
+          trainList)
+      {
 
-      gc.fillRect((t.getXPos()+1)*DISTANCE,(t.getYPos()+1.5)*DISTANCE,30,30);
+        gc.fillRect((t.getXPos()) * DISTANCE, (t.getYPos() + 1.5) * DISTANCE, 30, 30);
+
+
+      }
 
 
     }
-
-
   }
 }
 
