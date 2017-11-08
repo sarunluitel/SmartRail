@@ -8,15 +8,14 @@ package SmartRail;
 // Being edited by sarun.
 public class Train extends Thread
 {
-  private static int totalTrains = 0;
+  private static int totalTrains = -1;
 
   private int trainID;
   private Station Destination;// change string to Station when we define station
   private Component currentComponent; // Train can be currently at station, light switch or track.
   private Station spawnStation; // change string to Station when we define station
-  private int xPos=100; // increase as train moves forward.
-  private int yPos=100; // increase as train moves down a track
-
+  private int xPos = 0; // increase as train moves forward.
+  private int yPos = 0; // increase as train moves down a track
 
 
   Train(Station Destination, Station spawnStation)
@@ -26,6 +25,8 @@ public class Train extends Thread
     this.Destination = Destination;// this should be a pointer to a station
     this.spawnStation = spawnStation;
     this.currentComponent = spawnStation;
+    this.yPos = trainID;
+
   }
 
   @Override
@@ -57,7 +58,7 @@ public class Train extends Thread
         if (this.currentComponent instanceof Station)
         {
           System.out.println("All Aboard train " + trainID + " leaving from " + this.spawnStation.getComponentName());
-          xPos+= 100;
+          xPos++;
 
         }
 
@@ -72,7 +73,7 @@ public class Train extends Thread
 
 
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());
-        xPos+= 100;
+        xPos++;
         System.out.println();
 
         try
@@ -88,23 +89,18 @@ public class Train extends Thread
     }
   }
 
-  public int getTrainID()
-  {
-    return trainID;
-  }
-
   public void setCurrentComponent(Component curComp)
   {
     this.currentComponent = curComp;
   }
 
-  public int getxPos()
+  public int getXPos()
   {
     return xPos;
   }
 
 
-  public int getyPos()
+  public int getYPos()
   {
     return yPos;
   }

@@ -13,16 +13,17 @@ import java.util.ArrayList;
 
 public class XMLController extends AnimationTimer
 {
-  private ArrayList<ArrayList> entireMap;
-  final int DISTANCE=60;
+  private final int DISTANCE=60;
 
   @FXML
   private Canvas canvas;
-  private GraphicsContext gc = canvas.getGraphicsContext2D();
+  private GraphicsContext gc;
 
   @FXML
   void initialize()
   {
+    ArrayList<ArrayList> entireMap;
+    gc = canvas.getGraphicsContext2D();
 
     entireMap = MapView.getInstance().getEntireMap();
 
@@ -52,16 +53,22 @@ public class XMLController extends AnimationTimer
 
       }
     }
+
     this.start();
 
   }
 
-  private TrainView trainView=TrainView.getInstance();
+  private ArrayList<Train> trainList=TrainView.getInstance().getList();
+
   @Override
   public void handle(long now)
   {
-    Train t1 = (Train) trainView.getList().get(0);
-    gc.fillOval(t1.getxPos(), t1.getyPos(), 50, 50);
+    for (Train t :
+        trainList)
+    {
+      gc.fillRect(t.getXPos()*DISTANCE,t.getYPos()*DISTANCE,50,50);
+
+    }
 
 
   }

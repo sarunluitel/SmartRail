@@ -25,7 +25,7 @@ public class TrainView
     trainList.add(t1);
   }
 
-  public ArrayList getList()
+  ArrayList getList()
   {
     return trainList;
   }
