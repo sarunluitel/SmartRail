@@ -5,6 +5,8 @@
 package SmartRail;
 
 
+import java.util.LinkedList;
+
 // Being edited by sarun.
 public class Train extends Thread
 {
@@ -29,6 +31,11 @@ public class Train extends Thread
 
   }
 
+  public synchronized void giveIdToComponent(Component currentComponent)
+  {
+    currentComponent.getComponentName();
+  }
+
   @Override
   public void run()
   {
@@ -39,8 +46,13 @@ public class Train extends Thread
 
     while (this.Destination != this.currentComponent)
     {
-
-      move();
+      LinkedList<Component> compList = new LinkedList<>();
+      compList.add(Destination);
+      currentComponent.acceptMessage(new Message("right", "findpath", compList));
+      //notifyAll();
+      //System.out.println("sent message");
+      break;
+      //move();
     }
 
     System.out.println("Train " + trainID + " Arrived at " + this.currentComponent.getComponentName());

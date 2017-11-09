@@ -43,13 +43,21 @@ public class Track extends Thread implements Component
     }
   }
 
-  public void acceptMessage(Message message)
+  @Override
+  public void getTrainId(Train t)
   {
+    //Set train reference
+  }
+
+  public synchronized void acceptMessage(Message message)
+  {
+    System.out.println("Recieved message by track: " + name);
     this.message = message;
+    notifyAll();
     //return message;
   }
 
-  public boolean findPath(Component c, String dir)
+  public synchronized boolean findPath(Component c, String dir)
   {
     LinkedList<Component> targetComponent = new LinkedList<>();
     targetComponent.add(c);
@@ -69,9 +77,9 @@ public class Track extends Thread implements Component
   }
 
   @Override
-  public Message returnPath(Message m)
+  public synchronized boolean returnPath(Message m)
   {
-    return message;
+    return false;
   }
 
   @Override
@@ -79,28 +87,34 @@ public class Track extends Thread implements Component
   {
     while(true)
     {
-      if (message == null)
+      synchronized (this)
       {
-        try
+        if (message == null)
         {
-          wait();
-        } catch (InterruptedException ex)
-        {
-          //Print
+          try {
+            wait();
+          } catch (InterruptedException ex) {
+            //Print
+          }
         }
-      }
-      else
-      {
-        String action = message.getAction();
-        String direction = message.getDirection();
-        LinkedList<Component> target = message.getTarget();
-        if(action.equalsIgnoreCase("findpath"))
+        else
         {
-          findPath(target.get(0), direction);
-          message = null;
-          notifyAll();
-        }
+          String action = message.getAction();
+          String direction = message.getDirection();
+          LinkedList<Component> target = message.getTarget();
+          if (action.equalsIgnoreCase("findpath"))
+          {
+            findPath(target.get(0), direction);
+            message = null;
+            notifyAll();
+          }
+          else
+          {
+            System.out.println(action);
+            message = null;
+          }
 
+        }
       }
     }
   }

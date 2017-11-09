@@ -36,6 +36,12 @@ public class Light extends Thread implements Component
   }
 
   @Override
+  public void getTrainId(Train t)
+  {
+
+  }
+
+  @Override
   public void run()
   {
     // make light talk to other components next to it
@@ -54,9 +60,9 @@ public class Light extends Thread implements Component
   }
 
   @Override
-  public Message returnPath(Message m)
+  public boolean returnPath(Message m)
   {
-    return message;
+    return false;
   }
 
   @Override
