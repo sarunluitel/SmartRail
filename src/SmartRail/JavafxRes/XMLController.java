@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
 
@@ -21,6 +23,10 @@ public class XMLController extends AnimationTimer
   private GraphicsContext gc;
   private final Image trackImage = new Image(getClass().getResourceAsStream("GUI_resources/track.png"));
   private final Image trainImage = new Image(getClass().getResourceAsStream("GUI_resources/train.png"));
+  @FXML
+  private ImageView train1;
+  @FXML
+  private StackPane stackPane;
 
   @FXML
   void initialize()
@@ -42,7 +48,15 @@ public class XMLController extends AnimationTimer
         {
           gc.fillOval(DISTANCE * (j + 1), DISTANCE * (i + 2), 50, 50);
           if (j == 0)
-            gc.drawImage(trainImage, DISTANCE * (j + 1), DISTANCE * (i + 2) - 5);
+          {
+           // stackPane.getChildren().addAll(canvas, train1);
+            train1.setImage(trainImage);
+            train1.setX(DISTANCE * (j + 1));
+            train1.setY(DISTANCE * (i + 2) - 5);
+          }
+
+          // gc.drawImage(trainImage, DISTANCE * (j + 1), DISTANCE * (i + 2) - 5);
+
         }
 
         if (temp.get(j) instanceof Track)
@@ -58,6 +72,7 @@ public class XMLController extends AnimationTimer
 
       }
     }
+
     this.start();
 
 
@@ -73,7 +88,9 @@ public class XMLController extends AnimationTimer
       for (Train t :
           trainList)
       {
-        gc.drawImage(trainImage, DISTANCE * (t.getXPos() + 1) + frameCounter, DISTANCE * (t.getYPos() + 2) - 5);
+        train1.setX(DISTANCE * (t.getXPos() + 1) + frameCounter / 2);
+        // gc.drawImage(trainImage, DISTANCE * (t.getXPos() + 1) + frameCounter, DISTANCE * (t.getYPos() + 2) - 5);
+
 
       }
 
