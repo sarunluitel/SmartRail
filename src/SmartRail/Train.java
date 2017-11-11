@@ -18,6 +18,7 @@ public class Train extends Thread
   private Station spawnStation; // change string to Station when we define station
   private int xPos = 0; // increase as train moves forward.
   private int yPos = 0; // increase as train moves down a track
+  private volatile boolean waiting = false;
 
 
   Train(Station Destination, Station spawnStation)
@@ -32,9 +33,10 @@ public class Train extends Thread
 
   }
 
-  public synchronized void giveIdToComponent(Component currentComponent)
+  public synchronized void acceptMessage(Message m)
   {
-    currentComponent.getComponentName();
+    waiting = false;
+    notifyAll();
   }
 
   @Override
@@ -45,15 +47,29 @@ public class Train extends Thread
     //spawnStation.acceptMessage(MESSAGE);
     //notifyAll();
 
+    LinkedList<Component> compList = new LinkedList<>();
+    compList.add(Destination);
+    currentComponent.acceptMessage(new Message("right", "findpath", compList));
+    waiting = true;
     while (this.Destination != this.currentComponent)
     {
-      LinkedList<Component> compList = new LinkedList<>();
-      compList.add(Destination);
-      currentComponent.acceptMessage(new Message("right", "findpath", compList));
+      synchronized (this)
+      {
+        if (waiting)
+        {
+          try
+          {
+            wait();
+          } catch (InterruptedException e)
+          {
+            System.out.println("Interrupted");
+          }
+        }
+      }
       //notifyAll();
       //System.out.println("sent message");
-      break;
-      //move();
+
+      move();
     }
 
     System.out.println("Train " + trainID + " Arrived at " + this.currentComponent.getComponentName());

@@ -84,7 +84,7 @@ public class Station extends Thread implements Component
       System.out.println("Not null");
       //Do something
     }
-    if(dir.equalsIgnoreCase("right") && rightTrack != null)
+    else if(dir.equalsIgnoreCase("right") && rightTrack != null)
     {
       rightTrack.acceptMessage(m);
       return true;
@@ -176,6 +176,10 @@ public class Station extends Thread implements Component
 
             }
             message = new Message("0", "0", new LinkedList<>());
+          }
+          else if(action.equalsIgnoreCase("returnpath"))
+          {
+
           }
         }
       }

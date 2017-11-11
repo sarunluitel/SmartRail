@@ -79,7 +79,22 @@ public class Track extends Thread implements Component
   @Override
   public synchronized boolean returnPath(Message m)
   {
-    return false;
+    String dir = m.getDirection();
+    LinkedList<Component> pathList = m.getTarget();
+    if(!pathList.isEmpty())
+    {
+      pathList.add(this);
+    }
+
+    if(dir.equalsIgnoreCase("left"))
+    {
+      left.acceptMessage(m);
+    }
+    else
+    {
+      right.acceptMessage(m);
+    }
+    return true;
   }
 
   @Override
@@ -105,6 +120,12 @@ public class Track extends Thread implements Component
           if (action.equalsIgnoreCase("findpath"))
           {
             findPath(target.get(0), direction);
+            message = null;
+            notifyAll();
+          }
+          else if (action.equalsIgnoreCase("returnpath"))
+          {
+            returnPath(message);
             message = null;
             notifyAll();
           }
