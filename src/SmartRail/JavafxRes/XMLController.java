@@ -14,12 +14,13 @@ import java.util.ArrayList;
 
 public class XMLController extends AnimationTimer
 {
-  private final int DISTANCE = 60;
+  private final int DISTANCE = 88;
   private int frameCounter = 0;
   @FXML
   private Canvas canvas;
   private GraphicsContext gc;
   private final Image trackImage = new Image(getClass().getResourceAsStream("GUI_resources/track.png"));
+  private final Image trainImage = new Image(getClass().getResourceAsStream("GUI_resources/train.png"));
 
   @FXML
   void initialize()
@@ -40,14 +41,16 @@ public class XMLController extends AnimationTimer
         if (temp.get(j) instanceof Station)
         {
           gc.fillOval(DISTANCE * (j + 1), DISTANCE * (i + 2), 50, 50);
+          if (j == 0)
+            gc.drawImage(trainImage, DISTANCE * (j + 1), DISTANCE * (i + 2) - 5);
         }
 
         if (temp.get(j) instanceof Track)
         {
 
-          gc.fillRect(DISTANCE * (j + 1), DISTANCE * (i + 2), 50, 15);
-        }
+          gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 2));
 
+        }
         if (temp.get(j) instanceof Light)
         {
           gc.fillRect(DISTANCE * (j + 1), DISTANCE * (i + 2), 50, 15);
@@ -55,9 +58,6 @@ public class XMLController extends AnimationTimer
 
       }
     }
-
-    gc.drawImage(trackImage, 0, 0);
-   // gc.drawImage(trackView.getImage(), 0, 0);
     this.start();
 
 
@@ -65,29 +65,15 @@ public class XMLController extends AnimationTimer
 
   private ArrayList<Train> trainList = TrainView.getInstance().getList();
 
-
-  private double past3FrameX = 0;
-  private double past3FrameY = 0;
-  private TrackView trackView;
-
   @Override
   public void handle(long now)
   {
     frameCounter++;
-
-    // if (frameCounter == 60)
     {
       for (Train t :
           trainList)
       {
-
-        past3FrameX = (t.getXPos()) * DISTANCE + frameCounter;
-        past3FrameY = (t.getYPos() + 1.5) * DISTANCE;
-
-        if (frameCounter % 5 == 0)
-        {
-          gc.clearRect(past3FrameX, past3FrameY, 30, 30);
-        }
+        gc.drawImage(trainImage, DISTANCE * (t.getXPos() + 1) + frameCounter, DISTANCE * (t.getYPos() + 2) - 5);
 
       }
 

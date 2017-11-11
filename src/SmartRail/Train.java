@@ -22,12 +22,13 @@ public class Train extends Thread
 
   Train(Station Destination, Station spawnStation)
   {
-    totalTrains++;
+
     this.trainID = totalTrains;
     this.Destination = Destination;// this should be a pointer to a station
     this.spawnStation = spawnStation;
     this.currentComponent = spawnStation;
     this.yPos = trainID;
+    totalTrains++;
 
   }
 
