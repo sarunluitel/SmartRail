@@ -51,10 +51,10 @@ public class XMLController extends AnimationTimer
           if (j == 0)
           {
             // element 0 is the canvas so increment of one.
-            allComponentsGUI.add(i+1, new ImageView(trainImage));
-            allComponentsGUI.get(i+1).setX(DISTANCE * (j + 1));
-            allComponentsGUI.get(i+1).setY(DISTANCE * (i + 2) - 5);
-            allComponentsGUI.get(i+1).setId("train "+ j+1);
+            allComponentsGUI.add(i + 1, new ImageView(trainImage));
+            allComponentsGUI.get(i + 1).setX(DISTANCE * (j + 1));
+            allComponentsGUI.get(i + 1).setY(DISTANCE * (i + 2) - 5);
+            allComponentsGUI.get(i + 1).setId("train " + j + 1);
           }
         }
 
@@ -72,11 +72,9 @@ public class XMLController extends AnimationTimer
       }
     }
     gamePane.getChildren().setAll(allComponentsGUI);
-    gamePane.getChildren().set(0,canvas);
+    gamePane.getChildren().set(0, canvas);
 
     this.start();
-
-
   }
 
   private ArrayList<Train> trainList = TrainView.getInstance().getList();
@@ -85,17 +83,10 @@ public class XMLController extends AnimationTimer
   public void handle(long now)
   {
     frameCounter++;
+    for (int i = 1; i < 7; i++)
     {
-      for (int i = 1; i < 4; i++)
-      {
 
-
-        allComponentsGUI.get(i).setX(frameCounter);
-
-
-      }
-      //trainNUmTrack=0;
-
+      allComponentsGUI.get(i).setX(frameCounter / 2);
     }
   }
 }
