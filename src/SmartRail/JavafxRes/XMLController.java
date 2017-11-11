@@ -23,6 +23,7 @@ public class XMLController extends AnimationTimer
   private GraphicsContext gc;
   private final Image trackImage = new Image(getClass().getResourceAsStream("GUI_resources/track.png"));
   private final Image trainImage = new Image(getClass().getResourceAsStream("GUI_resources/train.png"));
+  private final Image stationImage = new Image(getClass().getResourceAsStream("GUI_resources/station.png"));
 
   private ArrayList<ImageView> allComponentsGUI = new ArrayList<>();
 
@@ -47,7 +48,7 @@ public class XMLController extends AnimationTimer
 
         if (temp.get(j) instanceof Station)
         {
-          gc.fillOval(DISTANCE * (j + 1), DISTANCE * (i + 2), 50, 50);
+          gc.drawImage(stationImage,DISTANCE * (j+1), DISTANCE * (i + 2));
           if (j == 0)
           {
             // element 0 is the canvas so increment of one.

@@ -31,11 +31,4 @@ public class TrainView
     return trainList;
   }
 
-public Image getTrainImage()
-{
-
-  Image image = new Image(getClass().getResourceAsStream("GUI_resources/train.png"));
-   return image;
-}
-
 }
