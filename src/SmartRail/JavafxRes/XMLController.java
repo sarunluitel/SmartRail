@@ -8,6 +8,7 @@ import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ public class XMLController extends AnimationTimer
   @FXML
   private Canvas canvas;
   private GraphicsContext gc;
+  private final Image trackImage = new Image(getClass().getResourceAsStream("GUI_resources/track.png"));
 
   @FXML
   void initialize()
@@ -53,6 +55,9 @@ public class XMLController extends AnimationTimer
 
       }
     }
+
+    gc.drawImage(trackImage, 0, 0);
+   // gc.drawImage(trackView.getImage(), 0, 0);
     this.start();
 
 
@@ -60,19 +65,29 @@ public class XMLController extends AnimationTimer
 
   private ArrayList<Train> trainList = TrainView.getInstance().getList();
 
+
+  private double past3FrameX = 0;
+  private double past3FrameY = 0;
+  private TrackView trackView;
+
   @Override
   public void handle(long now)
   {
-   // frameCounter++;
+    frameCounter++;
 
-   // if (frameCounter == 60)
+    // if (frameCounter == 60)
     {
       for (Train t :
           trainList)
       {
 
-        gc.fillRect((t.getXPos()) * DISTANCE, (t.getYPos() + 1.5) * DISTANCE, 30, 30);
+        past3FrameX = (t.getXPos()) * DISTANCE + frameCounter;
+        past3FrameY = (t.getYPos() + 1.5) * DISTANCE;
 
+        if (frameCounter % 5 == 0)
+        {
+          gc.clearRect(past3FrameX, past3FrameY, 30, 30);
+        }
 
       }
 

@@ -1,6 +1,7 @@
 package SmartRail.JavafxRes;
 
 import SmartRail.Train;
+import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 
@@ -29,5 +30,12 @@ public class TrainView
   {
     return trainList;
   }
+
+public Image getTrainImage()
+{
+
+  Image image = new Image(getClass().getResourceAsStream("GUI_resources/train.png"));
+   return image;
+}
 
 }
