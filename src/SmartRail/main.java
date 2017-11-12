@@ -41,9 +41,9 @@ public class main
 
   static void instantiate(Map map)
   {
+    //int sizeOfLayer
 
-    Train testTrain = new Train((Station)map.getMap(0).get(2),(Station)map.getMap(0).get(0));
-    setAllAlive(map.getMap(0));
+    Train testTrain = new Train((Station)map.getMap(0).get(3),(Station)map.getMap(0).get(0));
     testTrain.start();
 
 
@@ -74,15 +74,6 @@ public class main
 
   }
 
-  private static  void setAllAlive(ArrayList<Component> layerX)
-  {
-    for (Component X :
-        layerX)
-    {
-      //X.start();
-    }
-
-  }
 }
 
 

@@ -67,7 +67,7 @@ public class Switch extends Thread implements Component
   @Override
   public void acceptMessage(Message message)
   {
-
+    System.out.println("accepted by switch");
   }
 
   @Override
