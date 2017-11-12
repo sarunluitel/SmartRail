@@ -41,7 +41,7 @@ public class Station extends Thread implements Component
   // code to  determine station
   public Component nextComponent(String Direction)
   {
-    //if(Direction.equalsIgnoreCase("right")) return rightTrack;
+    if(Direction.equalsIgnoreCase("right")) return rightTrack;
     return leftTrack;
 
   }
@@ -139,25 +139,15 @@ public class Station extends Thread implements Component
               {
                 newDir = "right";
               }
-              Message wrongStation = new Message(newDir, "returnpath", pathList);
-              returnPath(wrongStation);
+              pathList.add(this);
+              Message correctStation = new Message(newDir, "returnpath", pathList);
+              returnPath(correctStation);
               System.out.println("Sending return path");
             }
             else if (findPath(target.get(0), direction))
             {
               System.out.println("Sending messsage to track: " + rightTrack.getComponentName());
               //System.out.println(stationName + " found.");
-              if(direction.equalsIgnoreCase("right"))
-              {
-
-              }
-              else
-              {
-                LinkedList<Component> pathList = new LinkedList<>();
-                pathList.add(this);
-                Message path = new Message("right", "returnpath", pathList);
-              }
-
             }
             else
             {
@@ -179,7 +169,12 @@ public class Station extends Thread implements Component
           }
           else if(action.equalsIgnoreCase("returnpath"))
           {
-
+            if(trainInStation != null)
+            {
+              System.out.println("Train on station");
+              trainInStation.acceptMessage(message);
+              message = new Message("0", "0", new LinkedList<>());;
+            }
           }
         }
       }

@@ -94,6 +94,7 @@ public class Track extends Thread implements Component
     {
       right.acceptMessage(m);
     }
+
     return true;
   }
 
