@@ -39,6 +39,6 @@ public class JavaFX extends Application
   @Override
   public void start(Stage primaryStage) throws Exception
   {
-  //  welcomeScreen(primaryStage);
+    welcomeScreen(primaryStage);
   }
 }

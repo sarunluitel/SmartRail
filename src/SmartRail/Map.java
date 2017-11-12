@@ -17,7 +17,7 @@ public class Map
       componentsInLine++;
       switch (c)
       {
-        case 'R':
+        case 'S':
           layers.get(layerCount).add(componentsInLine, new Station());
           break;
 
@@ -25,12 +25,12 @@ public class Map
           layers.get(layerCount).add(componentsInLine, new Track());
           break;
 
-        case 'O':
-          layers.get(layerCount).add(componentsInLine, new Light());
+        case 'R':
+          layers.get(layerCount).add(componentsInLine, new Switch(false));
           break;
 
         case 'L':
-          layers.get(layerCount).add(componentsInLine, new Station());
+          layers.get(layerCount).add(componentsInLine, new Switch(true));
           break;
       }
     }
@@ -44,24 +44,56 @@ public class Map
 
     Station rightStation = (Station) temp.get(compInLayer);
     rightStation.setLeftTrack((Track) temp.get(compInLayer - 1));
+    rightStation.start();
 
     //Assign Last component to left station
     Station leftStation = (Station) temp.get(0);
     leftStation.setRightTrack((Track) temp.get(1));
+    leftStation.start();
 
     for (int i = 1; i < compInLayer; i++)
     {
-
       if (temp.get(i) instanceof Track)
       {
         ((Track) temp.get(i)).setNeighbors((Component) temp.get(i + 1), "right");
         ((Track) temp.get(i)).setNeighbors((Component) temp.get(i - 1), "left");
+        ((Track) temp.get(i)).start();
       }
 
-      if (temp.get(i) instanceof Light)
-      {
-        ((Light) temp.get(i)).setLeftComponent((Component) temp.get(i - 1));
-        ((Light) temp.get(i)).setRightComponent((Component) temp.get(i + 1));
+      if (temp.get(i) instanceof Switch)
+      {// a switch unfolds to be a 0=Sw=0; surrounded by lights.
+
+       /* ((Switch) temp.get(i)).setLeft((Track) temp.get(i - 1));
+        ((Switch) temp.get(i)).setRightTrack((Track) temp.get(i + 1));*/
+       Light left= new Light();
+       Light right= new Light();
+       Track leftTrack = new Track();
+       Track rightTrack= new Track();
+
+       left.setLeftTrack((Track) temp.get(i - 1));
+       left.setRightTrack(leftTrack);
+
+       leftTrack.setNeighbors(left,"left");
+       leftTrack.setNeighbors((Switch) temp.get(i),"right");
+
+
+        right.setLeftTrack(rightTrack);
+        right.setRightTrack((Track) temp.get(i + 1));
+
+        rightTrack.setNeighbors((Switch) temp.get(i),"left");
+        rightTrack.setNeighbors(right,"right");
+
+
+        ((Switch) temp.get(i)).setLeft(leftTrack);// set O=Sw
+
+        ((Switch) temp.get(i)).setRight(rightTrack);
+
+        ((Switch) temp.get(i)).start();
+        right.start();
+        left.start();
+        leftTrack.start();
+        rightTrack.start();
+
       }
 
     }

@@ -1,28 +1,26 @@
 package SmartRail;
 
-import java.util.LinkedList;
-
 public class Light extends Thread implements Component
 {
   private String leftLight;
   private String rightLight;
 
   // next component will be null if light is red.
-  private Component rightComponent;
+  private Track rightTrack;
   // Left component has pointer to where the light is.
-  private Component leftComponent;
+  private Track leftTrack;
   private Message message;
 
   //Setters for data types.
 
-  public void setLeftComponent(Component leftComponent)
+  public void setLeftTrack(Track leftTrack)
   {
-    this.leftComponent = leftComponent;
+    this.leftTrack = leftTrack;
   }
 
-  public void setRightComponent(Component rightComponent)
+  public void setRightTrack(Track rightTrack)
   {
-    this.rightComponent = rightComponent;
+    this.rightTrack = rightTrack;
   }
 
   public void setLeftLight(String leftLight)
@@ -71,17 +69,17 @@ public class Light extends Thread implements Component
     if (direction.equals("right") && leftLight.equals("green"))
     {
       // green light facing left allows trains to move right
-      return rightComponent;
+      return rightTrack;
     }
     if (direction.equals("left") && rightLight.equals("green"))
     {
-      return leftComponent;
+      return leftTrack;
     }
     return null;
   }
 
   public String getComponentName()
   {
-    return "light at track : " + this.leftComponent.getComponentName();
+    return "light at track : " + this.leftTrack.getComponentName();
   }
 }

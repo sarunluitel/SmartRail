@@ -10,7 +10,7 @@ import java.util.LinkedList;
 // Being edited by sarun.
 public class Train extends Thread
 {
-  private static int totalTrains = -1;
+  private static int totalTrains = 0;
 
   private int trainID;
   private Station Destination;// change string to Station when we define station

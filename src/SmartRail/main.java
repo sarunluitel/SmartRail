@@ -4,6 +4,8 @@ import SmartRail.JavafxRes.MapView;
 import SmartRail.JavafxRes.TrainView;
 import SmartRail.JavafxRes.XMLController;
 
+import java.util.ArrayList;
+
 /************************************
  @author Sarun Luitel
  ************************************/
@@ -39,7 +41,13 @@ public class main
 
   static void instantiate(Map map)
   {
-    trainView = TrainView.getInstance();
+
+    Train testTrain = new Train((Station)map.getMap(0).get(2),(Station)map.getMap(0).get(0));
+    setAllAlive(map.getMap(0));
+    testTrain.start();
+
+
+    /*trainView = TrainView.getInstance();
     Track t1 = new Track();
     Station s1 = new Station();
     Station s2 = new Station();
@@ -48,7 +56,7 @@ public class main
     t1.setNeighbors(s1,"left");
     t1.setNeighbors(s2,"right");
 
-    Train testTrain = new Train(s2,s1);
+
     //System.out.println("s1: " + s1.getComponentName() + "s2: " + s2.getComponentName() + "track1: " + t1.getComponentName());
     //Train t1 = new Train((Station) map.getMap(0).get(0), (Station) map.getMap(0).get(map.getcompInLayer(0) - 1));
     Train t2 = new Train((Station) map.getMap(1).get(0), (Station) map.getMap(1).get(map.getcompInLayer(1) - 1));
@@ -62,7 +70,17 @@ public class main
     testTrain.start();
     s1.start();
     t1.start();
-    s2.start();
+    s2.start();*/
+
+  }
+
+  private static  void setAllAlive(ArrayList<Component> layerX)
+  {
+    for (Component X :
+        layerX)
+    {
+      //X.start();
+    }
 
   }
 }

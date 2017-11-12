@@ -1,6 +1,5 @@
 package SmartRail;
 
-import javax.xml.soap.SOAPPart;
 import java.util.LinkedList;
 
 public class Station extends Thread implements Component

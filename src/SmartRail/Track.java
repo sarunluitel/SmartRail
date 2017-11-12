@@ -14,9 +14,17 @@ public class Track extends Thread implements Component
   private Message message = null;
 
   public Track()
+{
+  totalTracks++;
+  this.name = "Track " + totalTracks;
+}
+
+  public Track(Component left, Component right)
   {
     totalTracks++;
     this.name = "Track " + totalTracks;
+    this.left=left;
+    this.right=right;
   }
 
   //Getter methods

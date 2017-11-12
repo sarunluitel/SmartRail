@@ -1,18 +1,15 @@
 // Follows similar comment syntax to java
 // This file gives configuration to build the map
-// (=) indicates a track; (R) Indicates a right Station;
-// (L) indicates a Left Station; (O) indicates a light
-// Switch yet to be implemented
-// Format (R==O==L)
+// (=) indicates a track; (R) Indicates a right Forking Switch;
+// (L) indicates a Left Forking Switch; (O) indicates a light
+// (S)is a Station. a layer has to start and end in a Station.
+// Format (S==R==S)
+//        (S===L=S)
 // DO NOT LEAVE  BLANK LINES.
 //
 //
-L====R
-L====R
-L====R
-L====R
-L====R
-L====R
+S=S
+
 
 
 //Train spawn will be from GUI input
