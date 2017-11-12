@@ -28,6 +28,7 @@ public class Train extends Thread
     this.Destination = Destination;// this should be a pointer to a station
     this.spawnStation = spawnStation;
     this.currentComponent = spawnStation;
+    currentComponent.getTrainId(this);
     this.yPos = trainID;
     totalTrains++;
 
@@ -92,13 +93,13 @@ public class Train extends Thread
         }
 
 
-        while (this.currentComponent.nextComponent("left") == null)
+        while (this.currentComponent.nextComponent("right") == null)
         {
           System.out.println("train " + trainID + " Waiting on red light");
           Thread.sleep(1000);
         }
 
-        this.setCurrentComponent(this.currentComponent.nextComponent("left"));
+        this.setCurrentComponent(this.currentComponent.nextComponent("right"));
 
 
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());
