@@ -29,7 +29,7 @@ public class Train extends Thread
     this.spawnStation = spawnStation;
     this.currentComponent = spawnStation;
     currentComponent.getTrainId(this);
-    this.yPos = trainID;
+    this.yPos = trainID;// this needs to come from the GUI Click
     totalTrains++;
 
   }
@@ -85,10 +85,12 @@ public class Train extends Thread
       {
         System.out.println("!!!!!chu chu chu chu!!!!!!!! train!!!" + trainID + "\n");
 
+
         if (this.currentComponent instanceof Station)
         {
           System.out.println("All Aboard train " + trainID + " leaving from " + this.spawnStation.getComponentName());
           xPos++;
+          System.out.println("Current XPOS "+xPos);
 
         }
 
@@ -104,6 +106,7 @@ public class Train extends Thread
 
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());
         xPos++;
+        System.out.println("Current XPOS "+xPos);
         System.out.println();
 
         try

@@ -88,7 +88,8 @@ public class XMLController extends AnimationTimer
     frameCounter++;
     for (int i = 1; i < 3; i++)
     {
-      trainNCanvas.get(i).setX(frameCounter);
+      trainNCanvas.get(1).setX(frameCounter/2
+      );
     }
 
   }
