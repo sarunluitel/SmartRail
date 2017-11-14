@@ -88,20 +88,18 @@ public class Track extends Thread implements Component
   public synchronized boolean returnPath(Message m)
   {
     String dir = m.getDirection();
-    LinkedList<Component> pathList = m.getTarget();
-    if(!pathList.isEmpty())
+    //LinkedList<Component> pathList = m.getTarget();
+    if(!m.getTarget().isEmpty())
     {
-      pathList.add(this);
+      m.getTarget().add(this);
     }
-
+    m.setSender(this);
     if(dir.equalsIgnoreCase("left"))
     {
-      m.setSender(this);
       left.acceptMessage(m);
     }
     else
     {
-      m.setSender(this);
       right.acceptMessage(m);
     }
 
