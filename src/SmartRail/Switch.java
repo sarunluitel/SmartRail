@@ -130,7 +130,21 @@ public class Switch extends Thread implements Component
           if (action.equalsIgnoreCase("findpath"))
           {
             returnComponent = messages.getFirst().getSender();
-            findPath(target.get(0), direction);
+            if(!findPath(target.get(0), direction))
+            {
+
+              String newDir;
+              if(direction.equalsIgnoreCase("left"))
+              {
+                newDir = "right";
+              }
+              else
+              {
+                newDir = "left";
+              }
+              returnComponent.acceptMessage(new Message(newDir, "returnpath", new LinkedList<>(), this));
+              messages.remove();
+            }
             System.out.println("running");
             notifyAll();
           }
@@ -178,6 +192,7 @@ public class Switch extends Thread implements Component
         else
         {
           messages.remove(1);
+          returnPath = false;
         }
       }
       //multiple options
@@ -198,6 +213,7 @@ public class Switch extends Thread implements Component
           else
           {
             messages.remove(1);
+            returnPath = false;
           }
           System.out.println("up");
         }
@@ -216,6 +232,7 @@ public class Switch extends Thread implements Component
           else
           {
             messages.remove(1);
+            returnPath = false;
           }
         }
         if(down != null)

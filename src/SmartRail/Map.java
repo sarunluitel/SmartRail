@@ -111,13 +111,13 @@ public class Map
   private void addNeighbourTop()
   {
     int currentRowPos = 0;
-    for (Component s : (ArrayList<Component>) layers.get(layerCount - firstRowToHaveSwitch))
+    for (Component s : (ArrayList<Component>) layers.get(layerCount -1))
     {
       if (s instanceof Switch)
       {
         Track tempTrack = new Track();
-        switchesInCurrentRow.get(currentRowPos).setUpTrack(tempTrack);
-        ((Switch) s).setDown(tempTrack);
+        switchesInCurrentRow.get(currentRowPos).setDown(tempTrack);
+        ((Switch) s).setUpTrack(tempTrack);
 
         if (((Switch) s).getIsLeft())
         {
