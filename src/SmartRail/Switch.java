@@ -16,8 +16,9 @@ public class Switch extends Thread implements Component
   private LinkedList<Message> messages = new LinkedList<>();
   private Component returnComponent = null;
 
-  Switch(boolean isLeft){
-    this.isLeft=isLeft;
+  Switch(boolean isLeft)
+  {
+    this.isLeft = isLeft;
   }
 
   public Track getUpTrack()
@@ -71,17 +72,16 @@ public class Switch extends Thread implements Component
   {
     System.out.println("Switch has message");
 
-    if(message.getAction().equalsIgnoreCase("returnpath"))
+    if (message.getAction().equalsIgnoreCase("returnpath"))
     {
       System.out.println("returned");
       messages.add(1, message);
       notifyAll();
-    }
-    else
+    } else
     {
       messages.add(message);
     }
-    if(messages.size() == 1)
+    if (messages.size() == 1)
     {
       //System.out.println("Size 1");
       notifyAll();
@@ -90,23 +90,23 @@ public class Switch extends Thread implements Component
   }
 
 
-
   @Override
   public void run()
   {
-    while(true)
+    while (true)
     {
       synchronized (this)
       {
         if (messages.isEmpty() || waitingForResponse)
         {
-          try {
+          try
+          {
             wait();
-          } catch (InterruptedException ex) {
+          } catch (InterruptedException ex)
+          {
             //Print
           }
-        }
-        else
+        } else
         {
           String action = messages.getFirst().getAction();
           String direction = messages.getFirst().getDirection();
@@ -117,14 +117,12 @@ public class Switch extends Thread implements Component
             findPath(target.get(0), direction);
             System.out.println("running");
             notifyAll();
-          }
-          else if (action.equalsIgnoreCase("returnpath"))
+          } else if (action.equalsIgnoreCase("returnpath"))
           {
             returnPath(messages.getFirst());
             messages.remove();
             notifyAll();
-          }
-          else
+          } else
           {
             System.out.println(action);
             messages.remove();
@@ -143,21 +141,21 @@ public class Switch extends Thread implements Component
     LinkedList<Component> compList = new LinkedList<>();
     compList.add(c);
     //For Direction right
-    if(dir.equalsIgnoreCase("right"))
+    if (dir.equalsIgnoreCase("right"))
     {
       //If dir = right and isLeft, only one track option
-      if(isLeft)
+      if (isLeft)
       {
         right.acceptMessage(new Message(dir, "findpath", compList, this));
       }
       //multiple options
       else
       {
-        if(upTrack != null)
+        if (upTrack != null)
         {
           System.out.println("not null");
         }
-        if(right != null)
+        if (right != null)
         {
           right.acceptMessage(new Message(dir, "findpath", compList, this));
           try
@@ -167,12 +165,12 @@ public class Switch extends Thread implements Component
           {
 
           }
-          if(!messages.get(1).getTarget().isEmpty())
+          if (!messages.get(1).getTarget().isEmpty())
           {
             return true;
           }
         }
-        if(down != null)
+        if (down != null)
         {
           System.out.println("not null down");
         }
@@ -181,9 +179,9 @@ public class Switch extends Thread implements Component
     //For Direction left
     else
     {
-      if(isLeft)
+      if (isLeft)
       {
-        if(left != null)
+        if (left != null)
         {
           try
           {
@@ -193,10 +191,9 @@ public class Switch extends Thread implements Component
 
           }
         }
-      }
-      else
+      } else
       {
-        if(right != null)
+        if (right != null)
         {
           try
           {
@@ -208,7 +205,6 @@ public class Switch extends Thread implements Component
         }
       }
     }
-
 
 
     System.out.println("Done waiting");
@@ -218,7 +214,7 @@ public class Switch extends Thread implements Component
   @Override
   public synchronized boolean returnPath(Message m)
   {
-    if(!m.getTarget().isEmpty())
+    if (!m.getTarget().isEmpty())
     {
       m.getTarget().add(this);
     }

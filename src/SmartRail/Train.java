@@ -7,7 +7,7 @@ package SmartRail;
 
 import java.util.LinkedList;
 
-// Being edited by sarun.
+
 public class Train extends Thread
 {
   private static int totalTrains = 0;
