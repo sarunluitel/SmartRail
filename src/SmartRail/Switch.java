@@ -13,6 +13,7 @@ public class Switch extends Thread implements Component
   private Track right = null;
   private Track left = null;
   private boolean waitingForResponse = false;
+  private volatile boolean returnPath = false;
   private LinkedList<Message> messages = new LinkedList<>();
   private Component returnComponent = null;
 
@@ -75,6 +76,8 @@ public class Switch extends Thread implements Component
     {
       System.out.println("returned");
       messages.add(1, message);
+      waitingForResponse = false;
+      returnPath = true;
       notifyAll();
     }
     else
@@ -108,9 +111,22 @@ public class Switch extends Thread implements Component
         }
         else
         {
-          String action = messages.getFirst().getAction();
-          String direction = messages.getFirst().getDirection();
-          LinkedList<Component> target = messages.getFirst().getTarget();
+          String action;
+          String direction;
+          LinkedList<Component> target;
+          if (!returnPath)
+          {
+            action = messages.getFirst().getAction();
+            direction = messages.getFirst().getDirection();
+            target = messages.getFirst().getTarget();
+          }
+          else
+          {
+            action = messages.get(1).getAction();
+            direction = messages.get(1).getDirection();
+            target = messages.get(1).getTarget();
+          }
+
           if (action.equalsIgnoreCase("findpath"))
           {
             returnComponent = messages.getFirst().getSender();
@@ -120,9 +136,11 @@ public class Switch extends Thread implements Component
           }
           else if (action.equalsIgnoreCase("returnpath"))
           {
-            returnPath(messages.getFirst());
-            messages.remove();
-            notifyAll();
+
+            returnPath(messages.get(1));
+            //messages.remove();
+
+
           }
           else
           {
@@ -233,7 +251,13 @@ public class Switch extends Thread implements Component
   @Override
   public Component nextComponent(String direction)
   {
-    return null;
+    return right;
+  }
+
+  @Override
+  public void trainLeaving()
+  {
+
   }
 
   @Override

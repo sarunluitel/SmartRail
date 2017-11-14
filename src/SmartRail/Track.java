@@ -12,6 +12,7 @@ public class Track extends Thread implements Component
   private Component left;
   private Component right;
   private Message message = null;
+  private Train trainOnTrack = null;
 
   public Track()
 {
@@ -54,6 +55,7 @@ public class Track extends Thread implements Component
   @Override
   public void getTrainId(Train t)
   {
+    trainOnTrack = t;
     //Set train reference
   }
 
@@ -154,6 +156,12 @@ public class Track extends Thread implements Component
   {
     if (Direction.equalsIgnoreCase("right")) return right;
     return left;
+  }
+
+  @Override
+  public void trainLeaving()
+  {
+    trainOnTrack = null;
   }
 
   public String getComponentName()
