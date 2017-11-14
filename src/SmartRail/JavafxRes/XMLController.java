@@ -48,7 +48,7 @@ public class XMLController extends AnimationTimer
 
         if (temp.get(j) instanceof Station)
         {
-          gc.drawImage(stationImage,(DISTANCE+35) * (j+1), DISTANCE * (i + 1));
+          gc.drawImage(stationImage,DISTANCE * (j+1), DISTANCE * (i + 1));
           if (j == 0)
           {
             // element 0 is the canvas so increment of one.
@@ -88,7 +88,8 @@ public class XMLController extends AnimationTimer
     frameCounter++;
     for (int i = 1; i < 3; i++)
     {
-      trainNCanvas.get(1).setX(frameCounter);
+      trainNCanvas.get(1).setX(frameCounter/2
+      );
     }
 
   }
