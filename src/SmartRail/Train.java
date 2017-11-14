@@ -146,4 +146,6 @@ public class Train extends Thread
   {
     return yPos;
   }
+
+  public int getTrainID(){return this.trainID;}
 }

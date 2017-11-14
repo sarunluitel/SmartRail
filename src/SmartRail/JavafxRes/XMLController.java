@@ -21,8 +21,12 @@ public class XMLController extends AnimationTimer
   private final Image trackImage = new Image(getClass().getResourceAsStream("GUI_resources/track.png"));
   private final Image trainImage = new Image(getClass().getResourceAsStream("GUI_resources/train.png"));
   private final Image stationImage = new Image(getClass().getResourceAsStream("GUI_resources/station.png"));
+  private final Image noLight = new Image(getClass().getResourceAsStream("GUI_resources/noLight.png"));
+  private final Image leftRed = new Image(getClass().getResourceAsStream("GUI_resources/leftRed.png"));
+  private final Image leftGreen = new Image(getClass().getResourceAsStream("GUI_resources/leftGreen.png"));
 
   private ArrayList<ImageView> trainNCanvas = new ArrayList<>();
+  private ArrayList<Train> trainList = TrainView.getInstance().getList();
 
   @FXML
   private Pane gamePane;
@@ -35,7 +39,7 @@ public class XMLController extends AnimationTimer
 
     entireMap = MapView.getInstance().getEntireMap();
 
-    trainNCanvas.add(0, new ImageView());//temp added at 0 later canvas
+    trainNCanvas.add(0, new ImageView());//temp added at 0 to add canvas later
     for (int i = 0; i < entireMap.size(); i++)
     {
       ArrayList temp = entireMap.get(i);
@@ -45,48 +49,67 @@ public class XMLController extends AnimationTimer
 
         if (temp.get(j) instanceof Station)
         {
-          gc.drawImage(stationImage,DISTANCE * (j+1), DISTANCE * (i + 1));
-          if (j == 0)
-          {
-            // element 0 is the canvas so increment of one.
-            trainNCanvas.add(i + 1, new ImageView(trainImage));
-            trainNCanvas.get(i + 1).setX(DISTANCE * (j + 1));
-            trainNCanvas.get(i + 1).setY(DISTANCE * (i+1) - 5);
-            trainNCanvas.get(i + 1).setId("train " + j + 1);
-          }
+          gc.drawImage(stationImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
+
         }
 
         if (temp.get(j) instanceof Track)
         {
-          gc.fillRect(0,0,20,20);
-          gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i+1));
+          gc.fillRect(0, 0, 20, 20);
+          gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
 
         }
         if (temp.get(j) instanceof Switch)
         {
-          gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i+1));
+          gc.drawImage(noLight, DISTANCE * (j + 1), DISTANCE * (i+1));
         }
 
       }
     }
+
+    putTrainsOnMap();
+
+
     canvas.setHeight(720);
     canvas.setWidth(1280);
     gamePane.getChildren().setAll(trainNCanvas);
     gamePane.getChildren().set(0, canvas);
-
     this.start();
+
+
   }
 
-  private ArrayList<Train> trainList = TrainView.getInstance().getList();
+  private void putTrainsOnMap()
+  {
+    int i = 1; // index 0 is reserved for canvas always
+
+    for (Train t : trainList)
+    {
+      // element 0 is the canvas so increment of one.
+      trainNCanvas.add(i, new ImageView(trainImage));
+      trainNCanvas.get(i).setX(DISTANCE);
+      trainNCanvas.get(i).setY(DISTANCE * (i + 1) - 5);
+      trainNCanvas.get(i).setId(t.getTrainID() + "");
+      i++;
+    }
+  }
+
+  private int currentXpos=0;// pos where the train should be.
 
   @Override
   public void handle(long now)
   {
     frameCounter++;
-    for (int i = 1; i < 3; i++)
+
+
+    for (int i = 0; i < trainNCanvas.size() - 1; i++)
     {
-      trainNCanvas.get(1).setX(frameCounter/2
-      );
+
+      currentXpos = trainList.get(i).getXPos() * DISTANCE;
+      if (currentXpos != currentXpos + (frameCounter / 3) % 88)
+      {
+        trainNCanvas.get(i + 1).setX(currentXpos + (frameCounter / 3) % 88);
+      }
     }
 
   }
