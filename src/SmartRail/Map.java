@@ -4,11 +4,8 @@ import java.util.ArrayList;
 
 public class Map
 {
-  private static int layerCount = -1;
+  private  int layerCount = -1;
   private ArrayList<ArrayList> layers = new ArrayList<>();
-  private ArrayList<Switch> switchesInCurrentRow = new ArrayList<>();
-  private int currentSwitchNum = 0;
-  private static int firstRowToHaveSwitch;
 
   void setMap(String config)
   {
@@ -30,14 +27,12 @@ public class Map
 
         case 'R':
           layers.get(layerCount).add(componentsInLine, new Switch(false));
-          switchesInCurrentRow.add(currentSwitchNum, (Switch) layers.get(layerCount).get(componentsInLine));
-          currentSwitchNum++;
+
           break;
 
         case 'L':
           layers.get(layerCount).add(componentsInLine, new Switch(true));
-          switchesInCurrentRow.add(currentSwitchNum, (Switch) layers.get(layerCount).get(componentsInLine));
-          currentSwitchNum++;
+
           break;
       }
     }
@@ -70,7 +65,6 @@ public class Map
 
       if (temp.get(i) instanceof Switch)
       {// a switch unfolds to be a 0=Sw=0; surrounded by lights.
-        if(firstRowToHaveSwitch==0)firstRowToHaveSwitch=layerCount;
 
         Light leftLight = new Light();
         Light rightLight = new Light();
@@ -110,32 +104,40 @@ public class Map
 
   private void addNeighbourTop()
   {
-    int currentRowPos = 0;
-    for (Component s : (ArrayList<Component>) layers.get(layerCount-1))
+    Track tempTrack = new Track();
+    for (Component senior : (ArrayList<Component>) layers.get(layerCount-1))
     {
-      if (s instanceof Switch)
+      if(senior instanceof Switch)
       {
-        Track tempTrack = new Track();
-        switchesInCurrentRow.get(currentRowPos).setUpTrack(tempTrack);
-        ((Switch) s).setDown(tempTrack);
+        for (Component junior:(ArrayList<Component>) layers.get(layerCount))
 
-        if (((Switch) s).getIsLeft())
         {
-          tempTrack.setNeighbors(s, "right");
-          tempTrack.setNeighbors(switchesInCurrentRow.get(currentRowPos), "left");
+          if(junior instanceof Switch)
+          {
+            ((Switch) junior).setUpTrack(tempTrack);
+            ((Switch) senior).setDown(tempTrack);
+            if (((Switch) junior).getIsLeft())
+            {
 
-        } else
-        {
-          tempTrack.setNeighbors(s, "left");
-          tempTrack.setNeighbors(switchesInCurrentRow.get(currentRowPos), "right");
+              tempTrack.setNeighbors(junior, "right");
+              tempTrack.setNeighbors(senior, "left");
+
+            } else
+            {
+              tempTrack.setNeighbors(junior, "left");
+              tempTrack.setNeighbors(senior, "right");
+
+            }
+            tempTrack.start();
+
+          }
 
         }
-        tempTrack.start();
-        currentRowPos++;
 
       }
 
     }
+
 
   }
 
