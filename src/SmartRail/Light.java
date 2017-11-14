@@ -4,14 +4,15 @@ import java.util.LinkedList;
 
 public class Light extends Thread implements Component
 {
-  private String leftLight;
-  private String rightLight;
+  private String leftLight = "green";
+  private String rightLight = "green";
 
   // next component will be null if light is red.
   private Track rightTrack;
   // Left component has pointer to where the light is.
   private Track leftTrack;
   private Message message;
+
 
   //Setters for data types.
 
@@ -37,6 +38,12 @@ public class Light extends Thread implements Component
 
   @Override
   public void getTrainId(Train t)
+  {
+
+  }
+
+  @Override
+  public void trainLeaving()
   {
 
   }

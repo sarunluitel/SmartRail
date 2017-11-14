@@ -37,6 +37,12 @@ public class Station extends Thread implements Component
     trainInStation = t;
   }
 
+  @Override
+  public void trainLeaving()
+  {
+    trainInStation = null;
+  }
+
   // code to  determine station
   public Component nextComponent(String Direction)
   {
