@@ -10,7 +10,7 @@ public class Station extends Thread implements Component
   private Track leftTrack;
   private String stationName; //expects Names in format St.15
   private Train trainInStation = null;
-  private volatile Message message = new Message("0", "0", new LinkedList<>());
+  private volatile Message message = null;
 
 
   public Station()
@@ -61,13 +61,13 @@ public class Station extends Thread implements Component
     if(dir.equalsIgnoreCase("right") && rightTrack != null)
     {
       compList.add(c);
-      rightTrack.acceptMessage(new Message(dir, "findpath", compList));
+      rightTrack.acceptMessage(new Message(dir, "findpath", compList, this));
       return true;
     }
     else if(dir.equalsIgnoreCase("left") && leftTrack != null)
     {
       compList.add(c);
-      leftTrack.acceptMessage(new Message(dir, "findpath", compList));
+      leftTrack.acceptMessage(new Message(dir, "findpath", compList, this));
       return true;
     }
     return false;
@@ -105,7 +105,7 @@ public class Station extends Thread implements Component
     {
       synchronized (this)
       {
-        if (message.getDirection().equalsIgnoreCase("0")) {
+        if (message == null) {
 
 
         try
@@ -139,7 +139,7 @@ public class Station extends Thread implements Component
                 newDir = "right";
               }
               pathList.add(this);
-              Message correctStation = new Message(newDir, "returnpath", pathList);
+              Message correctStation = new Message(newDir, "returnpath", pathList, this);
               returnPath(correctStation);
               System.out.println("Sending return path");
             }
@@ -159,12 +159,12 @@ public class Station extends Thread implements Component
               {
                 newDir = "right";
               }
-              Message wrongStation = new Message(newDir, "returnpath", emptyList);
+              Message wrongStation = new Message(newDir, "returnpath", emptyList, this);
               returnPath(wrongStation);
               System.out.println("Sending return path");
 
             }
-            message = new Message("0", "0", new LinkedList<>());
+            message = null;
           }
           else if(action.equalsIgnoreCase("returnpath"))
           {
@@ -172,7 +172,7 @@ public class Station extends Thread implements Component
             {
               System.out.println("Train on station");
               trainInStation.acceptMessage(message);
-              message = new Message("0", "0", new LinkedList<>());;
+              message = null;;
             }
           }
         }
