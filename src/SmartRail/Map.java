@@ -105,19 +105,19 @@ public class Map
         rightTrack.start();
       }
     }
-    if (layerCount > 0) addNeighbourTop();// assign top and bottom layers for a switch
+    if (layerCount != 0) addNeighbourTop();// assign top and bottom layers for a switch
   }
 
   private void addNeighbourTop()
   {
     int currentRowPos = 0;
-    for (Component s : (ArrayList<Component>) layers.get(layerCount -1))
+    for (Component s : (ArrayList<Component>) layers.get(layerCount-1))
     {
       if (s instanceof Switch)
       {
         Track tempTrack = new Track();
-        switchesInCurrentRow.get(currentRowPos).setDown(tempTrack);
-        ((Switch) s).setUpTrack(tempTrack);
+        switchesInCurrentRow.get(currentRowPos).setUpTrack(tempTrack);
+        ((Switch) s).setDown(tempTrack);
 
         if (((Switch) s).getIsLeft())
         {
