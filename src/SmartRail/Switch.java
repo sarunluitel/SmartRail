@@ -1,17 +1,20 @@
 package SmartRail;
 
+import sun.awt.image.ImageWatched;
+
 import java.util.LinkedList;
 
 public class Switch extends Thread implements Component
 {
 
   private final boolean isLeft;
-  private Track upTrack;
-  private Track down;
-  private Track right;
-  private Track left;
+  private Track upTrack = null;
+  private Track down = null;
+  private Track right = null;
+  private Track left = null;
   private boolean waitingForResponse = false;
   private LinkedList<Message> messages = new LinkedList<>();
+  private Component returnComponent = null;
 
   Switch(boolean isLeft){
     this.isLeft=isLeft;
@@ -57,8 +60,34 @@ public class Switch extends Thread implements Component
     this.left = left;
   }
 
+  public boolean getIsLeft()
+  {
+    return isLeft;
+  }
 
 
+  @Override
+  public synchronized void acceptMessage(Message message)
+  {
+    System.out.println("Switch has message");
+
+    if(message.getAction().equalsIgnoreCase("returnpath"))
+    {
+      System.out.println("returned");
+      messages.add(1, message);
+      notifyAll();
+    }
+    else
+    {
+      messages.add(message);
+    }
+    if(messages.size() == 1)
+    {
+      //System.out.println("Size 1");
+      notifyAll();
+    }
+
+  }
 
 
 
@@ -69,7 +98,7 @@ public class Switch extends Thread implements Component
     {
       synchronized (this)
       {
-        if (messages.isEmpty())
+        if (messages.isEmpty() || waitingForResponse)
         {
           try {
             wait();
@@ -84,8 +113,9 @@ public class Switch extends Thread implements Component
           LinkedList<Component> target = messages.getFirst().getTarget();
           if (action.equalsIgnoreCase("findpath"))
           {
+            returnComponent = messages.getFirst().getSender();
             findPath(target.get(0), direction);
-            messages.remove();
+            System.out.println("running");
             notifyAll();
           }
           else if (action.equalsIgnoreCase("returnpath"))
@@ -106,22 +136,74 @@ public class Switch extends Thread implements Component
   }
 
 
-
   @Override
-  public synchronized void acceptMessage(Message message)
+  public synchronized boolean findPath(Component c, String dir)
   {
-    System.out.println("Switch has message");
-    messages.add(message);
-    if(messages.size() == 1)
+    waitingForResponse = true;
+    LinkedList<Component> compList = new LinkedList<>();
+    compList.add(c);
+    //For Direction right
+    if(dir.equalsIgnoreCase("right"))
     {
-      notifyAll();
+      //If dir = right and isLeft, only one track option
+      if(isLeft)
+      {
+        right.acceptMessage(new Message(dir, "findpath", compList, this));
+      }
+      //multiple options
+      else
+      {
+        if(right != null)
+        {
+          right.acceptMessage(new Message(dir, "findpath", compList, this));
+          try
+          {
+            wait();
+          } catch (InterruptedException ex)
+          {
+
+          }
+          if(!messages.get(1).getTarget().isEmpty())
+          {
+            return true;
+          }
+        }
+      }
+    }
+    //For Direction left
+    else
+    {
+      if(isLeft)
+      {
+        if(left != null)
+        {
+          try
+          {
+            wait();
+          } catch (InterruptedException ex)
+          {
+
+          }
+        }
+      }
+      else
+      {
+        if(right != null)
+        {
+          try
+          {
+            wait();
+          } catch (InterruptedException ex)
+          {
+
+          }
+        }
+      }
     }
 
-  }
 
-  @Override
-  public boolean findPath(Component c, String dir)
-  {
+
+    System.out.println("Done waiting");
     return false;
   }
 

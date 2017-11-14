@@ -1,5 +1,7 @@
 package SmartRail;
 
+import java.util.LinkedList;
+
 public class Light extends Thread implements Component
 {
   private String leftLight;
@@ -42,25 +44,95 @@ public class Light extends Thread implements Component
   @Override
   public void run()
   {
-    // make light talk to other components next to it
+    while(true)
+    {
+      synchronized (this)
+      {
+        if (message == null)
+        {
+          try {
+            wait();
+          } catch (InterruptedException ex) {
+            //Print
+          }
+        }
+        else
+        {
+          String action = message.getAction();
+          String direction = message.getDirection();
+          LinkedList<Component> target = message.getTarget();
+          if (action.equalsIgnoreCase("findpath"))
+          {
+            findPath(target.get(0), direction);
+            message = null;
+            notifyAll();
+          }
+          else if (action.equalsIgnoreCase("returnpath"))
+          {
+            returnPath(message);
+            message = null;
+            notifyAll();
+          }
+          else
+          {
+            System.out.println(action);
+            message = null;
+          }
+
+        }
+      }
+    }
   }
 
   @Override
-  public void acceptMessage(Message message)
+  public synchronized void acceptMessage(Message message)
   {
+    System.out.println("Light message");
     this.message = message;
+    notifyAll();
   }
 
-  @Override
-  public boolean findPath(Component c, String dir)
+  public synchronized boolean findPath(Component c, String dir)
   {
+    LinkedList<Component> targetComponent = new LinkedList<>();
+    targetComponent.add(c);
+    if (dir.equalsIgnoreCase("right"))
+    {
+
+      rightTrack.acceptMessage(new Message(dir, "findpath", targetComponent, this));
+      return true;
+    }
+    else if (dir.equalsIgnoreCase("left"))
+    {
+      leftTrack.acceptMessage(new Message(dir, "findpath", targetComponent, this));
+      return true;
+    }
+
     return false;
   }
 
   @Override
-  public boolean returnPath(Message m)
+  public synchronized boolean returnPath(Message m)
   {
-    return false;
+    String dir = m.getDirection();
+    LinkedList<Component> pathList = m.getTarget();
+    if(!pathList.isEmpty())
+    {
+      pathList.add(this);
+    }
+
+    if(dir.equalsIgnoreCase("left"))
+    {
+      m.setSender(this);
+      leftTrack.acceptMessage(m);
+    }
+    else
+    {
+      m.setSender(this);
+      rightTrack.acceptMessage(m);
+    }
+
+    return true;
   }
 
   @Override
