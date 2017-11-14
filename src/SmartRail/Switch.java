@@ -1,5 +1,8 @@
 package SmartRail;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Switch extends Thread implements Component
 {
 
@@ -8,6 +11,8 @@ public class Switch extends Thread implements Component
   private Track down;
   private Track right;
   private Track left;
+  private boolean waitingForResponse = false;
+  private LinkedList<Message> messages = new LinkedList<>();
 
   Switch(boolean isLeft){
     this.isLeft=isLeft;
@@ -15,7 +20,6 @@ public class Switch extends Thread implements Component
 
   public Track getUpTrack()
   {
-
     return upTrack;
   }
 
@@ -60,13 +64,59 @@ public class Switch extends Thread implements Component
 
 
   @Override
-  public void run(){}
+  public void run()
+  {
+    while(true)
+    {
+      synchronized (this)
+      {
+        if (messages.isEmpty())
+        {
+          try {
+            wait();
+          } catch (InterruptedException ex) {
+            //Print
+          }
+        }
+        else
+        {
+          String action = messages.getFirst().getAction();
+          String direction = messages.getFirst().getDirection();
+          LinkedList<Component> target = messages.getFirst().getTarget();
+          if (action.equalsIgnoreCase("findpath"))
+          {
+            findPath(target.get(0), direction);
+            messages.remove();
+            notifyAll();
+          }
+          else if (action.equalsIgnoreCase("returnpath"))
+          {
+            returnPath(messages.getFirst());
+            messages.remove();
+            notifyAll();
+          }
+          else
+          {
+            System.out.println(action);
+            messages.remove();
+          }
+
+        }
+      }
+    }
+  }
 
 
 
   @Override
-  public void acceptMessage(Message message)
+  public synchronized void acceptMessage(Message message)
   {
+    System.out.println("Switch has message");
+    messages.add(message);
+    if(messages.size() == 1)
+    {
+      notifyAll();
+    }
 
   }
 
