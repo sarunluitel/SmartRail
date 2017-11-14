@@ -36,4 +36,9 @@ public class Message
   {
     return sender;
   }
+
+  public void setSender(Component c)
+  {
+    sender = c;
+  }
 }

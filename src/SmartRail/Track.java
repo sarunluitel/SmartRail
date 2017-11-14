@@ -72,12 +72,12 @@ public class Track extends Thread implements Component
     if (dir.equalsIgnoreCase("right"))
     {
 
-      right.acceptMessage(new Message(dir, "findpath", targetComponent));
+      right.acceptMessage(new Message(dir, "findpath", targetComponent, this));
       return true;
     }
     else if (dir.equalsIgnoreCase("left"))
     {
-      left.acceptMessage(new Message(dir, "findpath", targetComponent));
+      left.acceptMessage(new Message(dir, "findpath", targetComponent, this));
       return true;
     }
 
@@ -96,10 +96,12 @@ public class Track extends Thread implements Component
 
     if(dir.equalsIgnoreCase("left"))
     {
+      m.setSender(this);
       left.acceptMessage(m);
     }
     else
     {
+      m.setSender(this);
       right.acceptMessage(m);
     }
 

@@ -50,7 +50,7 @@ public class Train extends Thread
 
     LinkedList<Component> compList = new LinkedList<>();
     compList.add(Destination);
-    currentComponent.acceptMessage(new Message("right", "findpath", compList));
+    currentComponent.acceptMessage(new Message("right", "findpath", compList, currentComponent));
     waiting = true;
     while (this.Destination != this.currentComponent)
     {
