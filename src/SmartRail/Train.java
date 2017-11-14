@@ -19,6 +19,7 @@ public class Train extends Thread
   private int xPos = 0; // increase as train moves forward.
   private int yPos = 0; // increase as train moves down a track
   private volatile boolean waiting = false;
+  private boolean goodPath = true;
 
 
   Train(Station Destination, Station spawnStation)
@@ -37,6 +38,10 @@ public class Train extends Thread
   public synchronized void acceptMessage(Message m)
   {
     waiting = false;
+    if(m.getTarget().isEmpty())
+    {
+      goodPath = false;
+    }
     notifyAll();
   }
 
@@ -65,6 +70,10 @@ public class Train extends Thread
           {
             System.out.println("Interrupted");
           }
+        }
+        if(!goodPath)
+        {
+          break;
         }
       }
       //notifyAll();

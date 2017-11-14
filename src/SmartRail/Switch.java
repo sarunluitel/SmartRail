@@ -167,31 +167,73 @@ public class Switch extends Thread implements Component
       if(isLeft)
       {
         right.acceptMessage(new Message(dir, "findpath", compList, this));
+        try
+        {
+          wait();
+        } catch (InterruptedException ex) {}
+        if(!messages.get(1).getTarget().isEmpty())
+        {
+          return true;
+        }
+        else
+        {
+          messages.remove(1);
+        }
       }
       //multiple options
       else
       {
         if(upTrack != null)
         {
-          System.out.println("not null");
-        }
-        if(right != null)
-        {
-          right.acceptMessage(new Message(dir, "findpath", compList, this));
+          System.out.println("up");
+          upTrack.acceptMessage(new Message(dir, "findpath", compList, this));
           try
           {
             wait();
-          } catch (InterruptedException ex)
-          {
-
-          }
+          } catch (InterruptedException ex) {}
           if(!messages.get(1).getTarget().isEmpty())
           {
             return true;
           }
+          else
+          {
+            messages.remove(1);
+          }
+          System.out.println("up");
+        }
+        if(right != null)
+        {
+          System.out.println("right");
+          right.acceptMessage(new Message(dir, "findpath", compList, this));
+          try
+          {
+            wait();
+          } catch (InterruptedException ex) {}
+          if(!messages.get(1).getTarget().isEmpty())
+          {
+            return true;
+          }
+          else
+          {
+            messages.remove(1);
+          }
         }
         if(down != null)
         {
+          System.out.println("down");
+          down.acceptMessage(new Message(dir, "findpath", compList, this));
+          try
+          {
+            wait();
+          } catch (InterruptedException ex) {}
+          if(!messages.get(1).getTarget().isEmpty())
+          {
+            return true;
+          }
+          else
+          {
+            messages.remove(1);
+          }
           System.out.println("not null down");
         }
       }
@@ -199,30 +241,49 @@ public class Switch extends Thread implements Component
     //For Direction left
     else
     {
-      if(isLeft)
+      if(!isLeft)
       {
-        if(left != null)
-        {
-          try
-          {
-            wait();
-          } catch (InterruptedException ex)
-          {
-
-          }
-        }
+        left.acceptMessage(new Message(dir, "findpath", compList, this));
       }
       else
       {
-        if(right != null)
+        if(upTrack != null)
         {
+          upTrack.acceptMessage(new Message(dir, "findpath", compList, this));
           try
           {
             wait();
-          } catch (InterruptedException ex)
+          } catch (InterruptedException ex) {}
+          if(!messages.get(1).getTarget().isEmpty())
           {
-
+            return true;
           }
+          System.out.println("up");
+        }
+        if(right != null)
+        {
+          right.acceptMessage(new Message(dir, "findpath", compList, this));
+          try
+          {
+            wait();
+          } catch (InterruptedException ex) {}
+          if(!messages.get(1).getTarget().isEmpty())
+          {
+            return true;
+          }
+        }
+        if(down != null)
+        {
+          down.acceptMessage(new Message(dir, "findpath", compList, this));
+          try
+          {
+            wait();
+          } catch (InterruptedException ex) {}
+          if(!messages.get(1).getTarget().isEmpty())
+          {
+            return true;
+          }
+          System.out.println("down");
         }
       }
     }
