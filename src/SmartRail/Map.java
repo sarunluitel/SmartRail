@@ -8,6 +8,7 @@ public class Map
   private ArrayList<ArrayList> layers = new ArrayList<>();
   private ArrayList<Switch> switchesInCurrentRow = new ArrayList<>();
   private int currentSwitchNum = 0;
+  private static int firstRowToHaveSwitch;
 
   void setMap(String config)
   {
@@ -69,6 +70,7 @@ public class Map
 
       if (temp.get(i) instanceof Switch)
       {// a switch unfolds to be a 0=Sw=0; surrounded by lights.
+        if(firstRowToHaveSwitch==0)firstRowToHaveSwitch=layerCount;
 
         Light leftLight = new Light();
         Light rightLight = new Light();
@@ -109,7 +111,7 @@ public class Map
   private void addNeighbourTop()
   {
     int currentRowPos = 0;
-    for (Component s : (ArrayList<Component>) layers.get(layerCount - 1))
+    for (Component s : (ArrayList<Component>) layers.get(layerCount - firstRowToHaveSwitch))
     {
       if (s instanceof Switch)
       {
@@ -128,6 +130,7 @@ public class Map
           tempTrack.setNeighbors(switchesInCurrentRow.get(currentRowPos), "right");
 
         }
+        tempTrack.start();
         currentRowPos++;
 
       }

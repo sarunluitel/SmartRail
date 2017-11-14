@@ -1,9 +1,6 @@
 package SmartRail.JavafxRes;
 
-import SmartRail.Light;
-import SmartRail.Station;
-import SmartRail.Track;
-import SmartRail.Train;
+import SmartRail.*;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -65,9 +62,9 @@ public class XMLController extends AnimationTimer
           gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i+1));
 
         }
-        if (temp.get(j) instanceof Light)
+        if (temp.get(j) instanceof Switch)
         {
-          gc.fillRect(DISTANCE * (j + 1), DISTANCE * (i + 2), 50, 15);
+          gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i+1));
         }
 
       }
