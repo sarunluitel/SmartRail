@@ -7,12 +7,14 @@ public class Message
   private String direction;
   private String action;
   private LinkedList<Component> intendedTarget;
+  private Component sender;
 
-  public Message (String dir, String act, LinkedList<Component> c)
+  public Message (String dir, String act, LinkedList<Component> compList, Component c)
   {
     direction = dir;
     action = act;
-    intendedTarget = c;
+    intendedTarget = compList;
+    sender = c;
   }
 
   public String getAction()
@@ -28,5 +30,10 @@ public class Message
   public LinkedList<Component> getTarget()
   {
     return intendedTarget;
+  }
+
+  public Component getSender()
+  {
+    return sender;
   }
 }
