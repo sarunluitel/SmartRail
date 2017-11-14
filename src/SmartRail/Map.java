@@ -6,6 +6,8 @@ public class Map
 {
   private static int layerCount = -1;
   private ArrayList<ArrayList> layers = new ArrayList<>();
+  private ArrayList<Switch> switchesInCurrentRow = new ArrayList<>();
+  private int currentSwitchNum = 0;
 
   void setMap(String config)
   {
@@ -27,10 +29,14 @@ public class Map
 
         case 'R':
           layers.get(layerCount).add(componentsInLine, new Switch(false));
+          switchesInCurrentRow.add(currentSwitchNum, (Switch) layers.get(layerCount).get(componentsInLine));
+          currentSwitchNum++;
           break;
 
         case 'L':
           layers.get(layerCount).add(componentsInLine, new Switch(true));
+          switchesInCurrentRow.add(currentSwitchNum, (Switch) layers.get(layerCount).get(componentsInLine));
+          currentSwitchNum++;
           break;
       }
     }
@@ -64,43 +70,70 @@ public class Map
       if (temp.get(i) instanceof Switch)
       {// a switch unfolds to be a 0=Sw=0; surrounded by lights.
 
-       /* ((Switch) temp.get(i)).setLeft((Track) temp.get(i - 1));
-        ((Switch) temp.get(i)).setRightTrack((Track) temp.get(i + 1));*/
-       Light leftLight= new Light();
-       Light rightLight= new Light();
-       Track leftTrack = new Track();
-       Track rightTrack= new Track();
+        Light leftLight = new Light();
+        Light rightLight = new Light();
+        Track leftTrack = new Track();
+        Track rightTrack = new Track();
 
 
-       leftLight.setLeftTrack((Track) temp.get(i - 1));
-       leftLight.setRightTrack(leftTrack);
-        ((Track) temp.get(i - 1)).setNeighbors(leftLight,"right");
+        leftLight.setLeftTrack((Track) temp.get(i - 1));
+        leftLight.setRightTrack(leftTrack);
+        ((Track) temp.get(i - 1)).setNeighbors(leftLight, "right");
 
-       leftTrack.setNeighbors(leftLight,"left");
-       leftTrack.setNeighbors((Switch) temp.get(i),"right");
+        leftTrack.setNeighbors(leftLight, "left");
+        leftTrack.setNeighbors((Switch) temp.get(i), "right");
 
 
         rightLight.setLeftTrack(rightTrack);
         rightLight.setRightTrack((Track) temp.get(i + 1));
-        ((Track) temp.get(i + 1)).setNeighbors(rightLight,"left");
 
-        rightTrack.setNeighbors((Switch) temp.get(i),"left");
-        rightTrack.setNeighbors(rightLight,"right");
+        ((Track) temp.get(i + 1)).setNeighbors(rightLight, "left");
+        rightTrack.setNeighbors((Switch) temp.get(i), "left");
 
-
+        rightTrack.setNeighbors(rightLight, "right");
         ((Switch) temp.get(i)).setLeft(leftTrack);// set O=Sw
 
         ((Switch) temp.get(i)).setRight(rightTrack);
+
 
         ((Switch) temp.get(i)).start();
         rightLight.start();
         leftLight.start();
         leftTrack.start();
         rightTrack.start();
+      }
+    }
+    if (layerCount > 0) addNeighbourTop();// assign top and bottom layers for a switch
+  }
+
+  private void addNeighbourTop()
+  {
+    int currentRowPos = 0;
+    for (Component s : (ArrayList<Component>) layers.get(layerCount - 1))
+    {
+      if (s instanceof Switch)
+      {
+        Track tempTrack = new Track();
+        switchesInCurrentRow.get(currentRowPos).setUpTrack(tempTrack);
+        ((Switch) s).setDown(tempTrack);
+
+        if (((Switch) s).getIsLeft())
+        {
+          tempTrack.setNeighbors(s, "right");
+          tempTrack.setNeighbors(switchesInCurrentRow.get(currentRowPos), "left");
+
+        } else
+        {
+          tempTrack.setNeighbors(s, "left");
+          tempTrack.setNeighbors(switchesInCurrentRow.get(currentRowPos), "right");
+
+        }
+        currentRowPos++;
 
       }
 
     }
+
   }
 
   ArrayList getMap(int layer)
@@ -112,14 +145,6 @@ public class Map
   {
     return this.layers;
   }
-
-  //Number of components in an array.
-  int getcompInLayer(int layer)
-  {
-    return layers.get(layer).size();
-  }
-
-
 }
 
 
