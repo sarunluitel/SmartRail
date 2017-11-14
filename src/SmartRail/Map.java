@@ -51,6 +51,7 @@ public class Map
     leftStation.setRightTrack((Track) temp.get(1));
     leftStation.start();
 
+    //Starts with 1 because the component 0 is a station. already hard coded
     for (int i = 1; i < compInLayer; i++)
     {
       if (temp.get(i) instanceof Track)
@@ -65,23 +66,26 @@ public class Map
 
        /* ((Switch) temp.get(i)).setLeft((Track) temp.get(i - 1));
         ((Switch) temp.get(i)).setRightTrack((Track) temp.get(i + 1));*/
-       Light left= new Light();
-       Light right= new Light();
+       Light leftLight= new Light();
+       Light rightLight= new Light();
        Track leftTrack = new Track();
        Track rightTrack= new Track();
 
-       left.setLeftTrack((Track) temp.get(i - 1));
-       left.setRightTrack(leftTrack);
 
-       leftTrack.setNeighbors(left,"left");
+       leftLight.setLeftTrack((Track) temp.get(i - 1));
+       leftLight.setRightTrack(leftTrack);
+        ((Track) temp.get(i - 1)).setNeighbors(leftLight,"right");
+
+       leftTrack.setNeighbors(leftLight,"left");
        leftTrack.setNeighbors((Switch) temp.get(i),"right");
 
 
-        right.setLeftTrack(rightTrack);
-        right.setRightTrack((Track) temp.get(i + 1));
+        rightLight.setLeftTrack(rightTrack);
+        rightLight.setRightTrack((Track) temp.get(i + 1));
+        ((Track) temp.get(i + 1)).setNeighbors(rightLight,"left");
 
         rightTrack.setNeighbors((Switch) temp.get(i),"left");
-        rightTrack.setNeighbors(right,"right");
+        rightTrack.setNeighbors(rightLight,"right");
 
 
         ((Switch) temp.get(i)).setLeft(leftTrack);// set O=Sw
@@ -89,8 +93,8 @@ public class Map
         ((Switch) temp.get(i)).setRight(rightTrack);
 
         ((Switch) temp.get(i)).start();
-        right.start();
-        left.start();
+        rightLight.start();
+        leftLight.start();
         leftTrack.start();
         rightTrack.start();
 
