@@ -28,7 +28,7 @@ public class Main
     }
     MapView.getInstance().setEntireMap(map.getEntireMap());
 
-    Train testTrain = new Train((Station) map.getMap(0).get(8), (Station) map.getMap(0).get(0));
+    Train testTrain = new Train((Station) map.getMap(0).get(6), (Station) map.getMap(0).get(0));
     testTrain.start();
 
     JavaFX GUI = new JavaFX();

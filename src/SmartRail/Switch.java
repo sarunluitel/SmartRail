@@ -153,6 +153,10 @@ public class Switch extends Thread implements Component
       //multiple options
       else
       {
+        if(upTrack != null)
+        {
+          System.out.println("not null");
+        }
         if(right != null)
         {
           right.acceptMessage(new Message(dir, "findpath", compList, this));
@@ -167,6 +171,10 @@ public class Switch extends Thread implements Component
           {
             return true;
           }
+        }
+        if(down != null)
+        {
+          System.out.println("not null down");
         }
       }
     }
@@ -208,8 +216,17 @@ public class Switch extends Thread implements Component
   }
 
   @Override
-  public boolean returnPath(Message m)
+  public synchronized boolean returnPath(Message m)
   {
+    if(!m.getTarget().isEmpty())
+    {
+      m.getTarget().add(this);
+    }
+    m.setSender(this);
+    returnComponent.acceptMessage(m);
+    messages.remove();
+    messages.remove();
+    waitingForResponse = false;
     return false;
   }
 
