@@ -10,7 +10,8 @@ public class Station extends Thread implements Component
   private Track leftTrack;
   private String stationName; //expects Names in format St.15
   private Train trainInStation = null;
-  private volatile Message message = null;
+  private volatile LinkedList<Message> messages = new LinkedList<>();
+  private boolean secured = false;
 
 
   public Station()
@@ -55,7 +56,7 @@ public class Station extends Thread implements Component
   public synchronized void acceptMessage(Message mes)
   {
     System.out.println("Message received: " + stationName);
-    message = mes;
+    messages.add(mes);
     //System.out.println(message.getDirection());
     notifyAll();
   }
@@ -104,32 +105,74 @@ public class Station extends Thread implements Component
   }
 
   @Override
+  public synchronized boolean securePath(Message m)
+  {
+    String dir = m.getDirection();
+    if(secured == true)
+    {
+      if(dir.equalsIgnoreCase("right"))
+      {
+        leftTrack.acceptMessage(new Message("left", "couldNotSecure", new LinkedList<>(), this));
+      }
+      else
+      {
+        rightTrack.acceptMessage(new Message("left", "couldNotSecure", new LinkedList<>(), this));
+      }
+    }
+    secured = true;
+    System.out.println("Secure " + stationName);
+    //System.out.println(m.getTarget().getLast().getComponentName());
+    m.getTarget().remove(m.getTarget().size()-1);
+    //System.out.println(m.getTarget().getLast().getComponentName());
+    messages.remove();
+    if(dir.equalsIgnoreCase("right"))
+    {
+      rightTrack.acceptMessage(m);
+    }
+    else
+    {
+      leftTrack.acceptMessage(m);
+    }
+    return true;
+  }
+
+  @Override
+  public synchronized boolean readyForTrain(Message m)
+  {
+    return false;
+  }
+
+  @Override
+  public synchronized boolean couldNotSecure(Message m)
+  {
+    return false;
+  }
+
+  @Override
   public void run()
   {
-    int testing = 0;
+
     while(true)
     {
       synchronized (this)
       {
-        if (message == null) {
-
-
-        try
+        if (messages.isEmpty())
         {
-          wait();
-        } catch (Exception ex)
-        {
-          //Print
-        }
-
+          try
+          {
+            wait();
+          } catch (Exception ex)
+          {
+            //Print
+          }
         }
         else
         {
           //System.out.println("Past wait");
           String newDir;
-          String action = message.getAction();
-          String direction = message.getDirection();
-          LinkedList<Component> target = message.getTarget();
+          String action = messages.getFirst().getAction();
+          String direction = messages.getFirst().getDirection();
+          LinkedList<Component> target = messages.getFirst().getTarget();
           if (action.equalsIgnoreCase("findpath"))
           {
             if (target.get(0).getComponentName().equalsIgnoreCase(stationName))
@@ -170,16 +213,44 @@ public class Station extends Thread implements Component
               System.out.println("Sending return path");
 
             }
-            message = null;
+            messages.remove();
           }
           else if(action.equalsIgnoreCase("returnpath"))
           {
             if(trainInStation != null)
             {
               System.out.println("Train on station");
-              trainInStation.acceptMessage(message);
-              message = null;;
+              messages.getFirst().getTarget().add(this);
+              trainInStation.acceptMessage(messages.getFirst());
+              messages.remove();;
             }
+          }
+          else if(action.equalsIgnoreCase("securepath"))
+          {
+            System.out.println(target.getFirst().getComponentName());
+            if(target.getFirst().getComponentName().equalsIgnoreCase(stationName))
+            {
+              System.out.println("HERE");
+              secured = true;
+              if(direction.equalsIgnoreCase("right"))
+              {
+                newDir = "left";
+              }
+              else
+              {
+                newDir = "right";
+              }
+              Message pathSecured = new Message(newDir, "readyfortrain", target, this);
+              readyForTrain(pathSecured);
+              messages.remove();
+            }
+            else
+            {
+              securePath(messages.getFirst());
+            }
+            //====================================
+
+            //====================================
           }
         }
       }
@@ -188,24 +259,6 @@ public class Station extends Thread implements Component
 
   }
 
-  public synchronized void lookForMessage()
-  {
-
-    if (message == null)
-    {
-      try
-      {
-
-        System.out.println("Waiting");
-        wait();
-
-      } catch (Exception ex)
-      {
-        //Print
-      }
-    }
-    System.out.println("out");
-  }
 
   public String getComponentName()
   {

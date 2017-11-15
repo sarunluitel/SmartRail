@@ -11,8 +11,9 @@ public class Track extends Thread implements Component
   private static int totalTracks = 0;
   private Component left;
   private Component right;
-  private Message message = null;
+  private LinkedList<Message> messages = new LinkedList<>();
   private Train trainOnTrack = null;
+  private boolean secured = false;
 
   public Track()
 {
@@ -62,7 +63,7 @@ public class Track extends Thread implements Component
   public synchronized void acceptMessage(Message message)
   {
     System.out.println("Recieved message by track: " + name);
-    this.message = message;
+    messages.add(message);
     notifyAll();
     //return message;
   }
@@ -109,13 +110,53 @@ public class Track extends Thread implements Component
   }
 
   @Override
+  public synchronized boolean securePath(Message m)
+  {
+    String dir = m.getDirection();
+    if(secured == true)
+    {
+      return false;
+    }
+
+    secured = true;
+    m.getTarget().remove(m.getTarget().size()-1);
+    m.setSender(this);
+    if(dir.equalsIgnoreCase("right"))
+    {
+
+      right.acceptMessage(m);
+    }
+    else
+    {
+      left.acceptMessage(m);
+    }
+    messages.remove();
+
+
+
+    return true;
+  }
+
+  @Override
+  public synchronized boolean readyForTrain(Message m)
+  {
+    return false;
+  }
+
+  @Override
+  public synchronized boolean couldNotSecure(Message m)
+  {
+    return false;
+  }
+
+  @Override
   public void run()
   {
     while(true)
     {
       synchronized (this)
       {
-        if (message == null)
+        if (messages.isEmpty())
         {
           try {
             wait();
@@ -125,25 +166,31 @@ public class Track extends Thread implements Component
         }
         else
         {
-          String action = message.getAction();
-          String direction = message.getDirection();
-          LinkedList<Component> target = message.getTarget();
+          String action = messages.getFirst().getAction();
+          String direction = messages.getFirst().getDirection();
+          LinkedList<Component> target = messages.getFirst().getTarget();
           if (action.equalsIgnoreCase("findpath"))
           {
             findPath(target.get(0), direction);
-            message = null;
+            messages.remove();
             notifyAll();
           }
           else if (action.equalsIgnoreCase("returnpath"))
           {
-            returnPath(message);
-            message = null;
+            returnPath(messages.getFirst());
+            messages.remove();
             notifyAll();
+          }
+          else if (action.equalsIgnoreCase("securepath"))
+          {
+            securePath(messages.getFirst());
+            //messages.remove();
+
           }
           else
           {
             System.out.println(action);
-            message = null;
+            messages.remove();
           }
 
         }

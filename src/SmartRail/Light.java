@@ -4,14 +4,15 @@ import java.util.LinkedList;
 
 public class Light extends Thread implements Component
 {
-  private String leftLight = "green";
-  private String rightLight = "green";
+  private String leftLight = "";
+  private String rightLight = "";
 
   // next component will be null if light is red.
   private Track rightTrack;
   // Left component has pointer to where the light is.
   private Track leftTrack;
-  private Message message;
+  private LinkedList<Message> messages = new LinkedList<>();
+  private boolean secured = false;
 
 
   //Setters for data types.
@@ -55,7 +56,7 @@ public class Light extends Thread implements Component
     {
       synchronized (this)
       {
-        if (message == null)
+        if (messages.isEmpty())
         {
           try {
             wait();
@@ -65,25 +66,29 @@ public class Light extends Thread implements Component
         }
         else
         {
-          String action = message.getAction();
-          String direction = message.getDirection();
-          LinkedList<Component> target = message.getTarget();
+          String action = messages.getFirst().getAction();
+          String direction = messages.getFirst().getDirection();
+          LinkedList<Component> target = messages.getFirst().getTarget();
           if (action.equalsIgnoreCase("findpath"))
           {
             findPath(target.get(0), direction);
-            message = null;
+            messages.remove();
             notifyAll();
           }
           else if (action.equalsIgnoreCase("returnpath"))
           {
-            returnPath(message);
-            message = null;
+            returnPath(messages.getFirst());
+            messages.remove();
             notifyAll();
+          }
+          else if (action.equalsIgnoreCase("securepath"))
+          {
+            securePath(messages.getFirst());
           }
           else
           {
             System.out.println(action);
-            message = null;
+            messages.remove();
           }
 
         }
@@ -95,7 +100,7 @@ public class Light extends Thread implements Component
   public synchronized void acceptMessage(Message message)
   {
     System.out.println("Light message");
-    this.message = message;
+    messages.add(message);
     notifyAll();
   }
 
@@ -122,10 +127,10 @@ public class Light extends Thread implements Component
   public synchronized boolean returnPath(Message m)
   {
     String dir = m.getDirection();
-    LinkedList<Component> pathList = m.getTarget();
-    if(!pathList.isEmpty())
+
+    if(!m.getTarget().isEmpty())
     {
-      pathList.add(this);
+      m.getTarget().add(this);
     }
 
     if(dir.equalsIgnoreCase("left"))
@@ -140,6 +145,48 @@ public class Light extends Thread implements Component
     }
 
     return true;
+  }
+
+  @Override
+  public synchronized boolean securePath(Message m)
+  {
+    String dir = m.getDirection();
+    if(secured == true)
+    {
+      return false;
+    }
+
+    secured = true;
+    m.getTarget().remove(m.getTarget().size()-1);
+    m.setSender(this);
+    if(dir.equalsIgnoreCase("right"))
+    {
+      leftLight = "green";
+      rightLight = "red";
+      rightTrack.acceptMessage(m);
+    }
+    else
+    {
+      leftLight = "red";
+      rightLight = "green";
+      leftTrack.acceptMessage(m);
+    }
+    messages.remove();
+
+    return true;
+
+  }
+
+  @Override
+  public synchronized boolean readyForTrain(Message m)
+  {
+    return false;
+  }
+
+  @Override
+  public synchronized boolean couldNotSecure(Message m)
+  {
+    return false;
   }
 
   @Override

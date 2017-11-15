@@ -12,6 +12,9 @@ public interface Component
 
   boolean findPath(Component c, String dir);
   boolean returnPath(Message m);
+  boolean securePath(Message m);
+  boolean readyForTrain(Message m);
+  boolean couldNotSecure(Message m);
 
   // makes component keep track of next node
   //linear tracks.

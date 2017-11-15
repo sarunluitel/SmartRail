@@ -1,7 +1,5 @@
 package SmartRail;
 
-import sun.awt.image.ImageWatched;
-
 import java.util.LinkedList;
 
 public class Switch extends Thread implements Component
@@ -16,6 +14,8 @@ public class Switch extends Thread implements Component
   private volatile boolean returnPath = false;
   private LinkedList<Message> messages = new LinkedList<>();
   private Component returnComponent = null;
+  private Component nextComp = null;
+  private boolean secured = false;
 
   Switch(boolean isLeft){
     this.isLeft=isLeft;
@@ -79,6 +79,13 @@ public class Switch extends Thread implements Component
       waitingForResponse = false;
       returnPath = true;
       notifyAll();
+    }
+    else if(message.getAction().equalsIgnoreCase("readyfortrain"))
+    {
+      System.out.println("ready");
+      messages.add(1, message);
+      waitingForResponse = false;
+
     }
     else
     {
@@ -154,10 +161,15 @@ public class Switch extends Thread implements Component
             returnPath(messages.get(1));
             //messages.remove();
 
-
+          }
+          else if (action.equalsIgnoreCase("securepath"))
+          {
+            returnComponent = messages.getFirst().getSender();
+            securePath(messages.getFirst());
           }
           else
           {
+            //System.out.println(messages.getFirst().getSender().getComponentName());
             System.out.println(action);
             messages.remove();
           }
@@ -317,19 +329,61 @@ public class Switch extends Thread implements Component
     if(!m.getTarget().isEmpty())
     {
       m.getTarget().add(this);
+      nextComp = m.getSender();
     }
     m.setSender(this);
     returnComponent.acceptMessage(m);
     messages.remove();
     messages.remove();
     waitingForResponse = false;
+    returnPath = false;
+    return false;
+  }
+
+  @Override
+  public synchronized boolean securePath(Message m)
+  {
+    String dir = m.getDirection();
+    if(secured == true)
+    {
+      return false;
+    }
+
+    secured = true;
+    m.getTarget().remove(m.getTarget().size()-1);
+    m.setSender(this);
+    m.getTarget().getLast().acceptMessage(m);
+    //System.out.println(m.getTarget().getFirst().getComponentName());
+    //left.acceptMessage(m);
+
+    try
+    {
+      wait();
+    } catch (InterruptedException ex) {}
+    if(messages.get(1).getAction().equalsIgnoreCase("readyfortrain"))
+    {
+      return true;
+    }
+
+    return true;
+  }
+
+  @Override
+  public synchronized boolean readyForTrain(Message m)
+  {
+    return false;
+  }
+
+  @Override
+  public synchronized boolean couldNotSecure(Message m)
+  {
     return false;
   }
 
   @Override
   public Component nextComponent(String direction)
   {
-    return right;
+    return nextComp;
   }
 
   @Override

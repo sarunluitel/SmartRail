@@ -6,9 +6,9 @@
 // Format (S==R==S)
 //        (S===L=S)
 // DO NOT LEAVE  BLANK LINES.
+// L==S should be a valid configuration
 //
-//
-S=======S
+S==S
 S===R==S
 S====L==S
 S===R==S

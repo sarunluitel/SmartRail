@@ -20,6 +20,7 @@ public class Train extends Thread
   private int yPos = 0; // increase as train moves down a track
   private volatile boolean waiting = false;
   private boolean goodPath = true;
+  private LinkedList<Component> pathList = new LinkedList<>();
 
 
   Train(Station Destination, Station spawnStation)
@@ -33,6 +34,7 @@ public class Train extends Thread
     this.yPos = trainID;// this needs to come from the GUI Click
     totalTrains++;
 
+
   }
 
   public synchronized void acceptMessage(Message m)
@@ -41,6 +43,10 @@ public class Train extends Thread
     if(m.getTarget().isEmpty())
     {
       goodPath = false;
+    }
+    if(pathList.isEmpty())
+    {
+      pathList = m.getTarget();
     }
     notifyAll();
   }
@@ -75,14 +81,19 @@ public class Train extends Thread
         {
           break;
         }
+        //secure path
+
+        currentComponent.acceptMessage(new Message("right", "securepath", pathList, currentComponent));
+        waiting = true;
       }
       //notifyAll();
       //System.out.println("sent message");
 
-      move();
+      //move();
     }
 
     System.out.println("Train " + trainID + " Arrived at " + this.currentComponent.getComponentName());
+    return;
 
   }
 
