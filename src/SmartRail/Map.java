@@ -7,7 +7,7 @@ public class Map
   private  int layerCount = -1;
   private ArrayList<ArrayList> layers = new ArrayList<>();
 
-  void setMap(String config)
+  void setMap(String config) throws Exception
   {
     layerCount++;
     layers.add(layerCount, new ArrayList<Component>());
@@ -34,6 +34,10 @@ public class Map
           layers.get(layerCount).add(componentsInLine, new Switch(true));
 
           break;
+        default:
+           Exception e = new Exception("Please Use Letters S,R,L or == only");
+           throw e;
+
       }
     }
     assignNeighbour(componentsInLine);
