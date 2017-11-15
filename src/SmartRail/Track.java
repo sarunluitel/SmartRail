@@ -140,6 +140,17 @@ public class Track extends Thread implements Component
   @Override
   public synchronized boolean readyForTrain(Message m)
   {
+    String dir = m.getDirection();
+    m.setSender(this);
+    if(dir.equalsIgnoreCase("left"))
+    {
+      left.acceptMessage(m);
+    }
+    else
+    {
+      right.acceptMessage(m);
+    }
+    messages.remove();
     return false;
   }
 
@@ -186,6 +197,10 @@ public class Track extends Thread implements Component
             securePath(messages.getFirst());
             //messages.remove();
 
+          }
+          else if (action.equalsIgnoreCase("readyfortrain"))
+          {
+            readyForTrain(messages.getFirst());
           }
           else
           {
