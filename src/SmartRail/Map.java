@@ -47,20 +47,24 @@ public class Map
   private void assignNeighbour(int compInLayer)
   {
     ArrayList temp = layers.get(layerCount);
-    //assign first Track to station.
 
-    Station rightStation = (Station) temp.get(compInLayer);
-    rightStation.setLeftTrack((Track) temp.get(compInLayer - 1));
-    rightStation.start();
-
-    //Assign Last component to left station
-    Station leftStation = (Station) temp.get(0);
-    leftStation.setRightTrack((Track) temp.get(1));
-    leftStation.start();
 
     //Starts with 1 because the component 0 is a station. already hard coded
     for (int i = 1; i < compInLayer; i++)
     {
+      if(temp.get(i) instanceof Station)
+      {
+        //assign first Track to station.
+
+        Station rightStation = (Station) temp.get(compInLayer);
+        rightStation.setLeftTrack((Track) temp.get(compInLayer - 1));
+        rightStation.start();
+
+        //Assign Last component to left station
+        Station leftStation = (Station) temp.get(0);
+        leftStation.setRightTrack((Track) temp.get(1));
+        leftStation.start();
+      }
       if (temp.get(i) instanceof Track)
       {
         ((Track) temp.get(i)).setNeighbors((Component) temp.get(i + 1), "right");

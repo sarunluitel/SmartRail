@@ -1,12 +1,14 @@
 package SmartRail.JavafxRes;
 
 import SmartRail.*;
+import com.sun.xml.internal.bind.v2.TODO;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
@@ -65,7 +67,7 @@ public class XMLController extends AnimationTimer
 
           gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
 
-          gc.drawImage(leftGreen, DISTANCE * (j + 1), DISTANCE * (i + 1) - 10);
+          gc.drawImage(noLight, DISTANCE * (j + 1), DISTANCE * (i + 1) - 10);
 
           j++;
 
@@ -120,8 +122,8 @@ public class XMLController extends AnimationTimer
     for (int i = 0; i < seniorSwitches.size(); i++)
     {
       int x1, x2, y1, y2;
-      x1 = (seniorSwitches.get(i)+i) * DISTANCE + 10;
-      x2 = (juniorSwitches.get(i)+i) * DISTANCE + 10;
+      x1 = (seniorSwitches.get(i) + i) * DISTANCE + 10;
+      x2 = (juniorSwitches.get(i) + i) * DISTANCE + 10;
       y1 = (currentLayer) * DISTANCE + 10;
       y2 = (currentLayer + 1) * DISTANCE + 10;
       gc.setLineWidth(8);
@@ -155,13 +157,29 @@ public class XMLController extends AnimationTimer
     for (int i = 0; i < trainNCanvas.size() - 1; i++)
     {
 
-      currentXpos = trainList.get(i).getXPos() * DISTANCE;
-      if (currentXpos != currentXpos + (frameCounter / 3) % DISTANCE)
-      {
-        trainNCanvas.get(i + 1).setX(currentXpos + (frameCounter / 3) % DISTANCE);
-      }
+      // currentXpos = trainList.get(i).getXPos() * DISTANCE;
+      // if (currentXpos != currentXpos + (frameCounter / 3) % DISTANCE)
+      // {
+      trainNCanvas.get(i + 1).setX((frameCounter));
+      //  }
     }
 
+  }
+
+
+  private int trainSpawn = -1;
+  private int trainDestination = -1;
+
+  @FXML
+  private void clicked(MouseEvent e)
+  {
+    if (trainSpawn != -1 && trainDestination != -1)
+    {
+      //Train newTrain = new Train();
+      TODO sfdg;
+    }
+    System.out.println(e.getX()/88);
+    //System.out.println(e.getY()/88);
   }
 }
 
