@@ -29,7 +29,7 @@ public class Main
     }
     MapView.getInstance().setEntireMap(map.getEntireMap());
 
-    Train testTrain = new Train((Station) map.getMap(2).get(7), (Station) map.getMap(1).get(0));
+    Train testTrain = new Train((Station) map.getMap(1).get(7), (Station) map.getMap(1).get(0));
     TrainView.getInstance().addTrain(testTrain);
     testTrain.start();
 

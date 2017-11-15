@@ -8,7 +8,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 
@@ -35,7 +34,6 @@ public class XMLController extends AnimationTimer
   @FXML
   void initialize()
   {
-
     gc = canvas.getGraphicsContext2D();
 
     entireMap = MapView.getInstance().getEntireMap(); //comes from configuration file
@@ -122,11 +120,10 @@ public class XMLController extends AnimationTimer
     for (int i = 0; i < seniorSwitches.size(); i++)
     {
       int x1, x2, y1, y2;
-      x1 = (seniorSwitches.get(i)) * DISTANCE + 10;
-      x2 = (juniorSwitches.get(i)) * DISTANCE + 10;
+      x1 = (seniorSwitches.get(i)+i) * DISTANCE + 10;
+      x2 = (juniorSwitches.get(i)+i) * DISTANCE + 10;
       y1 = (currentLayer) * DISTANCE + 10;
       y2 = (currentLayer + 1) * DISTANCE + 10;
-      //gc.fillRect(x2,y2,80,80);
       gc.setLineWidth(8);
       gc.strokeLine(x2, y2, x1, y1); //DISTANCE * (j + 1), DISTANCE * (i + 1) - 10
     }
@@ -159,9 +156,9 @@ public class XMLController extends AnimationTimer
     {
 
       currentXpos = trainList.get(i).getXPos() * DISTANCE;
-      if (currentXpos != currentXpos + (frameCounter / 3) % 88)
+      if (currentXpos != currentXpos + (frameCounter / 3) % DISTANCE)
       {
-        trainNCanvas.get(i + 1).setX(currentXpos + (frameCounter / 3) % 88);
+        trainNCanvas.get(i + 1).setX(currentXpos + (frameCounter / 3) % DISTANCE);
       }
     }
 

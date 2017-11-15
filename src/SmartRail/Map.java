@@ -1,10 +1,11 @@
 package SmartRail;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Map
 {
-  private  int layerCount = -1;
+  private int layerCount = -1;
   private ArrayList<ArrayList> layers = new ArrayList<>();
 
   void setMap(String config) throws Exception
@@ -35,8 +36,8 @@ public class Map
 
           break;
         default:
-           Exception e = new Exception("Please Use Letters S,R,L or == only");
-           throw e;
+          Exception e = new Exception("Please Use Letters S,R,L or == only");
+          throw e;
 
       }
     }
@@ -75,7 +76,7 @@ public class Map
         Track leftTrack = new Track();
         Track rightTrack = new Track();
 
-
+        // =0= connecting left light to the rest of system
         leftLight.setLeftTrack((Track) temp.get(i - 1));
         leftLight.setRightTrack(leftTrack);
         ((Track) temp.get(i - 1)).setNeighbors(leftLight, "right");
@@ -108,31 +109,33 @@ public class Map
 
   private void addNeighbourTop()
   {
-    Track tempTrack = new Track();
-    for (Component senior : (ArrayList<Component>) layers.get(layerCount-1))
-    {
-      if(senior instanceof Switch)
-      {
-        for (Component junior:(ArrayList<Component>) layers.get(layerCount))
+    LinkedList<Track> tempList = new LinkedList<>();
 
+    for (Component senior : (ArrayList<Component>) layers.get(layerCount - 1))
+    {
+      if (senior instanceof Switch)
+      {
+        for (Component junior : (ArrayList<Component>) layers.get(layerCount))
         {
-          if(junior instanceof Switch)
+          if (junior instanceof Switch)
           {
-            ((Switch) junior).setUpTrack(tempTrack);
-            ((Switch) senior).setDown(tempTrack);
+            tempList.addLast(new Track());
+            ((Switch) junior).setUpTrack(tempList.getLast());
+            ((Switch) senior).setDown(tempList.getLast());
             if (((Switch) junior).getIsLeft())
             {
 
-              tempTrack.setNeighbors(junior, "right");
-              tempTrack.setNeighbors(senior, "left");
+              tempList.getLast().setNeighbors(junior, "right");
+              tempList.getLast().setNeighbors(senior, "left");
+
 
             } else
             {
-              tempTrack.setNeighbors(junior, "left");
-              tempTrack.setNeighbors(senior, "right");
+              tempList.getLast().setNeighbors(junior, "left");
+              tempList.getLast().setNeighbors(senior, "right");
 
             }
-            tempTrack.start();
+            tempList.getLast().start();
 
           }
 
