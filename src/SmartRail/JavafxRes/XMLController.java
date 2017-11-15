@@ -8,12 +8,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 
 public class XMLController extends AnimationTimer
 {
-  private final int DISTANCE = 95;// dictated by the size of tracks and trains. length pixel count
+  private final int DISTANCE = 88;// dictated by the size of tracks and trains. length pixel count
   private int frameCounter = 0;
   @FXML
   private Canvas canvas;
@@ -37,14 +38,14 @@ public class XMLController extends AnimationTimer
 
     gc = canvas.getGraphicsContext2D();
 
-    entireMap = MapView.getInstance().getEntireMap();
+    entireMap = MapView.getInstance().getEntireMap(); //comes from configuration file
 
     trainNCanvas.add(0, new ImageView());//temp added at 0 to add canvas later
 
     for (int i = 0; i < entireMap.size(); i++)
     {
       ArrayList temp = entireMap.get(i);
-      int componentInTemp=0;
+      int componentInTemp = 0;
 
       for (int j = 0; componentInTemp < temp.size(); j++)
 
@@ -66,20 +67,20 @@ public class XMLController extends AnimationTimer
 
           gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
 
-          gc.drawImage(leftGreen, DISTANCE * (j + 1), DISTANCE * (i + 1)-20);
+          gc.drawImage(leftGreen, DISTANCE * (j + 1), DISTANCE * (i + 1) - 10);
 
           j++;
 
           gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
+          gc.drawImage(noLight, DISTANCE * (j + 2), DISTANCE * (i + 1) - 10);
 
-          gc.drawImage(noLight, DISTANCE * (j + 2), DISTANCE * (i+1)-20);
-          gc.fillOval(DISTANCE * (j + 1), DISTANCE * (i + 1)-10,40,40);
-          if(i!=0) drawConnection(i);
+          gc.fillOval(DISTANCE * (j + 1), DISTANCE * (i + 1) - 10, 40, 40);
 
 
         }
         componentInTemp++;
       }
+      if (i != 0) drawConnection(i);
     }
 
     putTrainsOnMap();
@@ -93,43 +94,44 @@ public class XMLController extends AnimationTimer
 
   private void drawConnection(int currentLayer)
   {
-    Track tempTrack = new Track();
+    ArrayList<Integer> seniorSwitches = new ArrayList<>();
+    ArrayList<Integer> juniorSwitches = new ArrayList<>();
+    Integer seniorPos = 1;
+    Integer juniorPos = 1;
 
-    for (Component senior : (ArrayList<Component>) entireMap.get(currentLayer-1))
+    for (Component senior : (ArrayList<Component>) entireMap.get(currentLayer - 1))
     {
-      if(senior instanceof Switch)
+      seniorPos++;
+      if (senior instanceof Switch)
       {
-        for (Component junior:(ArrayList<Component>) entireMap.get(currentLayer))
 
-        {
-          if(junior instanceof Switch)
-          {
-            ((Switch) junior).setUpTrack(tempTrack);
-            ((Switch) senior).setDown(tempTrack);
-            if (((Switch) junior).getIsLeft())
-            {
-
-              tempTrack.setNeighbors(junior, "right");
-              tempTrack.setNeighbors(senior, "left");
-
-            } else
-            {
-              tempTrack.setNeighbors(junior, "left");
-              tempTrack.setNeighbors(senior, "right");
-
-            }
-            tempTrack.start();
-
-          }
-
-        }
-
+        seniorSwitches.add(seniorPos);
       }
-
     }
 
+    for (Component junior : (ArrayList<Component>) entireMap.get(currentLayer))
+    {
+      juniorPos++;
+      if (junior instanceof Switch)
+      {
 
+        juniorSwitches.add(juniorPos);
+      }
+    }
+    if (juniorSwitches.size() == 0 || seniorSwitches.size() == 0) return;
+    for (int i = 0; i < seniorSwitches.size(); i++)
+    {
+      int x1, x2, y1, y2;
+      x1 = (seniorSwitches.get(i)) * DISTANCE + 10;
+      x2 = (juniorSwitches.get(i)) * DISTANCE + 10;
+      y1 = (currentLayer) * DISTANCE + 10;
+      y2 = (currentLayer + 1) * DISTANCE + 10;
+      //gc.fillRect(x2,y2,80,80);
+      gc.setLineWidth(8);
+      gc.strokeLine(x2, y2, x1, y1); //DISTANCE * (j + 1), DISTANCE * (i + 1) - 10
+    }
   }
+
 
   private void putTrainsOnMap()
   {
@@ -146,14 +148,12 @@ public class XMLController extends AnimationTimer
     }
   }
 
-  private int currentXpos=0;// pos where the train should be.
+  private int currentXpos = 0;// pos where the train should be.
 
   @Override
   public void handle(long now)
   {
     frameCounter++;
-
-    gc.strokeLine(50,60,30,30);
 
     for (int i = 0; i < trainNCanvas.size() - 1; i++)
     {
