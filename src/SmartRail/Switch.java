@@ -383,6 +383,7 @@ public class Switch extends Thread implements Component
     if(messages.get(1).getAction().equalsIgnoreCase("readyfortrain"))
     {
       //System.out.println("Ready2");
+      //PUSHING
       return true;
     }
 
