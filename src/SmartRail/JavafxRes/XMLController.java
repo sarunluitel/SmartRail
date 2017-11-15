@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class XMLController extends AnimationTimer
 {
-  private final int DISTANCE = 88;// dictated by the size of tracks and trains. length pixel count
+  private final int DISTANCE = 95;// dictated by the size of tracks and trains. length pixel count
   private int frameCounter = 0;
   @FXML
   private Canvas canvas;
@@ -27,54 +27,106 @@ public class XMLController extends AnimationTimer
 
   private ArrayList<ImageView> trainNCanvas = new ArrayList<>();
   private ArrayList<Train> trainList = TrainView.getInstance().getList();
-
+  private ArrayList<ArrayList> entireMap;
   @FXML
   private Pane gamePane;
 
   @FXML
   void initialize()
   {
-    ArrayList<ArrayList> entireMap;
+
     gc = canvas.getGraphicsContext2D();
 
     entireMap = MapView.getInstance().getEntireMap();
 
     trainNCanvas.add(0, new ImageView());//temp added at 0 to add canvas later
+
     for (int i = 0; i < entireMap.size(); i++)
     {
       ArrayList temp = entireMap.get(i);
+      int componentInTemp=0;
 
-      for (int j = 0; j < temp.size(); j++)
+      for (int j = 0; componentInTemp < temp.size(); j++)
+
       {
 
-        if (temp.get(j) instanceof Station)
+        if (temp.get(componentInTemp) instanceof Station)
         {
           gc.drawImage(stationImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
 
         }
 
-        if (temp.get(j) instanceof Track)
+        if (temp.get(componentInTemp) instanceof Track)
         {
-          gc.fillRect(0, 0, 20, 20);
           gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
 
         }
-        if (temp.get(j) instanceof Switch)
+        if (temp.get(componentInTemp) instanceof Switch) // a switch unfolds to a 0=S=0
         {
-          gc.drawImage(noLight, DISTANCE * (j + 1), DISTANCE * (i+1));
-        }
 
+          gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
+
+          gc.drawImage(leftGreen, DISTANCE * (j + 1), DISTANCE * (i + 1)-20);
+
+          j++;
+
+          gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
+
+          gc.drawImage(noLight, DISTANCE * (j + 2), DISTANCE * (i+1)-20);
+          gc.fillOval(DISTANCE * (j + 1), DISTANCE * (i + 1)-10,40,40);
+          if(i!=0) drawConnection(i);
+
+
+        }
+        componentInTemp++;
       }
     }
 
     putTrainsOnMap();
-
-
-    canvas.setHeight(720);
-    canvas.setWidth(1280);
     gamePane.getChildren().setAll(trainNCanvas);
     gamePane.getChildren().set(0, canvas);
+
     this.start();
+
+
+  }
+
+  private void drawConnection(int currentLayer)
+  {
+    Track tempTrack = new Track();
+
+    for (Component senior : (ArrayList<Component>) entireMap.get(currentLayer-1))
+    {
+      if(senior instanceof Switch)
+      {
+        for (Component junior:(ArrayList<Component>) entireMap.get(currentLayer))
+
+        {
+          if(junior instanceof Switch)
+          {
+            ((Switch) junior).setUpTrack(tempTrack);
+            ((Switch) senior).setDown(tempTrack);
+            if (((Switch) junior).getIsLeft())
+            {
+
+              tempTrack.setNeighbors(junior, "right");
+              tempTrack.setNeighbors(senior, "left");
+
+            } else
+            {
+              tempTrack.setNeighbors(junior, "left");
+              tempTrack.setNeighbors(senior, "right");
+
+            }
+            tempTrack.start();
+
+          }
+
+        }
+
+      }
+
+    }
 
 
   }
@@ -101,6 +153,7 @@ public class XMLController extends AnimationTimer
   {
     frameCounter++;
 
+    gc.strokeLine(50,60,30,30);
 
     for (int i = 0; i < trainNCanvas.size() - 1; i++)
     {
