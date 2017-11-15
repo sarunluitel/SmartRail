@@ -5,10 +5,11 @@ import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,6 @@ public class XMLController extends AnimationTimer
   @FXML
   void initialize()
   {
-
     gc = canvas.getGraphicsContext2D();
 
     entireMap = MapView.getInstance().getEntireMap(); //comes from configuration file
@@ -67,7 +67,7 @@ public class XMLController extends AnimationTimer
 
           gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
 
-          gc.drawImage(leftGreen, DISTANCE * (j + 1), DISTANCE * (i + 1) - 10);
+          gc.drawImage(noLight, DISTANCE * (j + 1), DISTANCE * (i + 1) - 10);
 
           j++;
 
@@ -83,14 +83,18 @@ public class XMLController extends AnimationTimer
       if (i != 0) drawConnection(i);
     }
 
-    putTrainsOnMap();
+
     gamePane.getChildren().setAll(trainNCanvas);
     gamePane.getChildren().set(0, canvas);
+    gamePane.getChildren().add(btnSpawn);
 
     this.start();
 
 
   }
+
+  @FXML
+  private Button btnSpawn;
 
   private void drawConnection(int currentLayer)
   {
@@ -122,11 +126,10 @@ public class XMLController extends AnimationTimer
     for (int i = 0; i < seniorSwitches.size(); i++)
     {
       int x1, x2, y1, y2;
-      x1 = (seniorSwitches.get(i)) * DISTANCE + 10;
-      x2 = (juniorSwitches.get(i)) * DISTANCE + 10;
+      x1 = (seniorSwitches.get(i) + i) * DISTANCE + 10;
+      x2 = (juniorSwitches.get(i) + i) * DISTANCE + 10;
       y1 = (currentLayer) * DISTANCE + 10;
       y2 = (currentLayer + 1) * DISTANCE + 10;
-      //gc.fillRect(x2,y2,80,80);
       gc.setLineWidth(8);
       gc.strokeLine(x2, y2, x1, y1); //DISTANCE * (j + 1), DISTANCE * (i + 1) - 10
     }
@@ -139,13 +142,17 @@ public class XMLController extends AnimationTimer
 
     for (Train t : trainList)
     {
+      System.out.println("looking at the list");
       // element 0 is the canvas so increment of one.
       trainNCanvas.add(i, new ImageView(trainImage));
-      trainNCanvas.get(i).setX(DISTANCE);
-      trainNCanvas.get(i).setY(DISTANCE * (i + 1) - 5);
+      trainNCanvas.get(i).setX(t.getXPos() * DISTANCE);
+      trainNCanvas.get(i).setY(DISTANCE * t.getYPos());
       trainNCanvas.get(i).setId(t.getTrainID() + "");
       i++;
     }
+    gamePane.getChildren().setAll(trainNCanvas);
+    gamePane.getChildren().set(0, canvas);
+    gamePane.getChildren().add(btnSpawn);
   }
 
   private int currentXpos = 0;// pos where the train should be.
@@ -158,13 +165,61 @@ public class XMLController extends AnimationTimer
     for (int i = 0; i < trainNCanvas.size() - 1; i++)
     {
 
-      currentXpos = trainList.get(i).getXPos() * DISTANCE;
-      if (currentXpos != currentXpos + (frameCounter / 3) % 88)
-      {
-        trainNCanvas.get(i + 1).setX(currentXpos + (frameCounter / 3) % 88);
-      }
+      // currentXpos = trainList.get(i).getXPos() * DISTANCE;
+      // if (currentXpos != currentXpos + (frameCounter / 3) % DISTANCE)
+      // {
+      trainNCanvas.get(i + 1).setX(frameCounter);
+      //  }
     }
 
+  }
+
+
+  private int trainSpawn = -1;
+  private int trainDestination = -1;
+
+  @FXML
+  private void clicked(MouseEvent e)
+  {
+    int stationX = (int) (e.getX() / 88);
+    int stationY = (int) (e.getY() / 88);
+    gc.fillRect(stationX * DISTANCE, stationY * DISTANCE, 53, 46);// some indication for clicked station
+
+    if (trainSpawn == -1)
+    {
+      trainSpawn = stationY * 10 + stationX;
+      return;
+    }
+    trainDestination = stationY * 10 + stationX;
+  }
+
+
+  @FXML
+  private void spawn()
+  {
+    Train train;
+    if (trainDestination != -1 && trainSpawn != -1)
+    {
+      for (int j = 0; j < entireMap.get(trainDestination / 10 - 1).size() - 1; j++)
+      {
+
+        if (entireMap.get(trainDestination / 10 - 1).get(trainDestination % 10 - 1 + j) instanceof Station)
+        {
+          train = new Train((Station) entireMap.get(trainDestination / 10 - 1).get(trainDestination % 10 - 1 + j),
+              (Station) entireMap.get(trainSpawn / 10 - 1).get(trainSpawn % 10 - 1), trainSpawn % 10, trainSpawn / 10);
+          TrainView.getInstance().addTrain(train);
+          trainList = TrainView.getInstance().getList();
+
+          trainSpawn = -1;
+          trainDestination = -1;
+          putTrainsOnMap();
+          train.start();
+          return;
+        }
+      }
+
+
+    }
   }
 }
 
