@@ -13,7 +13,7 @@ public class Train extends Thread
   private static int totalTrains = 0;
 
   private int trainID;
-  private Station Destination;// change string to Station when we define station
+  private Station destination;// change string to Station when we define station
   private Component currentComponent; // Train can be currently at station, light switch or track.
   private Station spawnStation; // change string to Station when we define station
   private int xPos = 0; // increase as train moves forward.
@@ -27,14 +27,24 @@ public class Train extends Thread
   {
 
     this.trainID = totalTrains;
-    this.Destination = Destination;// this should be a pointer to a station
+    destination = Destination;// this should be a pointer to a station
     this.spawnStation = spawnStation;
     this.currentComponent = spawnStation;
     currentComponent.getTrainId(this);
     this.yPos = trainID;// this needs to come from the GUI Click
     totalTrains++;
 
+  }
 
+  Train(Station destination, Station spawnStation, int x, int y)
+  {
+    this.trainID = totalTrains;
+    this.destination = destination;// this should be a pointer to a station
+    this.spawnStation = spawnStation;
+    this.currentComponent = spawnStation;
+    currentComponent.getTrainId(this);
+    this.yPos = trainID;// this needs to come from the GUI Click
+    totalTrains++;
   }
 
   public synchronized void acceptMessage(Message m)
@@ -62,36 +72,48 @@ public class Train extends Thread
     //notifyAll();
 
     LinkedList<Component> compList = new LinkedList<>();
-    compList.add(Destination);
+    compList.add(destination);
     currentComponent.acceptMessage(new Message("right", "findpath", compList, currentComponent));
     waiting = true;
-    while (this.Destination != this.currentComponent)
-    {
-      synchronized (this)
-      {
-        if (waiting)
-        {
-          try
-          {
-            wait();
-          } catch (InterruptedException e)
-          {
-            System.out.println("Interrupted");
-          }
-        }
-        if(!goodPath)
-        {
-          break;
-        }
-        //secure path
 
-        currentComponent.acceptMessage(new Message("right", "securepath", pathList, currentComponent));
-        waiting = true;
+    synchronized (this)
+    {
+      if (waiting)
+      {
+        try
+        {
+          wait();
+        } catch (InterruptedException e)
+        {
+          System.out.println("Interrupted");
+        }
       }
+      if(!goodPath)
+      {
+        return;
+      }
+      //secure path
+
+      currentComponent.acceptMessage(new Message("right", "securepath", pathList, currentComponent));
+      waiting = true;
+      if (waiting)
+      {
+        try
+        {
+          wait();
+        } catch (InterruptedException e)
+        {
+          System.out.println("Interrupted");
+        }
+      }
+    }
+    while (this.destination != this.currentComponent)
+    {
+
       //notifyAll();
       //System.out.println("sent message");
 
-      //move();
+      move();
     }
 
     System.out.println("Train " + trainID + " Arrived at " + this.currentComponent.getComponentName());

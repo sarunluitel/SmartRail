@@ -57,6 +57,7 @@ public class Station extends Thread implements Component
   {
     System.out.println("Message received: " + stationName);
     messages.add(mes);
+    System.out.println(messages.getFirst().getAction());
     //System.out.println(message.getDirection());
     notifyAll();
   }
@@ -108,7 +109,7 @@ public class Station extends Thread implements Component
   public synchronized boolean securePath(Message m)
   {
     String dir = m.getDirection();
-    if(secured == true)
+    if(secured)
     {
       if(dir.equalsIgnoreCase("right"))
       {
@@ -266,6 +267,15 @@ public class Station extends Thread implements Component
             //====================================
 
             //====================================
+          }
+          else if(action.equalsIgnoreCase("readyfortrain"))
+          {
+            if(trainInStation != null)
+            {
+              trainInStation.acceptMessage(messages.getFirst());
+
+              messages.remove();
+            }
           }
         }
       }

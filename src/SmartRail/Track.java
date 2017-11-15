@@ -9,8 +9,8 @@ public class Track extends Thread implements Component
   ArrayList<Component> neighbors;
   String name;
   private static int totalTracks = 0;
-  private Component left;
-  private Component right;
+  private Component left = null;
+  private Component right = null;
   private LinkedList<Message> messages = new LinkedList<>();
   private Train trainOnTrack = null;
   private boolean secured = false;
@@ -46,10 +46,9 @@ public class Track extends Thread implements Component
   {
     if (dir.equalsIgnoreCase("right"))
     {
-      if(right == null)
-      {
+
         right = c;
-      }
+
     } else
     {
       if(left == null)

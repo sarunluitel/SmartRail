@@ -12,7 +12,7 @@ public class Switch extends Thread implements Component
   private Track left = null;
   private boolean waitingForResponse = false;
   private volatile boolean returnPath = false;
-  private boolean securedPath = false;
+  private volatile boolean securedPath = false;
   private LinkedList<Message> messages = new LinkedList<>();
   private Component returnComponent = null;
   private Component nextComp = null;
@@ -87,7 +87,7 @@ public class Switch extends Thread implements Component
 
       messages.add(1, message);
       waitingForResponse = false;
-      securedPath = true;
+      returnPath = true;
       notifyAll();
 
     }
@@ -131,12 +131,6 @@ public class Switch extends Thread implements Component
             direction = messages.getFirst().getDirection();
             target = messages.getFirst().getTarget();
           }
-          else if(securedPath)
-          {
-            action = messages.get(1).getAction();
-            direction = messages.get(1).getDirection();
-            target = messages.get(1).getTarget();
-          }
           else
           {
             action = messages.get(1).getAction();
@@ -176,6 +170,7 @@ public class Switch extends Thread implements Component
           {
             returnComponent = messages.getFirst().getSender();
             securePath(messages.getFirst());
+
           }
           else if (action.equalsIgnoreCase("readyfortrain"))
           {
@@ -183,7 +178,7 @@ public class Switch extends Thread implements Component
             messages.remove();
             messages.remove();
             waitingForResponse = false;
-            securedPath = false;
+
           }
           else
           {
@@ -393,6 +388,12 @@ public class Switch extends Thread implements Component
   @Override
   public synchronized boolean readyForTrain(Message m)
   {
+    nextComp = m.getSender();
+    System.out.println("NextComp " + nextComp.getComponentName());
+    m.setSender(this);
+
+    returnComponent.acceptMessage(m);
+    returnPath = false;
     return false;
   }
 
