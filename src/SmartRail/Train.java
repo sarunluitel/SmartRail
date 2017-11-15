@@ -42,11 +42,13 @@ public class Train extends Thread
     waiting = false;
     if(m.getTarget().isEmpty())
     {
+      System.out.println("pathlist empty");
       goodPath = false;
     }
     if(pathList.isEmpty())
     {
       pathList = m.getTarget();
+      System.out.println("Message has" + pathList.getFirst().getComponentName());
     }
     notifyAll();
   }

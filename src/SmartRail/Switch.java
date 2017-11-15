@@ -12,6 +12,7 @@ public class Switch extends Thread implements Component
   private Track left = null;
   private boolean waitingForResponse = false;
   private volatile boolean returnPath = false;
+  private boolean securedPath = false;
   private LinkedList<Message> messages = new LinkedList<>();
   private Component returnComponent = null;
   private Component nextComp = null;
@@ -83,9 +84,12 @@ public class Switch extends Thread implements Component
     else if(message.getAction().equalsIgnoreCase("readyfortrain"))
     {
       System.out.println("ready");
+      /*
       messages.add(1, message);
       waitingForResponse = false;
-
+      securedPath = true;
+      notifyAll();
+      */
     }
     else
     {
@@ -127,6 +131,12 @@ public class Switch extends Thread implements Component
             direction = messages.getFirst().getDirection();
             target = messages.getFirst().getTarget();
           }
+          else if(securedPath)
+          {
+            action = messages.get(1).getAction();
+            direction = messages.get(1).getDirection();
+            target = messages.get(1).getTarget();
+          }
           else
           {
             action = messages.get(1).getAction();
@@ -167,10 +177,19 @@ public class Switch extends Thread implements Component
             returnComponent = messages.getFirst().getSender();
             securePath(messages.getFirst());
           }
+          else if (action.equalsIgnoreCase("readyfortrain"))
+          {
+            readyForTrain(messages.get(1));
+            messages.remove();
+            messages.remove();
+            waitingForResponse = false;
+            securedPath = false;
+          }
           else
           {
             //System.out.println(messages.getFirst().getSender().getComponentName());
             System.out.println(action);
+            messages.remove();
             messages.remove();
           }
 
@@ -332,6 +351,7 @@ public class Switch extends Thread implements Component
       nextComp = m.getSender();
     }
     m.setSender(this);
+    System.out.println("RETCOMP " + returnComponent.getComponentName());
     returnComponent.acceptMessage(m);
     messages.remove();
     messages.remove();
@@ -344,7 +364,7 @@ public class Switch extends Thread implements Component
   public synchronized boolean securePath(Message m)
   {
     String dir = m.getDirection();
-    if(secured == true)
+    if(secured)
     {
       return false;
     }
@@ -362,6 +382,7 @@ public class Switch extends Thread implements Component
     } catch (InterruptedException ex) {}
     if(messages.get(1).getAction().equalsIgnoreCase("readyfortrain"))
     {
+      System.out.println("Ready2");
       return true;
     }
 

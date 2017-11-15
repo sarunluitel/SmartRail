@@ -139,6 +139,11 @@ public class Station extends Thread implements Component
   @Override
   public synchronized boolean readyForTrain(Message m)
   {
+    if(trainInStation != null)
+    {
+
+    }
+    System.out.println("sending back");
     return false;
   }
 
@@ -220,7 +225,10 @@ public class Station extends Thread implements Component
             if(trainInStation != null)
             {
               System.out.println("Train on station");
-              messages.getFirst().getTarget().add(this);
+              if(!target.isEmpty())
+              {
+                messages.getFirst().getTarget().add(this);
+              }
               trainInStation.acceptMessage(messages.getFirst());
               messages.remove();;
             }
@@ -241,7 +249,14 @@ public class Station extends Thread implements Component
                 newDir = "right";
               }
               Message pathSecured = new Message(newDir, "readyfortrain", target, this);
-              readyForTrain(pathSecured);
+              if(newDir.equalsIgnoreCase("left"))
+              {
+                leftTrack.acceptMessage(pathSecured);
+              }
+              else
+              {
+                rightTrack.acceptMessage(pathSecured);
+              }
               messages.remove();
             }
             else
