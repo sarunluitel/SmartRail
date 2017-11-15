@@ -84,12 +84,12 @@ public class Switch extends Thread implements Component
     else if(message.getAction().equalsIgnoreCase("readyfortrain"))
     {
       System.out.println("ready");
-      /*
+
       messages.add(1, message);
       waitingForResponse = false;
       securedPath = true;
       notifyAll();
-      */
+
     }
     else
     {
@@ -351,7 +351,7 @@ public class Switch extends Thread implements Component
       nextComp = m.getSender();
     }
     m.setSender(this);
-    System.out.println("RETCOMP " + returnComponent.getComponentName());
+    //System.out.println("RETCOMP " + returnComponent.getComponentName());
     returnComponent.acceptMessage(m);
     messages.remove();
     messages.remove();
@@ -382,7 +382,8 @@ public class Switch extends Thread implements Component
     } catch (InterruptedException ex) {}
     if(messages.get(1).getAction().equalsIgnoreCase("readyfortrain"))
     {
-      System.out.println("Ready2");
+      //System.out.println("Ready2");
+      //PUSHING
       return true;
     }
 

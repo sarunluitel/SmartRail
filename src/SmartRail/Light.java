@@ -85,6 +85,11 @@ public class Light extends Thread implements Component
           {
             securePath(messages.getFirst());
           }
+          else if(action.equalsIgnoreCase("readyfortrain"))
+          {
+            readyForTrain(messages.getFirst());
+
+          }
           else
           {
             System.out.println(action);
@@ -180,7 +185,21 @@ public class Light extends Thread implements Component
   @Override
   public synchronized boolean readyForTrain(Message m)
   {
-    return false;
+    String dir = m.getDirection();
+
+    m.setSender(this);
+    if(dir.equalsIgnoreCase("left"))
+    {
+
+      leftTrack.acceptMessage(m);
+    }
+    else
+    {
+
+      rightTrack.acceptMessage(m);
+    }
+    messages.remove();
+    return true;
   }
 
   @Override
