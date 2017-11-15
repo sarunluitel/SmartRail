@@ -46,10 +46,16 @@ public class Track extends Thread implements Component
   {
     if (dir.equalsIgnoreCase("right"))
     {
-      right = c;
+      if(right == null)
+      {
+        right = c;
+      }
     } else
     {
-      left = c;
+      if(left == null)
+      {
+        left = c;
+      }
     }
   }
 
