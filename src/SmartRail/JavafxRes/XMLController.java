@@ -1,11 +1,11 @@
 package SmartRail.JavafxRes;
 
 import SmartRail.*;
-import com.sun.xml.internal.bind.v2.TODO;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -83,14 +83,18 @@ public class XMLController extends AnimationTimer
       if (i != 0) drawConnection(i);
     }
 
-    putTrainsOnMap();
+
     gamePane.getChildren().setAll(trainNCanvas);
     gamePane.getChildren().set(0, canvas);
+    gamePane.getChildren().add(btnSpawn);
 
     this.start();
 
 
   }
+
+  @FXML
+  private Button btnSpawn;
 
   private void drawConnection(int currentLayer)
   {
@@ -138,13 +142,17 @@ public class XMLController extends AnimationTimer
 
     for (Train t : trainList)
     {
+      System.out.println("looking at the list");
       // element 0 is the canvas so increment of one.
       trainNCanvas.add(i, new ImageView(trainImage));
-      trainNCanvas.get(i).setX(DISTANCE);
-      trainNCanvas.get(i).setY(DISTANCE * (i + 1) - 5);
+      trainNCanvas.get(i).setX(t.getXPos() * DISTANCE);
+      trainNCanvas.get(i).setY(DISTANCE * t.getYPos());
       trainNCanvas.get(i).setId(t.getTrainID() + "");
       i++;
     }
+    gamePane.getChildren().setAll(trainNCanvas);
+    gamePane.getChildren().set(0, canvas);
+    gamePane.getChildren().add(btnSpawn);
   }
 
   private int currentXpos = 0;// pos where the train should be.
@@ -173,13 +181,45 @@ public class XMLController extends AnimationTimer
   @FXML
   private void clicked(MouseEvent e)
   {
-    if (trainSpawn != -1 && trainDestination != -1)
+    int stationX = (int) (e.getX() / 88);
+    int stationY = (int) (e.getY() / 88);
+    gc.fillRect(stationX * DISTANCE, stationY * DISTANCE, 53, 46);// some indication for clicked station
+
+    if (trainSpawn == -1)
     {
-      //Train newTrain = new Train();
-      TODO sfdg;
+      trainSpawn = stationY * 10 + stationX;
+      return;
     }
-    System.out.println(e.getX()/88);
-    //System.out.println(e.getY()/88);
+    trainDestination = stationY * 10 + stationX;
+  }
+
+
+  @FXML
+  private void spawn()
+  {
+    Train train;
+    if (trainDestination != -1 && trainSpawn != -1)
+    {
+      for (int j = 0; j < entireMap.get(trainDestination / 10 - 1).size() - 1; j++)
+      {
+
+        if (entireMap.get(trainDestination / 10 - 1).get(trainDestination % 10 - 1 + j) instanceof Station)
+        {
+          train = new Train((Station) entireMap.get(trainDestination / 10 - 1).get(trainDestination % 10 - 1 + j),
+              (Station) entireMap.get(trainSpawn / 10 - 1).get(trainSpawn % 10 - 1), trainSpawn % 10, trainSpawn / 10);
+          TrainView.getInstance().addTrain(train);
+          trainList = TrainView.getInstance().getList();
+
+          trainSpawn = -1;
+          trainDestination = -1;
+          putTrainsOnMap();
+          train.start();
+          return;
+        }
+      }
+
+
+    }
   }
 }
 

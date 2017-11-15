@@ -23,7 +23,7 @@ public class Train extends Thread
   private LinkedList<Component> pathList = new LinkedList<>();
 
 
-  Train(Station Destination, Station spawnStation)
+  public Train(Station Destination, Station spawnStation)
   {
 
     this.trainID = totalTrains;
@@ -36,26 +36,27 @@ public class Train extends Thread
 
   }
 
-  Train(Station destination, Station spawnStation, int x, int y)
+  public Train(Station destination, Station spawnStation, int x, int y)
   {
     this.trainID = totalTrains;
     this.destination = destination;// this should be a pointer to a station
     this.spawnStation = spawnStation;
     this.currentComponent = spawnStation;
     currentComponent.getTrainId(this);
-    this.yPos = trainID;// this needs to come from the GUI Click
+    this.xPos = x;
+    this.yPos = y;// this needs to come from the GUI Click
     totalTrains++;
   }
 
   public synchronized void acceptMessage(Message m)
   {
     waiting = false;
-    if(m.getTarget().isEmpty())
+    if (m.getTarget().isEmpty())
     {
       System.out.println("pathlist empty");
       goodPath = false;
     }
-    if(pathList.isEmpty())
+    if (pathList.isEmpty())
     {
       pathList = m.getTarget();
       System.out.println("Message has" + pathList.getFirst().getComponentName());
@@ -88,7 +89,7 @@ public class Train extends Thread
           System.out.println("Interrupted");
         }
       }
-      if(!goodPath)
+      if (!goodPath)
       {
         return;
       }
@@ -134,7 +135,7 @@ public class Train extends Thread
         {
           System.out.println("All Aboard train " + trainID + " leaving from " + this.spawnStation.getComponentName());
           xPos++;
-          System.out.println("Current XPOS "+xPos);
+          System.out.println("Current XPOS " + xPos);
 
         }
 
@@ -150,7 +151,7 @@ public class Train extends Thread
 
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());
         xPos++;
-        System.out.println("Current XPOS "+xPos);
+        System.out.println("Current XPOS " + xPos);
         System.out.println();
 
         try
@@ -182,5 +183,8 @@ public class Train extends Thread
     return yPos;
   }
 
-  public int getTrainID(){return this.trainID;}
+  public int getTrainID()
+  {
+    return this.trainID;
+  }
 }
