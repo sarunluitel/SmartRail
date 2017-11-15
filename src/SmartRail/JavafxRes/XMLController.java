@@ -168,7 +168,7 @@ public class XMLController extends AnimationTimer
       // currentXpos = trainList.get(i).getXPos() * DISTANCE;
       // if (currentXpos != currentXpos + (frameCounter / 3) % DISTANCE)
       // {
-      trainNCanvas.get(i + 1).setX((frameCounter));
+      trainNCanvas.get(i + 1).setX(frameCounter);
       //  }
     }
 
