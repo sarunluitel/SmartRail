@@ -77,7 +77,7 @@ public class Switch extends Thread implements Component
   @Override
   public synchronized void acceptMessage(Message message)
   {
-    System.out.println("Switch has message" + getComponentName());
+    System.out.println("Switch has message " + getComponentName());
     System.out.println(messages.size());
     if (message.getAction().equalsIgnoreCase("returnpath"))
     {
@@ -95,7 +95,14 @@ public class Switch extends Thread implements Component
       returnPath = true;
       notifyAll();
 
-    } else
+    } else if (message.getAction().equalsIgnoreCase("couldnotsecure"))
+    {
+      messages.add(1, message);
+      waitingForResponse = false;
+      returnPath = true;
+      notifyAll();
+    }
+    else
     {
       messages.add(message);
     }
@@ -178,7 +185,12 @@ public class Switch extends Thread implements Component
             messages.remove();
             waitingForResponse = false;
 
-          } else
+          } else if (action.equalsIgnoreCase("couldnotsecure"))
+          {
+            couldNotSecure(messages.get(1));
+            waitingForResponse = false;
+          }
+          else
           {
             //System.out.println(messages.getFirst().getSender().getComponentName());
             System.out.println(action);
@@ -373,7 +385,7 @@ public class Switch extends Thread implements Component
     if (!m.getTarget().isEmpty())
     {
       m.getTarget().add(this);
-      nextComp = m.getSender();
+
     }
     m.setSender(this);
     //System.out.println("RETCOMP " + returnComponent.getComponentName());
@@ -391,6 +403,17 @@ public class Switch extends Thread implements Component
     String dir = m.getDirection();
     if (secured)
     {
+      String newDir;
+      if(dir.equalsIgnoreCase("right"))
+      {
+        newDir = "left";
+      }
+      else
+      {
+        newDir = "right";
+      }
+      returnComponent.acceptMessage(new Message(newDir, "couldnotsecure", new LinkedList<>(), this));
+      messages.remove();
       return false;
     }
 
@@ -441,6 +464,12 @@ public class Switch extends Thread implements Component
   @Override
   public synchronized boolean couldNotSecure(Message m)
   {
+    secured = false;
+    m.setSender(this);
+    returnComponent.acceptMessage(m);
+    returnPath = false;
+    messages.remove();
+    messages.remove();
     return false;
   }
 

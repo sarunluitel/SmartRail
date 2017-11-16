@@ -90,7 +90,11 @@ public class Light extends Thread implements Component
           {
             readyForTrain(messages.getFirst());
 
-          } else
+          } else if (action.equalsIgnoreCase("couldnotsecure"))
+          {
+            couldNotSecure(messages.getFirst());
+          }
+          else
           {
             System.out.println(action);
             messages.remove();
@@ -155,6 +159,15 @@ public class Light extends Thread implements Component
     String dir = m.getDirection();
     if (secured == true)
     {
+      if(dir.equalsIgnoreCase("right"))
+      {
+        leftTrack.acceptMessage(new Message("left", "couldnotsecure", new LinkedList<>(), this));
+      }
+      else
+      {
+        rightTrack.acceptMessage(new Message("right", "couldnotsecure", new LinkedList<>(), this));
+      }
+      messages.remove();
       return false;
     }
 
@@ -200,6 +213,18 @@ public class Light extends Thread implements Component
   @Override
   public synchronized boolean couldNotSecure(Message m)
   {
+    secured = false;
+    String dir = m.getDirection();
+    m.setSender(this);
+    if(dir.equalsIgnoreCase("right"))
+    {
+      rightTrack.acceptMessage(m);
+    }
+    else
+    {
+      leftTrack.acceptMessage(m);
+    }
+    messages.remove();
     return false;
   }
 
