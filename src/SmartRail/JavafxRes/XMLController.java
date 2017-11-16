@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class XMLController extends AnimationTimer
 {
-  private final int DISTANCE = 88;// dictated by the size of tracks and trains. length pixel count
+  private final int DISTANCE = 95;// dictated by the size of tracks and trains. length pixel count
   private int frameCounter = 0;
   @FXML
   private Canvas canvas;
@@ -142,7 +142,6 @@ public class XMLController extends AnimationTimer
 
     for (Train t : trainList)
     {
-      System.out.println("looking at the list");
       // element 0 is the canvas so increment of one.
       trainNCanvas.add(i, new ImageView(trainImage));
       trainNCanvas.get(i).setX(t.getXPos() * DISTANCE);
@@ -181,8 +180,8 @@ public class XMLController extends AnimationTimer
   @FXML
   private void clicked(MouseEvent e)
   {
-    int stationX = (int) (e.getX() / 88);
-    int stationY = (int) (e.getY() / 88);
+    int stationX = (int) (e.getX() / DISTANCE);
+    int stationY = (int) (e.getY() / DISTANCE);
     gc.fillRect(stationX * DISTANCE, stationY * DISTANCE, 53, 46);// some indication for clicked station
 
     if (trainSpawn == -1)
