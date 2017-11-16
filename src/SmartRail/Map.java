@@ -52,7 +52,7 @@ public class Map
     //Starts with 1 because the component 0 is a station. already hard coded
     for (int i = 0; i < compInLayer; i++)
     {
-      if(temp.get(i) instanceof Station)
+      if (temp.get(i) instanceof Station)
       {
         //assign first Track to station.
 
@@ -100,7 +100,6 @@ public class Map
 
         ((Switch) temp.get(i)).setRight(rightTrack);
 
-        System.out.println("Starting Switches "+ ((Switch) temp.get(i)).getComponentName());
         ((Switch) temp.get(i)).start();
         rightLight.start();
         leftLight.start();
@@ -117,11 +116,11 @@ public class Map
 
     for (Component senior : (ArrayList<Component>) layers.get(layerCount - 1))
     {
-      if (senior instanceof Switch)
+      if (senior instanceof Switch && ((Switch) senior).getDown() == null)
       {
         for (Component junior : (ArrayList<Component>) layers.get(layerCount))
         {
-          if (junior instanceof Switch)
+          if (junior instanceof Switch && ((Switch) junior).getUpTrack() == null)
           {
             tempList.addLast(new Track());
             ((Switch) junior).setUpTrack(tempList.getLast());
@@ -141,15 +140,13 @@ public class Map
             }
             tempList.getLast().start();
 
+            break;
           }
 
         }
-
       }
 
     }
-
-
   }
 
   ArrayList getMap(int layer)
