@@ -138,9 +138,6 @@ public class XMLController extends AnimationTimer
 
   private void putTrainsOnMap()
   {
-    int i = 1; // index 0 is reserved for canvas always
-
-
     int totalTrains = trainList.size();
     // element 0 is the canvas so increment of one.
     Train t = trainList.get(totalTrains - 1);
@@ -148,7 +145,7 @@ public class XMLController extends AnimationTimer
     trainNCanvas.get(totalTrains).setX(t.getXPos() * DISTANCE);
     trainNCanvas.get(totalTrains).setY(DISTANCE * t.getYPos() + 10);
     trainNCanvas.get(totalTrains).setId(t.getTrainID() + "");
-
+    //put new train on the pane to display
 
     gamePane.getChildren().setAll(trainNCanvas);
     gamePane.getChildren().set(0, canvas);
@@ -162,13 +159,14 @@ public class XMLController extends AnimationTimer
   {
     frameCounter++;
     if (frameCounter == 880) frameCounter = 0;
-    for (int i = 0; i < trainNCanvas.size() - 1; i++)
+    for (int i = 1; i < trainNCanvas.size() ; i++)
     {
+
 
       // currentXpos = trainList.get(i).getXPos() * DISTANCE;
       // if (currentXpos != currentXpos + (frameCounter / 3) % DISTANCE)
       // {
-      //trainNCanvas.get(i + 1).setX(frameCounter);
+      trainNCanvas.get(i).setX(frameCounter);
       //  }
     }
 
