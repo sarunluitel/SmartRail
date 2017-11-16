@@ -4,7 +4,8 @@ import java.util.LinkedList;
 
 public class Switch extends Thread implements Component
 {
-
+  private static int switchCount = 0;
+  private int switchId;
   private final boolean isLeft;
   private Track upTrack = null;
   private Track down = null;
@@ -18,8 +19,11 @@ public class Switch extends Thread implements Component
   private Component nextComp = null;
   private boolean secured = false;
 
-  Switch(boolean isLeft){
+  Switch(boolean isLeft)
+  {
     this.isLeft=isLeft;
+    switchCount++;
+    switchId = switchCount;
   }
 
   public Track getUpTrack()
@@ -143,6 +147,7 @@ public class Switch extends Thread implements Component
           if (action.equalsIgnoreCase("findpath"))
           {
             returnComponent = messages.getFirst().getSender();
+            //System.out.println(returnComponent.getComponentName());
             if(!findPath(target.get(0), direction))
             {
 
@@ -163,10 +168,8 @@ public class Switch extends Thread implements Component
           }
           else if (action.equalsIgnoreCase("returnpath"))
           {
-
             returnPath(messages.get(1));
             //messages.remove();
-
           }
           else if (action.equalsIgnoreCase("securepath"))
           {
@@ -209,6 +212,7 @@ public class Switch extends Thread implements Component
       if(isLeft)
       {
         right.acceptMessage(new Message(dir, "findpath", compList, this));
+        System.out.println("RIGHT");
         try
         {
           wait();
@@ -439,6 +443,7 @@ public class Switch extends Thread implements Component
   @Override
   public String getComponentName()
   {
-    return null;
+    String switchName = "Switch " + switchId;
+    return switchName;
   }
 }

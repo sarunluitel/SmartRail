@@ -125,7 +125,7 @@ public class Train extends Thread
 
   }
 
-  private void move()
+  private synchronized void move()
   {
     try
     {

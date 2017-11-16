@@ -10,8 +10,8 @@
 // DO NOT LEAVE  BLANK LINES.
 //
 //
-S==R==L=S
-S===L==R=S
+S==R===L=S
+S===L=R=S
 S====S
 S===L==S
 S=R==S
