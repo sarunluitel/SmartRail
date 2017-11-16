@@ -9,7 +9,7 @@ public class Message
   private LinkedList<Component> intendedTarget;
   private Component sender;
 
-  public Message (String dir, String act, LinkedList<Component> compList, Component c)
+  public Message(String dir, String act, LinkedList<Component> compList, Component c)
   {
     direction = dir;
     action = act;

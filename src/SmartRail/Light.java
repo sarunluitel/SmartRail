@@ -54,7 +54,7 @@ public class Light extends Thread implements Component
   @Override
   public void run()
   {
-    while(true)
+    while (true)
     {
       synchronized (this)
       {
@@ -64,11 +64,11 @@ public class Light extends Thread implements Component
           {
 
             wait();
-          } catch (InterruptedException ex) {
+          } catch (InterruptedException ex)
+          {
             //Print
           }
-        }
-        else
+        } else
         {
           String action = messages.getFirst().getAction();
           String direction = messages.getFirst().getDirection();
@@ -78,23 +78,19 @@ public class Light extends Thread implements Component
             findPath(target.get(0), direction);
             messages.remove();
             notifyAll();
-          }
-          else if (action.equalsIgnoreCase("returnpath"))
+          } else if (action.equalsIgnoreCase("returnpath"))
           {
             returnPath(messages.getFirst());
             messages.remove();
             notifyAll();
-          }
-          else if (action.equalsIgnoreCase("securepath"))
+          } else if (action.equalsIgnoreCase("securepath"))
           {
             securePath(messages.getFirst());
-          }
-          else if(action.equalsIgnoreCase("readyfortrain"))
+          } else if (action.equalsIgnoreCase("readyfortrain"))
           {
             readyForTrain(messages.getFirst());
 
-          }
-          else
+          } else
           {
             System.out.println(action);
             messages.remove();
@@ -121,8 +117,7 @@ public class Light extends Thread implements Component
     {
       rightTrack.acceptMessage(new Message(dir, "findpath", targetComponent, this));
       return true;
-    }
-    else if (dir.equalsIgnoreCase("left"))
+    } else if (dir.equalsIgnoreCase("left"))
     {
       leftTrack.acceptMessage(new Message(dir, "findpath", targetComponent, this));
       return true;
@@ -136,17 +131,16 @@ public class Light extends Thread implements Component
   {
     String dir = m.getDirection();
 
-    if(!m.getTarget().isEmpty())
+    if (!m.getTarget().isEmpty())
     {
       m.getTarget().add(this);
     }
 
-    if(dir.equalsIgnoreCase("left"))
+    if (dir.equalsIgnoreCase("left"))
     {
       m.setSender(this);
       leftTrack.acceptMessage(m);
-    }
-    else
+    } else
     {
       m.setSender(this);
       rightTrack.acceptMessage(m);
@@ -159,21 +153,20 @@ public class Light extends Thread implements Component
   public synchronized boolean securePath(Message m)
   {
     String dir = m.getDirection();
-    if(secured == true)
+    if (secured == true)
     {
       return false;
     }
 
     secured = true;
-    m.getTarget().remove(m.getTarget().size()-1);
+    m.getTarget().remove(m.getTarget().size() - 1);
     m.setSender(this);
-    if(dir.equalsIgnoreCase("right"))
+    if (dir.equalsIgnoreCase("right"))
     {
       leftLight = "green";
       rightLight = "red";
       rightTrack.acceptMessage(m);
-    }
-    else
+    } else
     {
       leftLight = "red";
       rightLight = "green";
@@ -191,12 +184,11 @@ public class Light extends Thread implements Component
     String dir = m.getDirection();
 
     m.setSender(this);
-    if(dir.equalsIgnoreCase("left"))
+    if (dir.equalsIgnoreCase("left"))
     {
 
       leftTrack.acceptMessage(m);
-    }
-    else
+    } else
     {
 
       rightTrack.acceptMessage(m);

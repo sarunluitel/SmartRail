@@ -16,17 +16,17 @@ public class Track extends Thread implements Component
   private boolean secured = false;
 
   public Track()
-{
-  totalTracks++;
-  this.name = "Track " + totalTracks;
-}
+  {
+    totalTracks++;
+    this.name = "Track " + totalTracks;
+  }
 
   public Track(Component left, Component right)
   {
     totalTracks++;
     this.name = "Track " + totalTracks;
-    this.left=left;
-    this.right=right;
+    this.left = left;
+    this.right = right;
   }
 
   //Getter methods
@@ -47,11 +47,11 @@ public class Track extends Thread implements Component
     if (dir.equalsIgnoreCase("right"))
     {
 
-        right = c;
+      right = c;
 
     } else
     {
-      if(left == null)
+      if (left == null)
       {
         left = c;
       }
@@ -81,8 +81,7 @@ public class Track extends Thread implements Component
     {
       right.acceptMessage(new Message(dir, "findpath", targetComponent, this));
       return true;
-    }
-    else if (dir.equalsIgnoreCase("left"))
+    } else if (dir.equalsIgnoreCase("left"))
     {
       left.acceptMessage(new Message(dir, "findpath", targetComponent, this));
       return true;
@@ -96,16 +95,15 @@ public class Track extends Thread implements Component
   {
     String dir = m.getDirection();
     //LinkedList<Component> pathList = m.getTarget();
-    if(!m.getTarget().isEmpty())
+    if (!m.getTarget().isEmpty())
     {
       m.getTarget().add(this);
     }
     m.setSender(this);
-    if(dir.equalsIgnoreCase("left"))
+    if (dir.equalsIgnoreCase("left"))
     {
       left.acceptMessage(m);
-    }
-    else
+    } else
     {
       right.acceptMessage(m);
     }
@@ -117,25 +115,23 @@ public class Track extends Thread implements Component
   public synchronized boolean securePath(Message m)
   {
     String dir = m.getDirection();
-    if(secured == true)
+    if (secured == true)
     {
       return false;
     }
 
     secured = true;
-    m.getTarget().remove(m.getTarget().size()-1);
+    m.getTarget().remove(m.getTarget().size() - 1);
     m.setSender(this);
-    if(dir.equalsIgnoreCase("right"))
+    if (dir.equalsIgnoreCase("right"))
     {
 
       right.acceptMessage(m);
-    }
-    else
+    } else
     {
       left.acceptMessage(m);
     }
     messages.remove();
-
 
 
     return true;
@@ -146,11 +142,10 @@ public class Track extends Thread implements Component
   {
     String dir = m.getDirection();
     m.setSender(this);
-    if(dir.equalsIgnoreCase("left"))
+    if (dir.equalsIgnoreCase("left"))
     {
       left.acceptMessage(m);
-    }
-    else
+    } else
     {
       right.acceptMessage(m);
     }
@@ -167,7 +162,7 @@ public class Track extends Thread implements Component
   @Override
   public void run()
   {
-    while(true)
+    while (true)
     {
       synchronized (this)
       {
@@ -177,11 +172,11 @@ public class Track extends Thread implements Component
           {
 
             wait();
-          } catch (InterruptedException ex) {
+          } catch (InterruptedException ex)
+          {
             //Print
           }
-        }
-        else
+        } else
         {
           String action = messages.getFirst().getAction();
           String direction = messages.getFirst().getDirection();
@@ -191,24 +186,20 @@ public class Track extends Thread implements Component
             findPath(target.get(0), direction);
             messages.remove();
             notifyAll();
-          }
-          else if (action.equalsIgnoreCase("returnpath"))
+          } else if (action.equalsIgnoreCase("returnpath"))
           {
             returnPath(messages.getFirst());
             messages.remove();
             notifyAll();
-          }
-          else if (action.equalsIgnoreCase("securepath"))
+          } else if (action.equalsIgnoreCase("securepath"))
           {
             securePath(messages.getFirst());
             //messages.remove();
 
-          }
-          else if (action.equalsIgnoreCase("readyfortrain"))
+          } else if (action.equalsIgnoreCase("readyfortrain"))
           {
             readyForTrain(messages.getFirst());
-          }
-          else
+          } else
           {
             System.out.println(action);
             messages.remove();

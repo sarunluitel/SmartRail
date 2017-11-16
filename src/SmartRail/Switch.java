@@ -23,7 +23,7 @@ public class Switch extends Thread implements Component
 
   Switch(boolean isLeft)
   {
-    this.isLeft=isLeft;
+    this.isLeft = isLeft;
     switchCount++;
     switchId = switchCount;
   }
@@ -79,15 +79,14 @@ public class Switch extends Thread implements Component
   {
     System.out.println("Switch has message" + getComponentName());
     System.out.println(messages.size());
-    if(message.getAction().equalsIgnoreCase("returnpath"))
+    if (message.getAction().equalsIgnoreCase("returnpath"))
     {
       System.out.println("returned");
       messages.add(1, message);
       waitingForResponse = false;
       returnPath = true;
       notifyAll();
-    }
-    else if(message.getAction().equalsIgnoreCase("readyfortrain"))
+    } else if (message.getAction().equalsIgnoreCase("readyfortrain"))
     {
       System.out.println("ready");
 
@@ -96,12 +95,11 @@ public class Switch extends Thread implements Component
       returnPath = true;
       notifyAll();
 
-    }
-    else
+    } else
     {
       messages.add(message);
     }
-    if(messages.size() == 1)
+    if (messages.size() == 1)
     {
       //System.out.println("Size 1");
       notifyAll();
@@ -110,11 +108,10 @@ public class Switch extends Thread implements Component
   }
 
 
-
   @Override
   public void run()
   {
-    while(true)
+    while (true)
     {
       synchronized (this)
       {
@@ -124,11 +121,11 @@ public class Switch extends Thread implements Component
           {
 
             wait();
-          } catch (InterruptedException ex) {
+          } catch (InterruptedException ex)
+          {
             //Print
           }
-        }
-        else
+        } else
         {
           String action;
           String direction;
@@ -138,8 +135,7 @@ public class Switch extends Thread implements Component
             action = messages.getFirst().getAction();
             direction = messages.getFirst().getDirection();
             target = messages.getFirst().getTarget();
-          }
-          else
+          } else
           {
             action = messages.get(1).getAction();
             direction = messages.get(1).getDirection();
@@ -150,15 +146,14 @@ public class Switch extends Thread implements Component
           {
             returnComponent = messages.getFirst().getSender();
             //System.out.println(returnComponent.getComponentName());
-            if(!findPath(target.get(0), direction))
+            if (!findPath(target.get(0), direction))
             {
 
               String newDir;
-              if(direction.equalsIgnoreCase("left"))
+              if (direction.equalsIgnoreCase("left"))
               {
                 newDir = "right";
-              }
-              else
+              } else
               {
                 newDir = "left";
               }
@@ -167,27 +162,23 @@ public class Switch extends Thread implements Component
             }
             System.out.println("running");
             notifyAll();
-          }
-          else if (action.equalsIgnoreCase("returnpath"))
+          } else if (action.equalsIgnoreCase("returnpath"))
           {
             returnPath(messages.get(1));
             //messages.remove();
-          }
-          else if (action.equalsIgnoreCase("securepath"))
+          } else if (action.equalsIgnoreCase("securepath"))
           {
             returnComponent = messages.getFirst().getSender();
             securePath(messages.getFirst());
 
-          }
-          else if (action.equalsIgnoreCase("readyfortrain"))
+          } else if (action.equalsIgnoreCase("readyfortrain"))
           {
             readyForTrain(messages.get(1));
             messages.remove();
             messages.remove();
             waitingForResponse = false;
 
-          }
-          else
+          } else
           {
             //System.out.println(messages.getFirst().getSender().getComponentName());
             System.out.println(action);
@@ -208,22 +199,23 @@ public class Switch extends Thread implements Component
     LinkedList<Component> compList = new LinkedList<>();
     compList.add(c);
     //For Direction right
-    if(dir.equalsIgnoreCase("right"))
+    if (dir.equalsIgnoreCase("right"))
     {
       //If dir = right and isLeft, only one track option
-      if(isLeft)
+      if (isLeft)
       {
         right.acceptMessage(new Message(dir, "findpath", compList, this));
         System.out.println("RIGHT");
         try
         {
           wait();
-        } catch (InterruptedException ex) {}
-        if(!messages.get(1).getTarget().isEmpty())
+        } catch (InterruptedException ex)
+        {
+        }
+        if (!messages.get(1).getTarget().isEmpty())
         {
           return true;
-        }
-        else
+        } else
         {
           messages.remove(1);
           returnPath = false;
@@ -232,56 +224,59 @@ public class Switch extends Thread implements Component
       //multiple options
       else
       {
-        if(upTrack != null)
+        if (upTrack != null)
         {
           System.out.println("up");
           upTrack.acceptMessage(new Message(dir, "findpath", compList, this));
           try
           {
             wait();
-          } catch (InterruptedException ex) {}
-          if(!messages.get(1).getTarget().isEmpty())
+          } catch (InterruptedException ex)
+          {
+          }
+          if (!messages.get(1).getTarget().isEmpty())
           {
             return true;
-          }
-          else
+          } else
           {
             messages.remove(1);
             returnPath = false;
           }
           System.out.println("up");
         }
-        if(right != null)
+        if (right != null)
         {
           System.out.println("right");
           right.acceptMessage(new Message(dir, "findpath", compList, this));
           try
           {
             wait();
-          } catch (InterruptedException ex) {}
-          if(!messages.get(1).getTarget().isEmpty())
+          } catch (InterruptedException ex)
+          {
+          }
+          if (!messages.get(1).getTarget().isEmpty())
           {
             return true;
-          }
-          else
+          } else
           {
             messages.remove(1);
             returnPath = false;
           }
         }
-        if(down != null)
+        if (down != null)
         {
           System.out.println("down");
           down.acceptMessage(new Message(dir, "findpath", compList, this));
           try
           {
             wait();
-          } catch (InterruptedException ex) {}
-          if(!messages.get(1).getTarget().isEmpty())
+          } catch (InterruptedException ex)
+          {
+          }
+          if (!messages.get(1).getTarget().isEmpty())
           {
             return true;
-          }
-          else
+          } else
           {
             messages.remove(1);
           }
@@ -292,70 +287,73 @@ public class Switch extends Thread implements Component
     //For Direction left
     else
     {
-      if(!isLeft)
+      if (!isLeft)
       {
         left.acceptMessage(new Message(dir, "findpath", compList, this));
         try
         {
           wait();
-        } catch (InterruptedException ex) {}
-        if(!messages.get(1).getTarget().isEmpty())
+        } catch (InterruptedException ex)
+        {
+        }
+        if (!messages.get(1).getTarget().isEmpty())
         {
           return true;
-        }
-        else
+        } else
         {
           messages.remove(1);
           returnPath = false;
         }
-      }
-      else
+      } else
       {
-        if(upTrack != null)
+        if (upTrack != null)
         {
           upTrack.acceptMessage(new Message(dir, "findpath", compList, this));
           try
           {
             wait();
-          } catch (InterruptedException ex) {}
-          if(!messages.get(1).getTarget().isEmpty())
+          } catch (InterruptedException ex)
+          {
+          }
+          if (!messages.get(1).getTarget().isEmpty())
           {
             return true;
-          }
-          else
+          } else
           {
             messages.remove(1);
           }
           System.out.println("up");
         }
-        if(left != null)
+        if (left != null)
         {
           left.acceptMessage(new Message(dir, "findpath", compList, this));
           try
           {
             wait();
-          } catch (InterruptedException ex) {}
-          if(!messages.get(1).getTarget().isEmpty())
+          } catch (InterruptedException ex)
+          {
+          }
+          if (!messages.get(1).getTarget().isEmpty())
           {
             return true;
-          }
-          else
+          } else
           {
             messages.remove(1);
           }
         }
-        if(down != null)
+        if (down != null)
         {
           down.acceptMessage(new Message(dir, "findpath", compList, this));
           try
           {
             wait();
-          } catch (InterruptedException ex) {}
-          if(!messages.get(1).getTarget().isEmpty())
+          } catch (InterruptedException ex)
+          {
+          }
+          if (!messages.get(1).getTarget().isEmpty())
           {
             return true;
-          }
-          else
+          } else
           {
             messages.remove(1);
           }
@@ -365,7 +363,6 @@ public class Switch extends Thread implements Component
     }
 
 
-
     System.out.println("Done waiting");
     return false;
   }
@@ -373,7 +370,7 @@ public class Switch extends Thread implements Component
   @Override
   public synchronized boolean returnPath(Message m)
   {
-    if(!m.getTarget().isEmpty())
+    if (!m.getTarget().isEmpty())
     {
       m.getTarget().add(this);
       nextComp = m.getSender();
@@ -392,13 +389,13 @@ public class Switch extends Thread implements Component
   public synchronized boolean securePath(Message m)
   {
     String dir = m.getDirection();
-    if(secured)
+    if (secured)
     {
       return false;
     }
 
     secured = true;
-    m.getTarget().remove(m.getTarget().size()-1);
+    m.getTarget().remove(m.getTarget().size() - 1);
     m.setSender(this);
     m.getTarget().getLast().acceptMessage(m);
     //System.out.println(m.getTarget().getFirst().getComponentName());
@@ -407,8 +404,10 @@ public class Switch extends Thread implements Component
     try
     {
       wait();
-    } catch (InterruptedException ex) {}
-    if(messages.get(1).getAction().equalsIgnoreCase("readyfortrain"))
+    } catch (InterruptedException ex)
+    {
+    }
+    if (messages.get(1).getAction().equalsIgnoreCase("readyfortrain"))
     {
       //System.out.println("Ready2");
       //PUSHING
@@ -422,15 +421,13 @@ public class Switch extends Thread implements Component
   public synchronized boolean readyForTrain(Message m)
   {
     nextComp = m.getSender();
-    if(nextComp == right)
+    if (nextComp == right)
     {
       dirForTrain = "right";
-    }
-    else if(nextComp == left)
+    } else if (nextComp == left)
     {
       dirForTrain = "left";
-    }
-    else if(nextComp == upTrack)
+    } else if (nextComp == upTrack)
     {
       dirForTrain = "up";
     }

@@ -22,17 +22,19 @@ public class Train extends Thread
   private boolean goodPath = true;
   private LinkedList<Component> pathList = new LinkedList<>();
   private String direction;
+  private String trainName;
 
 
   public Train(Station Destination, Station spawnStation)
   {
 
     this.trainID = totalTrains;
+    this.trainName = "Train " + trainID;
     destination = Destination;// this should be a pointer to a station
     this.spawnStation = spawnStation;
     this.currentComponent = spawnStation;
     currentComponent.getTrainId(this);
-    this.yPos = trainID;// this needs to come from the GUI Click
+    //this.yPos = trainID;// this needs to come from the GUI Click
     totalTrains++;
 
   }
@@ -40,6 +42,7 @@ public class Train extends Thread
   public Train(Station destination, Station spawnStation, int x, int y)
   {
     this.trainID = totalTrains;
+    this.trainName = "Train " + trainID;
     this.destination = destination;// this should be a pointer to a station
     this.spawnStation = spawnStation;
     this.currentComponent = spawnStation;
@@ -49,6 +52,11 @@ public class Train extends Thread
     totalTrains++;
   }
 
+  public String getTrainName()
+  {
+    return trainName;
+  }
+
   public synchronized void acceptMessage(Message m)
   {
     waiting = false;
@@ -56,8 +64,7 @@ public class Train extends Thread
     {
       System.out.println("pathlist empty");
       goodPath = false;
-    }
-    else if (pathList.isEmpty())
+    } else if (pathList.isEmpty())
     {
       pathList = m.getTarget();
       System.out.println("Message has" + pathList.getFirst().getComponentName());
@@ -82,18 +89,21 @@ public class Train extends Thread
 
     synchronized (this)
     {
-      if (waiting) {
-        try {
+      if (waiting)
+      {
+        try
+        {
           wait();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException e)
+        {
           System.out.println("Interrupted");
         }
       }
-      if (!goodPath) {
+      if (!goodPath)
+      {
         return;
       }
       //secure path
-
 
 
       currentComponent.acceptMessage(new Message(direction, "securepath", pathList, currentComponent));
@@ -153,19 +163,17 @@ public class Train extends Thread
         currentComponent.getTrainId(this);
 
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());
-        if(currentComponent instanceof Track)
+        if (currentComponent instanceof Track)
         {
           xPos++;
-        }
-        else if(currentComponent instanceof Switch)
+        } else if (currentComponent instanceof Switch)
         {
           String moveDir = ((Switch) currentComponent).directionForTrain();
-          if(moveDir.equalsIgnoreCase("up"))
+          if (moveDir.equalsIgnoreCase("up"))
           {
             yPos--;
             //xPos will be updated for track
-          }
-          else if(moveDir.equalsIgnoreCase("down"))
+          } else if (moveDir.equalsIgnoreCase("down"))
           {
             yPos++;
           }

@@ -48,7 +48,7 @@ public class Station extends Thread implements Component
   // code to  determine station
   public Component nextComponent(String Direction)
   {
-    if(Direction.equalsIgnoreCase("right")) return rightTrack;
+    if (Direction.equalsIgnoreCase("right")) return rightTrack;
     return leftTrack;
 
   }
@@ -68,13 +68,12 @@ public class Station extends Thread implements Component
   public boolean findPath(Component c, String dir)
   {
     LinkedList<Component> compList = new LinkedList<>();
-    if(dir.equalsIgnoreCase("right") && rightTrack != null)
+    if (dir.equalsIgnoreCase("right") && rightTrack != null)
     {
       compList.add(c);
       rightTrack.acceptMessage(new Message(dir, "findpath", compList, this));
       return true;
-    }
-    else if(dir.equalsIgnoreCase("left") && leftTrack != null)
+    } else if (dir.equalsIgnoreCase("left") && leftTrack != null)
     {
       compList.add(c);
       leftTrack.acceptMessage(new Message(dir, "findpath", compList, this));
@@ -88,17 +87,15 @@ public class Station extends Thread implements Component
   {
     String dir = m.getDirection();
 
-    if(trainInStation != null)
+    if (trainInStation != null)
     {
       System.out.println("Not null");
       //Do something
-    }
-    else if(dir.equalsIgnoreCase("right") && rightTrack != null)
+    } else if (dir.equalsIgnoreCase("right") && rightTrack != null)
     {
       rightTrack.acceptMessage(m);
       return true;
-    }
-    else if(dir.equalsIgnoreCase("left") && leftTrack != null)
+    } else if (dir.equalsIgnoreCase("left") && leftTrack != null)
     {
       leftTrack.acceptMessage(m);
       return true;
@@ -111,13 +108,12 @@ public class Station extends Thread implements Component
   public synchronized boolean securePath(Message m)
   {
     String dir = m.getDirection();
-    if(secured)
+    if (secured)
     {
-      if(dir.equalsIgnoreCase("right"))
+      if (dir.equalsIgnoreCase("right"))
       {
         leftTrack.acceptMessage(new Message("left", "couldNotSecure", new LinkedList<>(), this));
-      }
-      else
+      } else
       {
         rightTrack.acceptMessage(new Message("right", "couldNotSecure", new LinkedList<>(), this));
       }
@@ -125,14 +121,13 @@ public class Station extends Thread implements Component
     secured = true;
     System.out.println("Secure " + stationName);
     //System.out.println(m.getTarget().getLast().getComponentName());
-    m.getTarget().remove(m.getTarget().size()-1);
+    m.getTarget().remove(m.getTarget().size() - 1);
     //System.out.println(m.getTarget().getLast().getComponentName());
     messages.remove();
-    if(dir.equalsIgnoreCase("right"))
+    if (dir.equalsIgnoreCase("right"))
     {
       rightTrack.acceptMessage(m);
-    }
-    else
+    } else
     {
       leftTrack.acceptMessage(m);
     }
@@ -142,7 +137,7 @@ public class Station extends Thread implements Component
   @Override
   public synchronized boolean readyForTrain(Message m)
   {
-    if(trainInStation != null)
+    if (trainInStation != null)
     {
 
     }
@@ -160,7 +155,7 @@ public class Station extends Thread implements Component
   public void run()
   {
 
-    while(true)
+    while (true)
     {
       synchronized (this)
       {
@@ -173,8 +168,7 @@ public class Station extends Thread implements Component
           {
             //Print
           }
-        }
-        else
+        } else
         {
           //System.out.println("Past wait");
           String newDir;
@@ -187,11 +181,10 @@ public class Station extends Thread implements Component
             {
               System.out.println(stationName + " found.");
               LinkedList<Component> pathList = new LinkedList<>();
-              if(direction.equalsIgnoreCase("right"))
+              if (direction.equalsIgnoreCase("right"))
               {
                 newDir = "left";
-              }
-              else
+              } else
               {
                 newDir = "right";
               }
@@ -199,27 +192,23 @@ public class Station extends Thread implements Component
               Message correctStation = new Message(newDir, "returnpath", pathList, this);
               returnPath(correctStation);
               System.out.println("Sending return path");
-            }
-            else if (findPath(target.get(0), direction))
+            } else if (findPath(target.get(0), direction))
             {
-              if(direction.equalsIgnoreCase("right"))
+              if (direction.equalsIgnoreCase("right"))
               {
                 System.out.println("Sending messsage to track: " + rightTrack.getComponentName());
-              }
-              else
+              } else
               {
                 System.out.println("Sending messsage to track: " + leftTrack.getComponentName());
               }
               //System.out.println(stationName + " found.");
-            }
-            else
+            } else
             {
               LinkedList<Component> emptyList = new LinkedList<>();
-              if(direction.equalsIgnoreCase("right"))
+              if (direction.equalsIgnoreCase("right"))
               {
                 newDir = "left";
-              }
-              else
+              } else
               {
                 newDir = "right";
               }
@@ -229,57 +218,52 @@ public class Station extends Thread implements Component
 
             }
             messages.remove();
-          }
-          else if(action.equalsIgnoreCase("returnpath"))
+          } else if (action.equalsIgnoreCase("returnpath"))
           {
-            if(trainInStation != null)
+            if (trainInStation != null)
             {
               System.out.println("Train on station");
-              if(!target.isEmpty())
+              if (!target.isEmpty())
               {
                 messages.getFirst().getTarget().add(this);
               }
               trainInStation.acceptMessage(messages.getFirst());
-              messages.remove();;
+              messages.remove();
+              ;
             }
-          }
-          else if(action.equalsIgnoreCase("securepath"))
+          } else if (action.equalsIgnoreCase("securepath"))
           {
             System.out.println(target.getFirst().getComponentName());
-            if(target.getFirst().getComponentName().equalsIgnoreCase(stationName))
+            if (target.getFirst().getComponentName().equalsIgnoreCase(stationName))
             {
               System.out.println("HERE");
               secured = true;
-              if(direction.equalsIgnoreCase("right"))
+              if (direction.equalsIgnoreCase("right"))
               {
                 newDir = "left";
-              }
-              else
+              } else
               {
                 newDir = "right";
               }
               Message pathSecured = new Message(newDir, "readyfortrain", target, this);
-              if(newDir.equalsIgnoreCase("left"))
+              if (newDir.equalsIgnoreCase("left"))
               {
                 leftTrack.acceptMessage(pathSecured);
-              }
-              else
+              } else
               {
                 rightTrack.acceptMessage(pathSecured);
               }
               messages.remove();
-            }
-            else
+            } else
             {
               securePath(messages.getFirst());
             }
             //====================================
 
             //====================================
-          }
-          else if(action.equalsIgnoreCase("readyfortrain"))
+          } else if (action.equalsIgnoreCase("readyfortrain"))
           {
-            if(trainInStation != null)
+            if (trainInStation != null)
             {
               trainInStation.acceptMessage(messages.getFirst());
 
@@ -295,7 +279,7 @@ public class Station extends Thread implements Component
 
   public String directionOut()
   {
-    if(rightTrack != null)
+    if (rightTrack != null)
     {
       return "right";
     }

@@ -4,10 +4,13 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane fx:id="gamePane" prefHeight="1000.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SmartRail.JavafxRes.XMLController">
-   <children>
-      <Button fx:id="btnSpawn" defaultButton="true" layoutX="552.0" layoutY="933.0" mnemonicParsing="false" onAction="#spawn" prefHeight="59.0" prefWidth="97.0" styleClass="Button" stylesheets="@DesignSheet.css" text="Spawn" />
-      <Canvas fx:id="canvas" height="917.0" onMouseClicked="#clicked" width="1500.0" />
+<Pane fx:id="gamePane" prefHeight="1000.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8.0.111"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="SmartRail.JavafxRes.XMLController">
+    <children>
+        <Button fx:id="btnSpawn" defaultButton="true" layoutX="552.0" layoutY="933.0" mnemonicParsing="false"
+                onAction="#spawn" prefHeight="59.0" prefWidth="97.0" styleClass="Button" stylesheets="@DesignSheet.css"
+                text="Spawn"/>
+        <Canvas fx:id="canvas" height="917.0" onMouseClicked="#clicked" width="1500.0"/>
 
-   </children>
+    </children>
 </Pane>

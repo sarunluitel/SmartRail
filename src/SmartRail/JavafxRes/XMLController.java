@@ -12,11 +12,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class XMLController extends AnimationTimer
 {
   private final int DISTANCE = 95;// dictated by the size of tracks and trains. length pixel count
-  private int frameCounter = 0;
+  private double frameCounter = 0.00;
   @FXML
   private Canvas canvas;
   private GraphicsContext gc;
@@ -28,7 +29,7 @@ public class XMLController extends AnimationTimer
   private final Image leftGreen = new Image(getClass().getResourceAsStream("GUI_resources/leftGreen.png"));
 
   private ArrayList<ImageView> trainNCanvas = new ArrayList<>();
-  private ArrayList<Train> trainList = TrainView.getInstance().getList();
+  private HashMap<String, Train> trainList = TrainView.getInstance().getList();
   private ArrayList<ArrayList> entireMap;
   @FXML
   private Pane gamePane;
@@ -140,11 +141,12 @@ public class XMLController extends AnimationTimer
   {
     int totalTrains = trainList.size();
     // element 0 is the canvas so increment of one.
-    Train t = trainList.get(totalTrains - 1);
+    Train t = trainList.get("Train " + (totalTrains - 1));
     trainNCanvas.add(totalTrains, new ImageView(trainImage));
     trainNCanvas.get(totalTrains).setX(t.getXPos() * DISTANCE);
     trainNCanvas.get(totalTrains).setY(DISTANCE * t.getYPos() + 10);
-    trainNCanvas.get(totalTrains).setId(t.getTrainID() + "");
+    trainNCanvas.get(totalTrains).setId(t.getTrainName());
+
     //put new train on the pane to display
 
     gamePane.getChildren().setAll(trainNCanvas);
@@ -157,19 +159,20 @@ public class XMLController extends AnimationTimer
   @Override
   public void handle(long now)
   {
-    frameCounter++;
-    if (frameCounter == 880) frameCounter = 0;
-    for (int i = 1; i < trainNCanvas.size() ; i++)
+    frameCounter += 120 / 88.00;
+
+
+    for (ImageView t : trainNCanvas)
     {
 
+      if (trainList.get(t.getId()) != null)
+      {
+        t.setX(trainList.get(t.getId()).getXPos() * DISTANCE + frameCounter % 88);
+        t.setY(trainList.get(t.getId()).getYPos() * DISTANCE);
+        //System.out.println(trainList.get(t.getId()).getTrainName());
+      }
 
-      // currentXpos = trainList.get(i).getXPos() * DISTANCE;
-      // if (currentXpos != currentXpos + (frameCounter / 3) % DISTANCE)
-      // {
-     // trainNCanvas.get(i).setX(frameCounter);
-      //  }
     }
-
   }
 
 
@@ -229,7 +232,7 @@ public class XMLController extends AnimationTimer
       train = new Train(destination, begin, GUIComp, trainSpawn / 100);
     }
 
-    TrainView.getInstance().addTrain(train);
+    TrainView.getInstance().addTrain(train.getTrainName(), train);
     trainList = TrainView.getInstance().getList();
     trainSpawn = -1;
     trainDestination = -1;
