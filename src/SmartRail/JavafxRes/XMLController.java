@@ -166,7 +166,7 @@ public class XMLController extends AnimationTimer
       // currentXpos = trainList.get(i).getXPos() * DISTANCE;
       // if (currentXpos != currentXpos + (frameCounter / 3) % DISTANCE)
       // {
-      trainNCanvas.get(i).setX(frameCounter);
+     // trainNCanvas.get(i).setX(frameCounter);
       //  }
     }
 
@@ -235,7 +235,6 @@ public class XMLController extends AnimationTimer
     trainDestination = -1;
     putTrainsOnMap();
     train.start();
-    System.out.println("Train going from " + begin.getComponentName() + "to " + destination.getComponentName());
   }
 
 
