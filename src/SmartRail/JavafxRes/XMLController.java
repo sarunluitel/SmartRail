@@ -140,18 +140,16 @@ public class XMLController extends AnimationTimer
   {
     int i = 1; // index 0 is reserved for canvas always
 
-    for (Train t : trainList)
-    {
-      // element 0 is the canvas so increment of one.
-      if (!trainNCanvas.contains(t))
-      {
-        trainNCanvas.add(i, new ImageView(trainImage));
-        trainNCanvas.get(i).setX(t.getXPos() * DISTANCE);
-        trainNCanvas.get(i).setY(DISTANCE * t.getYPos() + 10);
-        trainNCanvas.get(i).setId(t.getTrainID() + "");
-        i++;
-      }
-    }
+
+    int totalTrains = trainList.size();
+    // element 0 is the canvas so increment of one.
+    Train t = trainList.get(totalTrains - 1);
+    trainNCanvas.add(totalTrains, new ImageView(trainImage));
+    trainNCanvas.get(totalTrains).setX(t.getXPos() * DISTANCE);
+    trainNCanvas.get(totalTrains).setY(DISTANCE * t.getYPos() + 10);
+    trainNCanvas.get(totalTrains).setId(t.getTrainID() + "");
+
+
     gamePane.getChildren().setAll(trainNCanvas);
     gamePane.getChildren().set(0, canvas);
     gamePane.getChildren().add(btnSpawn);
