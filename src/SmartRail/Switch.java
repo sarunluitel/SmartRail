@@ -418,18 +418,17 @@ public class Switch extends Thread implements Component
   }
 
   @Override
-  public synchronized boolean readyForTrain(Message m)
-  {
+  public synchronized boolean readyForTrain(Message m) {
     nextComp = m.getSender();
-    if (nextComp == right)
-    {
+    if (nextComp == right) {
       dirForTrain = "right";
-    } else if (nextComp == left)
-    {
+    } else if (nextComp == left) {
       dirForTrain = "left";
-    } else if (nextComp == upTrack)
-    {
+    } else if (nextComp == upTrack) {
       dirForTrain = "up";
+    } else if (nextComp == down)
+    {
+      dirForTrain = "down";
     }
     System.out.println("NextComp " + nextComp.getComponentName());
     m.setSender(this);

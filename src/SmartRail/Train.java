@@ -165,7 +165,14 @@ public class Train extends Thread
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());
         if (currentComponent instanceof Track)
         {
-          xPos++;
+          if(direction.equalsIgnoreCase("right"))
+          {
+            xPos++;
+          }
+          else
+          {
+            xPos--;
+          }
         } else if (currentComponent instanceof Switch)
         {
           String moveDir = ((Switch) currentComponent).directionForTrain();
