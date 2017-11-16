@@ -57,7 +57,7 @@ public class Train extends Thread
       System.out.println("pathlist empty");
       goodPath = false;
     }
-    if (pathList.isEmpty())
+    else if (pathList.isEmpty())
     {
       pathList = m.getTarget();
       System.out.println("Message has" + pathList.getFirst().getComponentName());
@@ -118,7 +118,7 @@ public class Train extends Thread
 
       move();
     }
-
+    currentComponent.trainLeaving();
     System.out.println("Train " + trainID + " Arrived at " + this.currentComponent.getComponentName());
     return;
 
@@ -148,12 +148,28 @@ public class Train extends Thread
           System.out.println("train " + trainID + " Waiting on red light");
           Thread.sleep(1000);
         }
-
+        currentComponent.trainLeaving();
         this.setCurrentComponent(this.currentComponent.nextComponent(direction));
-
+        currentComponent.getTrainId(this);
 
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());
-        xPos++;
+        if(currentComponent instanceof Track)
+        {
+          xPos++;
+        }
+        else if(currentComponent instanceof Switch)
+        {
+          String moveDir = ((Switch) currentComponent).directionForTrain();
+          if(moveDir.equalsIgnoreCase("up"))
+          {
+            yPos--;
+            //xPos will be updated for track
+          }
+          else if(moveDir.equalsIgnoreCase("down"))
+          {
+            yPos++;
+          }
+        }
         System.out.println("Current XPOS " + xPos);
         System.out.println();
 

@@ -18,6 +18,8 @@ public class Switch extends Thread implements Component
   private Component returnComponent = null;
   private Component nextComp = null;
   private boolean secured = false;
+  private Train train = null;
+  private String dirForTrain;
 
   Switch(boolean isLeft)
   {
@@ -223,7 +225,7 @@ public class Switch extends Thread implements Component
         }
         else
         {
-          //messages.remove(1);
+          messages.remove(1);
           returnPath = false;
         }
       }
@@ -303,7 +305,7 @@ public class Switch extends Thread implements Component
         }
         else
         {
-          //messages.remove(1);
+          messages.remove(1);
           returnPath = false;
         }
       }
@@ -420,6 +422,18 @@ public class Switch extends Thread implements Component
   public synchronized boolean readyForTrain(Message m)
   {
     nextComp = m.getSender();
+    if(nextComp == right)
+    {
+      dirForTrain = "right";
+    }
+    else if(nextComp == left)
+    {
+      dirForTrain = "left";
+    }
+    else if(nextComp == upTrack)
+    {
+      dirForTrain = "up";
+    }
     System.out.println("NextComp " + nextComp.getComponentName());
     m.setSender(this);
 
@@ -443,13 +457,19 @@ public class Switch extends Thread implements Component
   @Override
   public void trainLeaving()
   {
-
+    train = null;
+    secured = false;
   }
 
   @Override
   public void getTrainId(Train t)
   {
+    train = t;
+  }
 
+  public String directionForTrain()
+  {
+    return dirForTrain;
   }
 
   @Override

@@ -13,6 +13,7 @@ public class Light extends Thread implements Component
   private Track leftTrack;
   private LinkedList<Message> messages = new LinkedList<>();
   private boolean secured = false;
+  private Train train;
 
 
   //Setters for data types.
@@ -40,13 +41,14 @@ public class Light extends Thread implements Component
   @Override
   public void getTrainId(Train t)
   {
-
+    train = t;
   }
 
   @Override
   public void trainLeaving()
   {
-
+    secured = false;
+    train = null;
   }
 
   @Override

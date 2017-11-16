@@ -229,6 +229,7 @@ public class Track extends Thread implements Component
   @Override
   public void trainLeaving()
   {
+    secured = false;
     trainOnTrack = null;
   }
 

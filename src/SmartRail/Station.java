@@ -41,6 +41,7 @@ public class Station extends Thread implements Component
   @Override
   public void trainLeaving()
   {
+    secured = false;
     trainInStation = null;
   }
 
@@ -58,6 +59,7 @@ public class Station extends Thread implements Component
     System.out.println("Message received: " + stationName);
     messages.add(mes);
     System.out.println(messages.getFirst().getAction());
+    System.out.println(messages.size());
     //System.out.println(message.getDirection());
     notifyAll();
   }
