@@ -79,7 +79,6 @@ public class Track extends Thread implements Component
     targetComponent.add(c);
     if (dir.equalsIgnoreCase("right"))
     {
-
       right.acceptMessage(new Message(dir, "findpath", targetComponent, this));
       return true;
     }
@@ -174,7 +173,9 @@ public class Track extends Thread implements Component
       {
         if (messages.isEmpty())
         {
-          try {
+          try
+          {
+
             wait();
           } catch (InterruptedException ex) {
             //Print

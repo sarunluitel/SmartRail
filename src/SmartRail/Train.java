@@ -21,6 +21,7 @@ public class Train extends Thread
   private volatile boolean waiting = false;
   private boolean goodPath = true;
   private LinkedList<Component> pathList = new LinkedList<>();
+  private String direction;
 
 
   public Train(Station Destination, Station spawnStation)
@@ -74,28 +75,28 @@ public class Train extends Thread
 
     LinkedList<Component> compList = new LinkedList<>();
     compList.add(destination);
-    currentComponent.acceptMessage(new Message("right", "findpath", compList, currentComponent));
+    direction = ((Station) currentComponent).directionOut();
+    System.out.println(direction);
+    currentComponent.acceptMessage(new Message(direction, "findpath", compList, currentComponent));
     waiting = true;
 
     synchronized (this)
     {
-      if (waiting)
-      {
-        try
-        {
+      if (waiting) {
+        try {
           wait();
-        } catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
           System.out.println("Interrupted");
         }
       }
-      if (!goodPath)
-      {
+      if (!goodPath) {
         return;
       }
       //secure path
 
-      currentComponent.acceptMessage(new Message("right", "securepath", pathList, currentComponent));
+
+
+      currentComponent.acceptMessage(new Message(direction, "securepath", pathList, currentComponent));
       waiting = true;
       if (waiting)
       {
@@ -107,6 +108,7 @@ public class Train extends Thread
           System.out.println("Interrupted");
         }
       }
+
     }
     while (this.destination != this.currentComponent)
     {
@@ -119,6 +121,7 @@ public class Train extends Thread
 
     System.out.println("Train " + trainID + " Arrived at " + this.currentComponent.getComponentName());
     return;
+
 
   }
 
@@ -140,13 +143,13 @@ public class Train extends Thread
         }
 
 
-        while (this.currentComponent.nextComponent("right") == null)
+        while (this.currentComponent.nextComponent(direction) == null)
         {
           System.out.println("train " + trainID + " Waiting on red light");
           Thread.sleep(1000);
         }
 
-        this.setCurrentComponent(this.currentComponent.nextComponent("right"));
+        this.setCurrentComponent(this.currentComponent.nextComponent(direction));
 
 
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());

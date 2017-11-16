@@ -117,7 +117,7 @@ public class Station extends Thread implements Component
       }
       else
       {
-        rightTrack.acceptMessage(new Message("left", "couldNotSecure", new LinkedList<>(), this));
+        rightTrack.acceptMessage(new Message("right", "couldNotSecure", new LinkedList<>(), this));
       }
     }
     secured = true;
@@ -200,7 +200,14 @@ public class Station extends Thread implements Component
             }
             else if (findPath(target.get(0), direction))
             {
-              System.out.println("Sending messsage to track: " + rightTrack.getComponentName());
+              if(direction.equalsIgnoreCase("right"))
+              {
+                System.out.println("Sending messsage to track: " + rightTrack.getComponentName());
+              }
+              else
+              {
+                System.out.println("Sending messsage to track: " + leftTrack.getComponentName());
+              }
               //System.out.println(stationName + " found.");
             }
             else
@@ -284,6 +291,14 @@ public class Station extends Thread implements Component
 
   }
 
+  public String directionOut()
+  {
+    if(rightTrack != null)
+    {
+      return "right";
+    }
+    return "left";
+  }
 
   public String getComponentName()
   {

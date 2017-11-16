@@ -114,7 +114,9 @@ public class Switch extends Thread implements Component
       {
         if (messages.isEmpty() || waitingForResponse)
         {
-          try {
+          try
+          {
+
             wait();
           } catch (InterruptedException ex) {
             //Print
@@ -287,6 +289,19 @@ public class Switch extends Thread implements Component
       if(!isLeft)
       {
         left.acceptMessage(new Message(dir, "findpath", compList, this));
+        try
+        {
+          wait();
+        } catch (InterruptedException ex) {}
+        if(!messages.get(1).getTarget().isEmpty())
+        {
+          return true;
+        }
+        else
+        {
+          messages.remove(1);
+          returnPath = false;
+        }
       }
       else
       {
@@ -303,9 +318,9 @@ public class Switch extends Thread implements Component
           }
           System.out.println("up");
         }
-        if(right != null)
+        if(left != null)
         {
-          right.acceptMessage(new Message(dir, "findpath", compList, this));
+          left.acceptMessage(new Message(dir, "findpath", compList, this));
           try
           {
             wait();

@@ -58,7 +58,9 @@ public class Light extends Thread implements Component
       {
         if (messages.isEmpty())
         {
-          try {
+          try
+          {
+
             wait();
           } catch (InterruptedException ex) {
             //Print
@@ -115,7 +117,6 @@ public class Light extends Thread implements Component
     targetComponent.add(c);
     if (dir.equalsIgnoreCase("right"))
     {
-
       rightTrack.acceptMessage(new Message(dir, "findpath", targetComponent, this));
       return true;
     }
