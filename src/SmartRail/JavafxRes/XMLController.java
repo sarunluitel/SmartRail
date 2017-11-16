@@ -138,17 +138,15 @@ public class XMLController extends AnimationTimer
 
   private void putTrainsOnMap()
   {
-    int i = 1; // index 0 is reserved for canvas always
+    int totalTrains = trainList.size();
+    // element 0 is the canvas so increment of one.
+    Train t = trainList.get(totalTrains - 1);
+    trainNCanvas.add(totalTrains, new ImageView(trainImage));
+    trainNCanvas.get(totalTrains).setX(t.getXPos() * DISTANCE);
+    trainNCanvas.get(totalTrains).setY(DISTANCE * t.getYPos() + 10);
+    trainNCanvas.get(totalTrains).setId(t.getTrainID() + "");
+    //put new train on the pane to display
 
-    for (Train t : trainList)
-    {
-      // element 0 is the canvas so increment of one.
-      trainNCanvas.add(i, new ImageView(trainImage));
-      trainNCanvas.get(i).setX(t.getXPos() * DISTANCE);
-      trainNCanvas.get(i).setY(DISTANCE * t.getYPos());
-      trainNCanvas.get(i).setId(t.getTrainID() + "");
-      i++;
-    }
     gamePane.getChildren().setAll(trainNCanvas);
     gamePane.getChildren().set(0, canvas);
     gamePane.getChildren().add(btnSpawn);
@@ -160,14 +158,15 @@ public class XMLController extends AnimationTimer
   public void handle(long now)
   {
     frameCounter++;
-
-    for (int i = 0; i < trainNCanvas.size() - 1; i++)
+    if (frameCounter == 880) frameCounter = 0;
+    for (int i = 1; i < trainNCanvas.size() ; i++)
     {
+
 
       // currentXpos = trainList.get(i).getXPos() * DISTANCE;
       // if (currentXpos != currentXpos + (frameCounter / 3) % DISTANCE)
       // {
-      trainNCanvas.get(i + 1).setX(frameCounter);
+      trainNCanvas.get(i).setX(frameCounter);
       //  }
     }
 
@@ -196,38 +195,40 @@ public class XMLController extends AnimationTimer
   @FXML
   private void spawn()
   {
-    Train train;
+    Train train = null;
     if (trainDestination == -1 || trainSpawn == -1) return;
-    System.out.println(trainDestination);
-    System.out.println(trainSpawn);
     ArrayList<Station> tempSpawn = new ArrayList<>();
     ArrayList<Station> tempDest = new ArrayList<>();
+    int GUIComp = 1;
     for (Component c : (ArrayList<Component>) entireMap.get(trainSpawn / 100 - 1))
     {
+      if (trainSpawn % 100 != 1) GUIComp++;
       if (c instanceof Station) tempSpawn.add((Station) c);
     }
 
     for (Component c : (ArrayList<Component>) entireMap.get(trainDestination / 100 - 1))
     {
       if (c instanceof Station) tempDest.add((Station) c);
+      if (trainDestination % 100 != 1) GUIComp++;
     }
-    Station begin=null;
-    Station destination=null;
+    Station begin = null;
+    Station destination = null;
 
-    if(trainSpawn%100==1)
+    if (trainSpawn % 100 == 1)
     {
       //tells if the station is on left corner of board
-       begin =tempSpawn.get(0);
-       destination = tempDest.get(1);
+      begin = tempSpawn.get(0);
+      destination = tempDest.get(1);
+      train = new Train(destination, begin, 1, trainSpawn / 100);
     }
-    if(trainDestination%100==1)
+    if (trainDestination % 100 == 1)
     {
       //tells if the station is on left corner of board
-      begin =tempSpawn.get(1);
+      begin = tempSpawn.get(1);
       destination = tempDest.get(0);
+      train = new Train(destination, begin, GUIComp, trainSpawn / 100);
     }
 
-    train = new Train(destination, begin, trainSpawn % 100, trainSpawn / 100);
     TrainView.getInstance().addTrain(train);
     trainList = TrainView.getInstance().getList();
     trainSpawn = -1;
@@ -236,4 +237,6 @@ public class XMLController extends AnimationTimer
     train.start();
     System.out.println("Train going from " + begin.getComponentName() + "to " + destination.getComponentName());
   }
+
+
 }
