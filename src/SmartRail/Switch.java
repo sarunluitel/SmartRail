@@ -75,8 +75,8 @@ public class Switch extends Thread implements Component
   @Override
   public synchronized void acceptMessage(Message message)
   {
-    System.out.println("Switch has message");
-
+    System.out.println("Switch has message" + getComponentName());
+    System.out.println(messages.size());
     if(message.getAction().equalsIgnoreCase("returnpath"))
     {
       System.out.println("returned");
@@ -223,7 +223,7 @@ public class Switch extends Thread implements Component
         }
         else
         {
-          messages.remove(1);
+          //messages.remove(1);
           returnPath = false;
         }
       }
@@ -303,7 +303,7 @@ public class Switch extends Thread implements Component
         }
         else
         {
-          messages.remove(1);
+          //messages.remove(1);
           returnPath = false;
         }
       }
@@ -320,6 +320,10 @@ public class Switch extends Thread implements Component
           {
             return true;
           }
+          else
+          {
+            messages.remove(1);
+          }
           System.out.println("up");
         }
         if(left != null)
@@ -333,6 +337,10 @@ public class Switch extends Thread implements Component
           {
             return true;
           }
+          else
+          {
+            messages.remove(1);
+          }
         }
         if(down != null)
         {
@@ -344,6 +352,10 @@ public class Switch extends Thread implements Component
           if(!messages.get(1).getTarget().isEmpty())
           {
             return true;
+          }
+          else
+          {
+            messages.remove(1);
           }
           System.out.println("down");
         }
