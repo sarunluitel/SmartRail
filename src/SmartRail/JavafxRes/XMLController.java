@@ -200,32 +200,41 @@ public class XMLController extends AnimationTimer
     Train train;
     if (trainDestination == -1 || trainSpawn == -1) return;
     System.out.println(trainDestination);
-    for (Component c : (ArrayList<Component>) entireMap.get(trainDestination / 100 - 1))
+    System.out.println(trainSpawn);
+    ArrayList<Station> tempSpawn = new ArrayList<>();
+    ArrayList<Station> tempDest = new ArrayList<>();
+    for (Component c : (ArrayList<Component>) entireMap.get(trainSpawn / 100 - 1))
     {
-      if (c instanceof Station && !c.equals(entireMap.get(trainSpawn / 100 - 1).get(trainSpawn % 100 - 1)))
-      {
-
-        Station begin = (Station) entireMap.get(trainSpawn / 100 - 1).get(trainSpawn % 100 - 1);
-        Station destination = (Station)c;
-
-
-        train = new Train(destination, begin, trainSpawn % 100, trainSpawn / 100);
-        TrainView.getInstance().addTrain(train);
-        trainList = TrainView.getInstance().getList();
-        trainSpawn = -1;
-        trainDestination = -1;
-        putTrainsOnMap();
-        train.start();
-        System.out.println("Train going from "+begin.getName()+"to "+destination.getComponentName());
-        return;
-      }
+      if (c instanceof Station) tempSpawn.add((Station) c);
     }
 
+    for (Component c : (ArrayList<Component>) entireMap.get(trainDestination / 100 - 1))
+    {
+      if (c instanceof Station) tempDest.add((Station) c);
+    }
+    Station begin=null;
+    Station destination=null;
 
+    if(trainSpawn%100==1)
+    {
+      //tells if the station is on left corner of board
+       begin =tempSpawn.get(0);
+       destination = tempDest.get(1);
+    }
+    if(trainDestination%100==1)
+    {
+      //tells if the station is on left corner of board
+      begin =tempSpawn.get(1);
+      destination = tempDest.get(0);
+    }
+
+    train = new Train(destination, begin, trainSpawn % 100, trainSpawn / 100);
+    TrainView.getInstance().addTrain(train);
+    trainList = TrainView.getInstance().getList();
+    trainSpawn = -1;
+    trainDestination = -1;
+    putTrainsOnMap();
+    train.start();
+    System.out.println("Train going from " + begin.getComponentName() + "to " + destination.getComponentName());
   }
 }
-
-
-
-
-
