@@ -187,10 +187,10 @@ public class XMLController extends AnimationTimer
 
     if (trainSpawn == -1)
     {
-      trainSpawn = stationY * 10 + stationX;
+      trainSpawn = stationY * 100 + stationX;
       return;
     }
-    trainDestination = stationY * 10 + stationX;
+    trainDestination = stationY * 100 + stationX;
   }
 
 
@@ -198,28 +198,30 @@ public class XMLController extends AnimationTimer
   private void spawn()
   {
     Train train;
-    if (trainDestination != -1 && trainSpawn != -1)
+    if (trainDestination == -1 || trainSpawn == -1) return;
+    System.out.println(trainDestination);
+    for (Component c : (ArrayList<Component>) entireMap.get(trainDestination / 100 - 1))
     {
-      for (int j = 0; j < entireMap.get(trainDestination / 10 - 1).size() - 1; j++)
+      if (c instanceof Station && !c.equals(entireMap.get(trainSpawn / 100 - 1).get(trainSpawn % 100 - 1)))
       {
 
-        if (entireMap.get(trainDestination / 10 - 1).get(trainDestination % 10 - 1 + j) instanceof Station)
-        {
-          train = new Train((Station) entireMap.get(trainDestination / 10 - 1).get(trainDestination % 10 - 1 + j),
-              (Station) entireMap.get(trainSpawn / 10 - 1).get(trainSpawn % 10 - 1), trainSpawn % 10, trainSpawn / 10);
-          TrainView.getInstance().addTrain(train);
-          trainList = TrainView.getInstance().getList();
+        Station begin = (Station) entireMap.get(trainSpawn / 100 - 1).get(trainSpawn % 100 - 1);
+        Station destination = (Station)c;
 
-          trainSpawn = -1;
-          trainDestination = -1;
-          putTrainsOnMap();
-          train.start();
-          return;
-        }
+
+        train = new Train(destination, begin, trainSpawn % 100, trainSpawn / 100);
+        TrainView.getInstance().addTrain(train);
+        trainList = TrainView.getInstance().getList();
+        trainSpawn = -1;
+        trainDestination = -1;
+        putTrainsOnMap();
+        train.start();
+        System.out.println("Train going from "+begin.getName()+"to "+destination.getComponentName());
+        return;
       }
-
-
     }
+
+
   }
 }
 

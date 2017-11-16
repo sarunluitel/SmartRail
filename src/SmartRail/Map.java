@@ -50,7 +50,7 @@ public class Map
 
 
     //Starts with 1 because the component 0 is a station. already hard coded
-    for (int i = 1; i < compInLayer; i++)
+    for (int i = 0; i < compInLayer; i++)
     {
       if(temp.get(i) instanceof Station)
       {
