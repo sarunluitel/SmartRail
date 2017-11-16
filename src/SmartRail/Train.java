@@ -117,11 +117,18 @@ public class Train extends Thread
       }
       //secure path
       waiting = true;
+
+
+
       while(waiting)
       {
         waitForSecure = true;
         System.out.println(pathList.size());
-        LinkedList<Component> messList = pathList;
+        LinkedList<Component> messList = new LinkedList<>();
+        for(int i = 0; i < pathList.size(); i++)
+        {
+          messList.add(i, pathList.get(i));
+        }
         currentComponent.acceptMessage(new Message(direction, "securepath", messList, currentComponent));
         waiting = true;
         if (waiting) {
