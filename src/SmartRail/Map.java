@@ -36,7 +36,7 @@ public class Map
 
           break;
         default:
-          Exception e = new Exception("Please Use Letters S,R,L or == only");
+          Exception e = new Exception("Please Use Letters S,R,L or = only");
           throw e;
 
       }
@@ -100,7 +100,7 @@ public class Map
 
         ((Switch) temp.get(i)).setRight(rightTrack);
 
-
+        System.out.println("Starting Switches "+ ((Switch) temp.get(i)).getComponentName());
         ((Switch) temp.get(i)).start();
         rightLight.start();
         leftLight.start();
