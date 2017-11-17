@@ -5,6 +5,7 @@
 package SmartRail;
 
 
+
 import java.util.LinkedList;
 
 
@@ -20,9 +21,10 @@ public class Train extends Thread
   private int yPos = 0; // increase as train moves down a track
   private volatile boolean waiting = false;
   private boolean goodPath = true;
-  private LinkedList<Component> pathList = new LinkedList<>();
+  private volatile LinkedList<Component> pathList = new LinkedList<>();
   private String direction;
   private String trainName;
+  private boolean waitForSecure;
 
 
   public Train(Station Destination, Station spawnStation)
@@ -60,7 +62,17 @@ public class Train extends Thread
   public synchronized void acceptMessage(Message m)
   {
     waiting = false;
-    if (m.getTarget().isEmpty())
+    if(waitForSecure)
+    {
+      if(m.getTarget().isEmpty())
+      {
+        waiting = true;
+      }
+      notifyAll();
+      return;
+
+    }
+    else if (m.getTarget().isEmpty())
     {
       System.out.println("pathlist empty");
       goodPath = false;
@@ -104,20 +116,37 @@ public class Train extends Thread
         return;
       }
       //secure path
-
-
-      currentComponent.acceptMessage(new Message(direction, "securepath", pathList, currentComponent));
       waiting = true;
-      if (waiting)
+
+
+
+      while(waiting)
       {
+        waitForSecure = true;
+        System.out.println(pathList.size());
+        LinkedList<Component> messList = new LinkedList<>();
+        for(int i = 0; i < pathList.size(); i++)
+        {
+          messList.add(i, pathList.get(i));
+        }
+        currentComponent.acceptMessage(new Message(direction, "securepath", messList, currentComponent));
+        waiting = true;
+        if (waiting) {
+          try {
+            wait();
+          } catch (InterruptedException e) {
+            System.out.println("Interrupted");
+          }
+        }
         try
         {
-          wait();
+          Thread.sleep(2500);
         } catch (InterruptedException e)
         {
-          System.out.println("Interrupted");
+          e.printStackTrace();
         }
       }
+
 
     }
     while (this.destination != this.currentComponent)
@@ -165,8 +194,16 @@ public class Train extends Thread
         System.out.println("train " + trainID + " Rolling down track " + this.currentComponent.getComponentName());
         if (currentComponent instanceof Track)
         {
-          xPos++;
-        } else if (currentComponent instanceof Switch)
+          if(direction.equalsIgnoreCase("right"))
+          {
+            xPos++;
+          }
+          else
+          {
+            xPos--;
+          }
+        }
+        else if (currentComponent instanceof Switch)
         {
           String moveDir = ((Switch) currentComponent).directionForTrain();
           if (moveDir.equalsIgnoreCase("up"))

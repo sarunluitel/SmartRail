@@ -110,10 +110,15 @@ public class Station extends Thread implements Component
     String dir = m.getDirection();
     if (secured)
     {
-      if (dir.equalsIgnoreCase("right"))
+      if (m.getSender() == trainInStation)
+      {
+        trainInStation.acceptMessage(new Message(dir, "couldNotSecure", new LinkedList<>(), this));
+      }
+      else if (dir.equalsIgnoreCase("right"))
       {
         leftTrack.acceptMessage(new Message("left", "couldNotSecure", new LinkedList<>(), this));
-      } else
+      }
+      else
       {
         rightTrack.acceptMessage(new Message("right", "couldNotSecure", new LinkedList<>(), this));
       }
@@ -148,6 +153,12 @@ public class Station extends Thread implements Component
   @Override
   public synchronized boolean couldNotSecure(Message m)
   {
+    secured = false;
+    m.setSender(this);
+    if(trainInStation != null)
+    {
+      trainInStation.acceptMessage(m);
+    }
     return false;
   }
 
@@ -229,7 +240,7 @@ public class Station extends Thread implements Component
               }
               trainInStation.acceptMessage(messages.getFirst());
               messages.remove();
-              ;
+
             }
           } else if (action.equalsIgnoreCase("securepath"))
           {
@@ -269,6 +280,11 @@ public class Station extends Thread implements Component
 
               messages.remove();
             }
+          }
+          else if (action.equalsIgnoreCase("couldnotsecure"))
+          {
+            couldNotSecure(messages.getFirst());
+            messages.remove();
           }
         }
       }

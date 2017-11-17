@@ -117,10 +117,20 @@ public class Track extends Thread implements Component
     String dir = m.getDirection();
     if (secured == true)
     {
+      if(dir.equalsIgnoreCase("right"))
+      {
+        left.acceptMessage(new Message("left", "couldnotsecure", new LinkedList<>(), this));
+      }
+      else
+      {
+        right.acceptMessage(new Message("right", "couldnotsecure", new LinkedList<>(), this));
+      }
+      messages.remove();
       return false;
     }
 
     secured = true;
+    System.out.println(m.getTarget().size());
     m.getTarget().remove(m.getTarget().size() - 1);
     m.setSender(this);
     if (dir.equalsIgnoreCase("right"))
@@ -156,6 +166,18 @@ public class Track extends Thread implements Component
   @Override
   public synchronized boolean couldNotSecure(Message m)
   {
+    secured = false;
+    String dir = m.getDirection();
+    m.setSender(this);
+    if(dir.equalsIgnoreCase("right"))
+    {
+      right.acceptMessage(m);
+    }
+    else
+    {
+      left.acceptMessage(m);
+    }
+    messages.remove();
     return false;
   }
 
@@ -186,20 +208,28 @@ public class Track extends Thread implements Component
             findPath(target.get(0), direction);
             messages.remove();
             notifyAll();
-          } else if (action.equalsIgnoreCase("returnpath"))
+          }
+          else if (action.equalsIgnoreCase("returnpath"))
           {
             returnPath(messages.getFirst());
             messages.remove();
             notifyAll();
-          } else if (action.equalsIgnoreCase("securepath"))
+          }
+          else if (action.equalsIgnoreCase("securepath"))
           {
             securePath(messages.getFirst());
             //messages.remove();
 
-          } else if (action.equalsIgnoreCase("readyfortrain"))
+          }
+          else if (action.equalsIgnoreCase("readyfortrain"))
           {
             readyForTrain(messages.getFirst());
-          } else
+          }
+          else if (action.equalsIgnoreCase("couldnotsecure"))
+          {
+            couldNotSecure(messages.getFirst());
+          }
+          else
           {
             System.out.println(action);
             messages.remove();
