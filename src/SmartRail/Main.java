@@ -4,7 +4,7 @@ import SmartRail.JavafxRes.MapView;
 import SmartRail.JavafxRes.TrainView;
 
 /************************************
- @author Sarun Luitel
+ @author Sarun Luitel, Vincent Huber
  ************************************/
 public class Main
 {

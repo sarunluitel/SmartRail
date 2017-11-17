@@ -7,17 +7,18 @@
 // but if there is a Station. It has to be at the first/ last or both.
 // Format (S==R==S)
 //        (S===L=S)
+// Configuration supports different station on either sides but a layer cannot end in a track.
 // DO NOT LEAVE  BLANK LINES.
 //
 //
 S==R===L=S
 S===L=R=S
+S======S
+S==L===R
+S=R=====L=S
 S====S
-S===L==S
-S=R==S
-S=====S
-S==R==S
-S===L==S
+S====R======S
+S======L===S
 
 
 

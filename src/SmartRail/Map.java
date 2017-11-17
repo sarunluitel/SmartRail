@@ -54,7 +54,7 @@ public class Map
 
 // to push
     //Starts with 1 because the component 0 is a station. already hard coded
-    for (int i = 0; i < compInLayer+1; i++)
+    for (int i = 0; i < compInLayer + 1; i++)
     {
       if (temp.get(i) instanceof Station)
       {
@@ -70,8 +70,9 @@ public class Map
       }
       if (temp.get(i) instanceof Track)
       {
-        ((Track) temp.get(i)).setNeighbors((Component) temp.get(i + 1), "right");
-        ((Track) temp.get(i)).setNeighbors((Component) temp.get(i - 1), "left");
+        if (i != compInLayer) ((Track) temp.get(i)).setNeighbors((Component) temp.get(i + 1), "right");
+
+        if (i != 0) ((Track) temp.get(i)).setNeighbors((Component) temp.get(i - 1), "left");
         TrackView.getInstance().addTrack(((Track) temp.get(i)).getComponentName(), (Track) temp.get(i));
 
         ((Track) temp.get(i)).start();
@@ -87,18 +88,18 @@ public class Map
 
 
         // =0= connecting left light to the rest of system
-        leftLight.setLeftTrack((Track) temp.get(i - 1));
+        if (i != 0) leftLight.setLeftTrack((Track) temp.get(i - 1));
         leftLight.setRightTrack(leftTrack);
-        ((Track) temp.get(i - 1)).setNeighbors(leftLight, "right");
+        if (i != 0)((Track) temp.get(i - 1)).setNeighbors(leftLight, "right");
 
         leftTrack.setNeighbors(leftLight, "left");
         leftTrack.setNeighbors((Switch) temp.get(i), "right");
 
 
         rightLight.setLeftTrack(rightTrack);
-        rightLight.setRightTrack((Track) temp.get(i + 1));
+        if (i != compInLayer)rightLight.setRightTrack((Track) temp.get(i + 1));
 
-        ((Track) temp.get(i + 1)).setNeighbors(rightLight, "left");
+        if (i != compInLayer)((Track) temp.get(i + 1)).setNeighbors(rightLight, "left");
         rightTrack.setNeighbors((Switch) temp.get(i), "left");
 
         rightTrack.setNeighbors(rightLight, "right");

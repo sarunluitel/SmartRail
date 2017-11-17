@@ -1,3 +1,5 @@
+
+
 package SmartRail.JavafxRes;
 
 import SmartRail.*;
@@ -17,7 +19,7 @@ import java.util.Set;
 
 public class XMLController extends AnimationTimer
 {
-  private final int DISTANCE = 88;// dictated by the size of tracks and trains. length pixel count make 88
+  private final int DISTANCE = 100;// dictated by the size of tracks and trains. length pixel count make 88
   private double frameCounter = 0.00;
   @FXML
   private Canvas canvas;
@@ -254,7 +256,7 @@ public class XMLController extends AnimationTimer
             break;
           }
 
-          trainNCanvas.get(name).setX(trainList.get(name).getXPos() * DISTANCE);
+          trainNCanvas.get(name).setX(trainList.get(name).getXPos() * DISTANCE+(frameCounter/5)%88);
           trainNCanvas.get(name).setY(trainList.get(name).getYPos() * DISTANCE);
           break;
         case "Light":
