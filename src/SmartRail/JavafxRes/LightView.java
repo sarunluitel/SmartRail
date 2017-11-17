@@ -21,7 +21,8 @@ public class LightView
 
   public void addLight(Light light)
   {
-    allLights.put(light.getComponentName(), light);
+    if (light != null)
+      allLights.put(light.getComponentName(), light);
   }
 
   public HashMap<String, Light> getAllLights()
