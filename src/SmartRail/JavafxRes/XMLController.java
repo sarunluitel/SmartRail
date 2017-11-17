@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class XMLController extends AnimationTimer
 {
-  private final int DISTANCE = 100;// dictated by the size of tracks and trains. length pixel count make 88
+  private final int DISTANCE = 88;// dictated by the size of tracks and trains. length pixel count make 88
   private double frameCounter = 0.00;
   @FXML
   private Canvas canvas;
@@ -250,9 +250,6 @@ public class XMLController extends AnimationTimer
           Train t = trainList.get(name);
           if (!t.isAlive())
           {
-            //trainList.remove(name);
-            //trainNCanvas.remove(name);
-            //updateGUI();
             gamePane.getChildren().remove(trainNCanvas.get(name));
             break;
           }

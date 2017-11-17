@@ -69,6 +69,7 @@ public class Light extends Thread implements Component
   @Override
   public void trainLeaving()
   {
+
     secured = false;
     train = null;
   }
