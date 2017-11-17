@@ -1,3 +1,10 @@
+/************************************
+ @author Vincent Huber
+ This class is used to run a switch for smartRail
+
+
+ ************************************/
+
 package SmartRail;
 
 import java.util.LinkedList;
@@ -74,6 +81,16 @@ public class Switch extends Thread implements Component
   }
 
 
+  /* acceptMessage is a method used by the components to read in a message
+  * the message received is added to the end of the queue (linkedlist) of
+  * messages
+  * The switch must make potentially multiple calculations for a single message
+  * and therefore must have additional processing when receiving a message
+  * The accept message must check if the switch is waiting for a
+  * return message (returnpath, readyfortrain, or couldnotsecure)
+  * acceptmessage sorts out these variables and notifies when it needs
+  * Message parameter, no return
+  */
   @Override
   public synchronized void acceptMessage(Message message)
   {
@@ -114,7 +131,10 @@ public class Switch extends Thread implements Component
 
   }
 
-
+  /* The track processes the message and correctly generates a return message
+     * or uses the correct method to process the message
+     * No parameters or return
+     */
   @Override
   public void run()
   {
@@ -203,7 +223,12 @@ public class Switch extends Thread implements Component
     }
   }
 
-
+  /* This method is used to send a findPath message along to a correct station
+  * This method has a component and a String (direction) for parameters
+  * This method goes through all possible neighbors in the given direction until
+  * a positive return value is received.
+  * returns a boolean for processing purposes
+  */
   @Override
   public synchronized boolean findPath(Component c, String dir)
   {
@@ -379,6 +404,10 @@ public class Switch extends Thread implements Component
     return false;
   }
 
+  /* This method is used to send a returnPath message along to a correct station
+ * This method has a component and a String (direction) for parameters
+ * returns a boolean for processing purposes
+ */
   @Override
   public synchronized boolean returnPath(Message m)
   {
@@ -397,6 +426,12 @@ public class Switch extends Thread implements Component
     return false;
   }
 
+  /* This method is used to send a securePath message along to a correct station
+ * This method has a component and a String (direction) for parameters
+ * takes notice of the component that sent the message so it can send it back
+ * to the correct component similar to findpath
+ * returns a boolean for processing purposes
+ */
   @Override
   public synchronized boolean securePath(Message m)
   {
@@ -440,6 +475,10 @@ public class Switch extends Thread implements Component
     return true;
   }
 
+  /* This method is used to send a readyfortrain message along to the correct train
+ * This method has a component and a String (direction) for parameters
+ * returns a boolean for processing purposes
+ */
   @Override
   public synchronized boolean readyForTrain(Message m) {
     nextComp = m.getSender();
@@ -461,6 +500,10 @@ public class Switch extends Thread implements Component
     return false;
   }
 
+  /* This method is used to send a couldnotsecure message along to the correct train
+ * This method has a component and a String (direction) for parameters
+ * returns a boolean for processing purposes
+ */
   @Override
   public synchronized boolean couldNotSecure(Message m)
   {
@@ -473,12 +516,20 @@ public class Switch extends Thread implements Component
     return false;
   }
 
+  /* This method is used by the Train to determine the next component in the path
+   * This method takes in a String parameter and returns the correct next Component
+   * The next component is assigned when a 'readyfortrain' message is processed
+   */
   @Override
   public Component nextComponent(String direction)
   {
     return nextComp;
   }
 
+  /* Code used when a train is leaving a switch
+   * No parameters and no return
+   * this method also frees up the switch to be secured for another component
+   */
   @Override
   public void trainLeaving()
   {
@@ -486,17 +537,28 @@ public class Switch extends Thread implements Component
     secured = false;
   }
 
+  /* This method is used by a train on the switch so the train
+   * can give its own reference to the switch
+   * takes a Train parameter and returns nothing
+   */
   @Override
   public void getTrainId(Train t)
   {
     train = t;
   }
 
+  /* This method is used by the train to determine if the train is
+   * going up, down or straight through a switch
+   * returns a String direction
+   */
   public String directionForTrain()
   {
     return dirForTrain;
   }
 
+  /* returns a string name of the component
+   * no parameters
+   */
   @Override
   public String getComponentName()
   {
