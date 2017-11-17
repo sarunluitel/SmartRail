@@ -112,7 +112,7 @@ public class Map
         LightView.getInstance().addLight(leftLight);
 
         TrackView.getInstance().addTrack(leftTrack.getComponentName(), leftTrack);
-        TrackView.getInstance().addTrack(rightLight.getComponentName(), rightTrack);
+        TrackView.getInstance().addTrack(rightTrack.getComponentName(), rightTrack);
 
         temp.add(i + 1, rightLight);
         temp.add(i + 1, rightTrack);
