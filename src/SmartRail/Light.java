@@ -243,6 +243,18 @@ public class Light extends Thread implements Component
     return null;
   }
 
+  public String getOrientation()
+  {
+    if(leftLight.equalsIgnoreCase("green"))
+    {
+      return "left";
+    } else if (leftLight.equalsIgnoreCase("red") && rightLight.equalsIgnoreCase("green"))
+    {
+      return "right";
+    }
+    return "empty";
+  }
+
   public String getComponentName()
   {
     return "light at track : " + this.leftTrack.getComponentName();

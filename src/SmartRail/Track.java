@@ -40,6 +40,19 @@ public class Track extends Thread implements Component
     return right;
   }
 
+  public boolean hasTrain()
+  {
+    if(trainOnTrack != null)
+    {
+      return true;
+    }
+    return false;
+  }
+
+  public boolean isSecured()
+  {
+    return secured;
+  }
 
   //Setters for Data
   public void setNeighbors(Component c, String dir)

@@ -1,5 +1,5 @@
 /************************************
- @author Sarun Luitel
+ @author Sarun Luitel and Vincent Huber
  ************************************/
 
 package SmartRail;
@@ -52,6 +52,7 @@ public class Train extends Thread
     this.xPos = x;
     this.yPos = y;// this needs to come from the GUI Click
     totalTrains++;
+    direction = ((Station) currentComponent).directionOut();
   }
 
   public String getTrainName()
@@ -94,7 +95,7 @@ public class Train extends Thread
 
     LinkedList<Component> compList = new LinkedList<>();
     compList.add(destination);
-    direction = ((Station) currentComponent).directionOut();
+
     System.out.println(direction);
     currentComponent.acceptMessage(new Message(direction, "findpath", compList, currentComponent));
     waiting = true;
@@ -245,6 +246,11 @@ public class Train extends Thread
   public int getYPos()
   {
     return yPos;
+  }
+
+  public String getDirection()
+  {
+    return direction;
   }
 
   public int getTrainID()

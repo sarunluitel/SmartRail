@@ -302,6 +302,15 @@ public class Station extends Thread implements Component
     return "left";
   }
 
+  public boolean hasTrain()
+  {
+    if(trainInStation != null)
+    {
+      return true;
+    }
+    return false;
+  }
+
   public String getComponentName()
   {
     return this.stationName;
