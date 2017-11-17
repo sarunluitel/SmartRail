@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 public class Light extends Thread implements Component
 {
+  private static int totalLights = 0;
   private String leftLight = "";
   private String rightLight = "";
 
@@ -13,8 +14,14 @@ public class Light extends Thread implements Component
   private Track leftTrack;
   private LinkedList<Message> messages = new LinkedList<>();
   private boolean secured = false;
+  private String lightName;
   private Train train;
 
+  Light()
+  {
+    this.lightName = "Light " + totalLights;
+    totalLights++;
+  }
 
   //Setters for data types.
 
@@ -220,6 +227,6 @@ public class Light extends Thread implements Component
 
   public String getComponentName()
   {
-    return "light at track : " + this.leftTrack.getComponentName();
+    return lightName;
   }
 }

@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 public class XMLController extends AnimationTimer
 {
-  private final int DISTANCE = 95;// dictated by the size of tracks and trains. length pixel count
+  private final int DISTANCE = 100;// dictated by the size of tracks and trains. length pixel count make 88
   private double frameCounter = 0.00;
   @FXML
   private Canvas canvas;
@@ -28,7 +28,7 @@ public class XMLController extends AnimationTimer
   private final Image leftRed = new Image(getClass().getResourceAsStream("GUI_resources/leftRed.png"));
   private final Image leftGreen = new Image(getClass().getResourceAsStream("GUI_resources/leftGreen.png"));
 
-  private ArrayList<ImageView> trainNCanvas = new ArrayList<>();
+  private HashMap<String, ImageView> trainNCanvas = new HashMap<>();
   private HashMap<String, Train> trainList = TrainView.getInstance().getList();
   private ArrayList<ArrayList> entireMap;
   @FXML
@@ -41,7 +41,7 @@ public class XMLController extends AnimationTimer
 
     entireMap = MapView.getInstance().getEntireMap(); //comes from configuration file
 
-    trainNCanvas.add(0, new ImageView());//temp added at 0 to add canvas later
+  //  trainNCanvas.put("canvas", new ImageView());//temp added at 0 to add canvas later
 
     for (int i = 0; i < entireMap.size(); i++)
     {
@@ -54,29 +54,36 @@ public class XMLController extends AnimationTimer
 
         if (temp.get(componentInTemp) instanceof Station)
         {
-          gc.drawImage(stationImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
+         // gc.drawImage(stationImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
+          Station s = (Station) temp.get(componentInTemp);
+          trainNCanvas.put(s.getComponentName(), new ImageView(stationImage));
+          trainNCanvas.get(s.getComponentName()).setX(DISTANCE * (j + 1));
+          trainNCanvas.get(s.getComponentName()).setY(DISTANCE * (i + 1));
 
         }
 
         if (temp.get(componentInTemp) instanceof Track)
         {
-          gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
+          Track t = (Track) temp.get(componentInTemp);
+          trainNCanvas.put(t.getComponentName(), new ImageView(trackImage));
+          trainNCanvas.get(t.getComponentName()).setX(DISTANCE * (j + 1));
+          trainNCanvas.get(t.getComponentName()).setY(DISTANCE * (i + 1));
 
         }
         if (temp.get(componentInTemp) instanceof Switch) // a switch unfolds to a 0=S=0
         {
-
-          gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
-
-          gc.drawImage(noLight, DISTANCE * (j + 1), DISTANCE * (i + 1) - 10);
-
-          j++;
-
-          gc.drawImage(trackImage, DISTANCE * (j + 1), DISTANCE * (i + 1));
-          gc.drawImage(noLight, DISTANCE * (j + 2), DISTANCE * (i + 1) - 10);
-
           gc.fillOval(DISTANCE * (j + 1), DISTANCE * (i + 1) - 10, 40, 40);
+          j--;
 
+        }
+
+        if (temp.get(componentInTemp) instanceof Light) // a switch unfolds to a 0=S=0
+        {
+          Light l = (Light) temp.get(componentInTemp);
+          trainNCanvas.put(l.getComponentName(), new ImageView(noLight));
+          trainNCanvas.get(l.getComponentName()).setX(DISTANCE * (j + 1));
+          trainNCanvas.get(l.getComponentName()).setY(DISTANCE * (i + 1) - 10);
+          j--;
 
         }
         componentInTemp++;
@@ -85,9 +92,9 @@ public class XMLController extends AnimationTimer
     }
 
 
-    gamePane.getChildren().setAll(trainNCanvas);
-    gamePane.getChildren().set(0, canvas);
+    gamePane.getChildren().setAll(trainNCanvas.values());
     gamePane.getChildren().add(btnSpawn);
+    gamePane.getChildren().add(canvas);
 
     this.start();
 
@@ -101,34 +108,36 @@ public class XMLController extends AnimationTimer
   {
     ArrayList<Integer> seniorSwitches = new ArrayList<>();
     ArrayList<Integer> juniorSwitches = new ArrayList<>();
-    Integer seniorPos = 1;
+    Integer seniorPos = 1;// Compensiates the Offset when components start. blank at the beginning
     Integer juniorPos = 1;
 
     for (Component senior : (ArrayList<Component>) entireMap.get(currentLayer - 1))
     {
-      seniorPos++;
       if (senior instanceof Switch)
       {
 
         seniorSwitches.add(seniorPos);
       }
+      seniorPos++;
+      if(senior instanceof Light || senior instanceof Switch)  seniorPos--;
     }
 
     for (Component junior : (ArrayList<Component>) entireMap.get(currentLayer))
     {
-      juniorPos++;
       if (junior instanceof Switch)
       {
 
         juniorSwitches.add(juniorPos);
       }
+      juniorPos++;
+      if(junior instanceof Light || junior instanceof Switch)  juniorPos--;
     }
     if (juniorSwitches.size() == 0 || seniorSwitches.size() == 0) return;
     for (int i = 0; i < seniorSwitches.size(); i++)
     {
       int x1, x2, y1, y2;
-      x1 = (seniorSwitches.get(i) + i) * DISTANCE + 10;
-      x2 = (juniorSwitches.get(i) + i) * DISTANCE + 10;
+      x1 = (seniorSwitches.get(i)) * DISTANCE + 10; //-1 is set to compensiate the space not taken by light
+      x2 = (juniorSwitches.get(i)) * DISTANCE + 10;
       y1 = (currentLayer) * DISTANCE + 10;
       y2 = (currentLayer + 1) * DISTANCE + 10;
       gc.setLineWidth(8);
@@ -142,16 +151,16 @@ public class XMLController extends AnimationTimer
     int totalTrains = trainList.size();
     // element 0 is the canvas so increment of one.
     Train t = trainList.get("Train " + (totalTrains - 1));
-    trainNCanvas.add(totalTrains, new ImageView(trainImage));
-    trainNCanvas.get(totalTrains).setX(t.getXPos() * DISTANCE);
-    trainNCanvas.get(totalTrains).setY(DISTANCE * t.getYPos() + 10);
-    trainNCanvas.get(totalTrains).setId(t.getTrainName());
+    trainNCanvas.put(t.getTrainName(), new ImageView(trainImage));
+    trainNCanvas.get(t.getTrainName()).setX(t.getXPos() * DISTANCE);
+    trainNCanvas.get(t.getTrainName()).setY(DISTANCE * t.getYPos() + 10);
+    trainNCanvas.get(t.getTrainName()).setId(t.getTrainName());
 
     //put new train on the pane to display
 
-    gamePane.getChildren().setAll(trainNCanvas);
-    gamePane.getChildren().set(0, canvas);
+    gamePane.getChildren().setAll(trainNCanvas.values());
     gamePane.getChildren().add(btnSpawn);
+    gamePane.getChildren().add(canvas);
   }
 
   private int currentXpos = 0;// pos where the train should be.
@@ -162,7 +171,7 @@ public class XMLController extends AnimationTimer
     frameCounter += 120 / 88.00;
 
 
-    for (ImageView t : trainNCanvas)
+    for (ImageView t : trainNCanvas.values())
     {
 
       if (trainList.get(t.getId()) != null)
@@ -192,6 +201,7 @@ public class XMLController extends AnimationTimer
       return;
     }
     trainDestination = stationY * 100 + stationX;
+    System.out.println(trainNCanvas.keySet());
   }
 
 
