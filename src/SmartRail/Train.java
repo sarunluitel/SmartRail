@@ -27,21 +27,7 @@ public class Train extends Thread
   private String trainName;
   private boolean waitForSecure;
 
-
-  public Train(Station Destination, Station spawnStation)
-  {
-
-    this.trainID = totalTrains;
-    this.trainName = "Train " + trainID;
-    destination = Destination;// this should be a pointer to a station
-    this.spawnStation = spawnStation;
-    this.currentComponent = spawnStation;
-    currentComponent.getTrainId(this);
-    //this.yPos = trainID;// this needs to come from the GUI Click
-    totalTrains++;
-
-  }
-
+  //Constructor for train
   public Train(Station destination, Station spawnStation, int x, int y)
   {
     this.trainID = totalTrains;
@@ -56,11 +42,15 @@ public class Train extends Thread
     direction = ((Station) currentComponent).directionOut();
   }
 
+  //String return method used for display purposes
   public String getTrainName()
   {
     return trainName;
   }
 
+  /* Accepts a message on whether a path has been found or secured
+   * no return
+   */
   public synchronized void acceptMessage(Message m)
   {
     waiting = false;
@@ -86,6 +76,10 @@ public class Train extends Thread
     notifyAll();
   }
 
+  /* The run method for train finds a path, then tries to secure the path
+   * if no path is found the train dies and if the path cannot be secured, it
+   * keeps trying after a sleep period
+   */
   @Override
   public void run()
   {
@@ -167,6 +161,9 @@ public class Train extends Thread
 
   }
 
+  /* Moves the train once path has been secured
+   * no return
+   */
   private synchronized void move()
   {
     try
@@ -234,29 +231,36 @@ public class Train extends Thread
     }
   }
 
+  /* Sets currentComponent to the correct component
+   * No return
+   */
   public void setCurrentComponent(Component curComp)
   {
     this.currentComponent = curComp;
   }
 
+  /* Gives GUI the xPos for display purposes
+   * returns an int
+   */
   public int getXPos()
   {
     return xPos;
   }
 
-
+  /* Gives GUI the yPos for display purposes
+     * returns an int
+     */
   public int getYPos()
   {
     return yPos;
   }
 
+  /* Gives GUI the direction for display purposes
+   * returns an int
+   */
   public String getDirection()
   {
     return direction;
   }
 
-  public int getTrainID()
-  {
-    return this.trainID;
-  }
 }
