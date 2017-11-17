@@ -1,5 +1,6 @@
 /************************************
  @author Sarun Luitel and Vincent Huber
+ This class is used to run a train in the smartRail
  ************************************/
 
 package SmartRail;
