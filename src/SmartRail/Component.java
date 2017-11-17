@@ -7,7 +7,9 @@ package SmartRail;
 
 public interface Component
 {
-  //
+  //Methods used by each of the components:
+  //Switch, Station, Light, and Track
+  //Comments are given in the components
   void acceptMessage(Message message);
 
   boolean findPath(Component c, String dir);
