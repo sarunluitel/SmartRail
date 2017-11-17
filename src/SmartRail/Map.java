@@ -1,5 +1,9 @@
 package SmartRail;
 
+import SmartRail.JavafxRes.LightView;
+import SmartRail.JavafxRes.StationView;
+import SmartRail.JavafxRes.TrackView;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -48,27 +52,28 @@ public class Map
   {
     ArrayList temp = layers.get(layerCount);
 
-
+// to push
     //Starts with 1 because the component 0 is a station. already hard coded
-    for (int i = 0; i < compInLayer; i++)
+    for (int i = 0; i < compInLayer+1; i++)
     {
       if (temp.get(i) instanceof Station)
       {
         //assign first Track to station.
 
-        Station rightStation = (Station) temp.get(compInLayer);
-        rightStation.setLeftTrack((Track) temp.get(compInLayer - 1));
-        rightStation.start();
+        Station station = (Station) temp.get(i);
+        if (i == 0) station.setRightTrack((Track) temp.get(1));
+        if (i != 0) station.setLeftTrack((Track) temp.get(i - 1));
+        StationView.getInstance().addStation(station.getComponentName(), station);
+        station.start();
 
-        //Assign Last component to left station
-        Station leftStation = (Station) temp.get(0);
-        leftStation.setRightTrack((Track) temp.get(1));
-        leftStation.start();
+
       }
       if (temp.get(i) instanceof Track)
       {
         ((Track) temp.get(i)).setNeighbors((Component) temp.get(i + 1), "right");
         ((Track) temp.get(i)).setNeighbors((Component) temp.get(i - 1), "left");
+        TrackView.getInstance().addTrack(((Track) temp.get(i)).getComponentName(), (Track) temp.get(i));
+
         ((Track) temp.get(i)).start();
       }
 
@@ -79,6 +84,7 @@ public class Map
         Light rightLight = new Light();
         Track leftTrack = new Track();
         Track rightTrack = new Track();
+
 
         // =0= connecting left light to the rest of system
         leftLight.setLeftTrack((Track) temp.get(i - 1));
@@ -101,19 +107,34 @@ public class Map
         ((Switch) temp.get(i)).setRight(rightTrack);
 
         ((Switch) temp.get(i)).start();
+        //add to view to be shown in canvas.
+        LightView.getInstance().addLight(rightLight);
+        LightView.getInstance().addLight(leftLight);
+
+        TrackView.getInstance().addTrack(leftTrack.getComponentName(), leftTrack);
+        TrackView.getInstance().addTrack(rightLight.getComponentName(), rightTrack);
+
+        temp.add(i + 1, rightLight);
+        temp.add(i + 1, rightTrack);
+        temp.add(i, leftTrack);
+        temp.add(i, leftLight);
+
+        compInLayer += 4;
+        i += 3;
         rightLight.start();
         leftLight.start();
         leftTrack.start();
         rightTrack.start();
+        //break;
       }
     }
-    if (layerCount != 0) addNeighbourTop();// assign top and bottom layers for a switch
+    if (layerCount != 0)
+      addNeighbourTop();// assign top and bottom layers for a switch
   }
 
   private void addNeighbourTop()
   {
     LinkedList<Track> tempList = new LinkedList<>();
-
     for (Component senior : (ArrayList<Component>) layers.get(layerCount - 1))
     {
       if (senior instanceof Switch && ((Switch) senior).getDown() == null)
