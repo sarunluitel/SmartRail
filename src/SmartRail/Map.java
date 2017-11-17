@@ -64,7 +64,6 @@ public class Map
         if (i == 0) station.setRightTrack((Track) temp.get(1));
         if (i != 0) station.setLeftTrack((Track) temp.get(i - 1));
         StationView.getInstance().addStation(station.getComponentName(), station);
-        System.out.println(station.getComponentName());
         station.start();
 
 
