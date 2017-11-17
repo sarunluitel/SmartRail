@@ -52,7 +52,7 @@ public class Map
   {
     ArrayList temp = layers.get(layerCount);
 
-
+// to push
     //Starts with 1 because the component 0 is a station. already hard coded
     for (int i = 0; i < compInLayer+1; i++)
     {
