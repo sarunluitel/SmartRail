@@ -11,9 +11,9 @@
 // DO NOT LEAVE  BLANK LINES.
 //
 //
-S==R===L=S
-S===L=R=S
-S======S
+S==R====S
+S===L==S
+==R====S
 S==L===R
 S=R=====L=S
 S====S
