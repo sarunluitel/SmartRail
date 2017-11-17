@@ -25,7 +25,7 @@ public class Station extends Thread implements Component
   public Station()
   {
     totalStation++;
-    this.stationName = "station " + totalStation;
+    this.stationName = "Station " + totalStation;
   }
 
 

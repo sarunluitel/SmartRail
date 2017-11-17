@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class XMLController extends AnimationTimer
 {
@@ -101,6 +102,7 @@ public class XMLController extends AnimationTimer
     gamePane.getChildren().setAll(trainNCanvas.values());
     gamePane.getChildren().add(btnSpawn);
     gamePane.getChildren().add(canvas);
+
   }
 
   @FXML
@@ -155,16 +157,14 @@ public class XMLController extends AnimationTimer
     Train t = trainList.get("Train " + (totalTrains - 1));
     if (t.getDirection().equals("left")) trainNCanvas.put(t.getTrainName(), new ImageView(trainImageflip));
     if (t.getDirection().equals("right")) trainNCanvas.put(t.getTrainName(), new ImageView(trainImage));
-    System.out.println(t.getTrainName() + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     trainNCanvas.get(t.getTrainName()).setX(t.getXPos() * DISTANCE);
     trainNCanvas.get(t.getTrainName()).setY(DISTANCE * t.getYPos() + 10);
     trainNCanvas.get(t.getTrainName()).setId(t.getTrainName());
 
     //put new train on the pane to display
 
-    gamePane.getChildren().setAll(trainNCanvas.values());
-    gamePane.getChildren().add(btnSpawn);
-    gamePane.getChildren().add(canvas);
+    //updateGUI();
+    gamePane.getChildren().add(trainNCanvas.get(t.getTrainName()));
   }
 
 
@@ -235,22 +235,31 @@ public class XMLController extends AnimationTimer
   private HashMap<String, Light> lightList = LightView.getInstance().getAllLights();
   private HashMap<String, Station> stationList = StationView.getInstance().getList();
   private HashMap<String, Track> trackList = TrackView.getInstance().getList();
+  private Set<String> loop = trainNCanvas.keySet();
 
   @Override
   public void handle(long now)
   {
     frameCounter++;
-    //if (frameCounter % 2 == 0) return;
-    for (String name : trainNCanvas.keySet())
+    if (frameCounter % 2 == 0) return;
+    for (String name : loop)
     {
-      System.out.println(trainNCanvas.keySet().size());
       switch (name.substring(0, 5))
       {
         case "Train":
+          Train t = trainList.get(name);
+          if (!t.isAlive())
+          {
+            //trainList.remove(name);
+            //trainNCanvas.remove(name);
+            //updateGUI();
+            gamePane.getChildren().remove(trainNCanvas.get(name));
+            break;
+          }
 
           trainNCanvas.get(name).setX(trainList.get(name).getXPos() * DISTANCE);
           trainNCanvas.get(name).setY(trainList.get(name).getYPos() * DISTANCE);
-
+          break;
         case "Light":
 
           if (lightList.get(name) != null)
@@ -272,11 +281,10 @@ public class XMLController extends AnimationTimer
 
           break;
         case "Stati":
-          trainNCanvas.get(name).setX(frameCounter);
+          // trainNCanvas.get(name).setX(frameCounter);
           Station s = stationList.get(name);
-          if (!s.hasTrain()) trainNCanvas.get(name).setImage(stationImageSecure);
-          if (s.hasTrain()) trainNCanvas.get(name).setImage(stationImage);
-          //
+          if (s.hasTrain()) trainNCanvas.get(name).setImage(stationImageSecure);
+          if (!s.hasTrain()) trainNCanvas.get(name).setImage(stationImage);
           break;
 
 
