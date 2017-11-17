@@ -1,3 +1,11 @@
+/************************************
+ @author Vincent Huber
+ This class is used to run a station for smartRail
+
+
+ ************************************/
+
+
 package SmartRail;
 
 import java.util.LinkedList;
@@ -13,7 +21,7 @@ public class Station extends Thread implements Component
   private volatile LinkedList<Message> messages = new LinkedList<>();
   private boolean secured = false;
 
-
+  //Constructor for station
   public Station()
   {
     totalStation++;
@@ -32,12 +40,20 @@ public class Station extends Thread implements Component
     this.leftTrack = leftTrack;
   }
 
+  /* This method is used by a train on the station so the train
+   * can give its own reference to the station
+   * takes a Train parameter and returns nothing
+   */
   @Override
   public void getTrainId(Train t)
   {
     trainInStation = t;
   }
 
+  /* Code used when a train is leaving a station
+   * No parameters and no return
+   * this method also frees up the station to be secured for another component
+   */
   @Override
   public void trainLeaving()
   {
@@ -45,7 +61,9 @@ public class Station extends Thread implements Component
     trainInStation = null;
   }
 
-  // code to  determine station
+  /* This method is used by the Train to determine the next component in the path
+   * This method takes in a String parameter and returns the correct next Component
+   */
   public Component nextComponent(String Direction)
   {
     if (Direction.equalsIgnoreCase("right")) return rightTrack;
@@ -53,6 +71,11 @@ public class Station extends Thread implements Component
 
   }
 
+  /* acceptMessage is a method used by the components to read in a message
+   * the message received is added to the end of the queue (linkedlist) of
+   * messages
+   * Message parameter, no return
+   */
   @Override
   public synchronized void acceptMessage(Message mes)
   {
@@ -64,6 +87,10 @@ public class Station extends Thread implements Component
     notifyAll();
   }
 
+  /* This method is used to send a findPath message along to a correct station
+   * This method has a component and a String (direction) for parameters
+   * returns a boolean for processing purposes
+   */
   @Override
   public boolean findPath(Component c, String dir)
   {
@@ -82,6 +109,10 @@ public class Station extends Thread implements Component
     return false;
   }
 
+  /* This method is used to send a returnPath message along to a correct station
+  * This method has a component and a String (direction) for parameters
+  * returns a boolean for processing purposes
+  */
   @Override
   public boolean returnPath(Message m)
   {
@@ -104,6 +135,10 @@ public class Station extends Thread implements Component
 
   }
 
+  /* This method is used to send a securePath message along to a correct station
+ * This method has a component and a String (direction) for parameters
+ * returns a boolean for processing purposes
+ */
   @Override
   public synchronized boolean securePath(Message m)
   {
@@ -139,6 +174,10 @@ public class Station extends Thread implements Component
     return true;
   }
 
+  /* This method is used to send a readyfortrain message along to the correct train
+ * This method has a component and a String (direction) for parameters
+ * returns a boolean for processing purposes
+ */
   @Override
   public synchronized boolean readyForTrain(Message m)
   {
@@ -150,6 +189,10 @@ public class Station extends Thread implements Component
     return false;
   }
 
+  /* This method is used to send a couldnotsecure message along to the correct train
+ * This method has a component and a String (direction) for parameters
+ * returns a boolean for processing purposes
+ */
   @Override
   public synchronized boolean couldNotSecure(Message m)
   {
@@ -162,6 +205,10 @@ public class Station extends Thread implements Component
     return false;
   }
 
+  /* The station processes the message and correctly generates a return message
+   * or uses the corretc method to process the message
+   * No parameters or return
+   */
   @Override
   public void run()
   {
@@ -293,6 +340,10 @@ public class Station extends Thread implements Component
 
   }
 
+  /* This method send a message to a train which direction the
+   * train needs to look to for its destination
+   * returns a string with no parameters
+   */
   public String directionOut()
   {
     if (rightTrack != null)
@@ -302,6 +353,9 @@ public class Station extends Thread implements Component
     return "left";
   }
 
+  /* Method used for display purposes
+   * boolean return
+   */
   public boolean hasTrain()
   {
     if(trainInStation != null)
@@ -311,6 +365,9 @@ public class Station extends Thread implements Component
     return false;
   }
 
+  /* returns a string name of the component
+   * no parameters
+   */
   public String getComponentName()
   {
     return this.stationName;

@@ -95,7 +95,7 @@ public class Train extends Thread
 
     LinkedList<Component> compList = new LinkedList<>();
     compList.add(destination);
-
+    currentComponent.getTrainId(this);
     System.out.println(direction);
     currentComponent.acceptMessage(new Message(direction, "findpath", compList, currentComponent));
     waiting = true;
@@ -141,6 +141,7 @@ public class Train extends Thread
         }
         try
         {
+
           Thread.sleep(2500);
         } catch (InterruptedException e)
         {
