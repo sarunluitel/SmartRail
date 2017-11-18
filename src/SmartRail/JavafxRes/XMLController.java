@@ -12,15 +12,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import sun.security.rsa.RSASignature;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
 public class XMLController extends AnimationTimer
 {
-  private final int DISTANCE = 100;// dictated by the size of tracks and trains. length pixel count make 88
+  private final int DISTANCE = 88;// dictated by the size of tracks and trains. length pixel count make 88
   private double frameCounter = 0.00;
   @FXML
   private Canvas canvas;
@@ -35,6 +38,9 @@ public class XMLController extends AnimationTimer
   private final Image leftRed = new Image(getClass().getResourceAsStream("GUI_resources/leftRed.png"));
   private final Image leftGreen = new Image(getClass().getResourceAsStream("GUI_resources/leftGreen.png"));
 
+
+
+
   private HashMap<String, ImageView> trainNCanvas = new HashMap<>();
   private HashMap<String, Train> trainList = TrainView.getInstance().getList();
   private ArrayList<ArrayList> entireMap;
@@ -44,6 +50,12 @@ public class XMLController extends AnimationTimer
   @FXML
   void initialize()
   {
+
+   /* Media hit = new Media(new File("/GUI_resources/choo_choo.mp3").toURI().toString());
+    MediaPlayer mediaPlayer = new MediaPlayer(hit);
+    mediaPlayer.play();
+*/
+
     gc = canvas.getGraphicsContext2D();
 
     entireMap = MapView.getInstance().getEntireMap(); //comes from configuration file

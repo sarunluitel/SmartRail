@@ -3,10 +3,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.111"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="SmartRail.JavaFX">
+<AnchorPane prefHeight="360.0" prefWidth="640.0" styleClass="Anchor" stylesheets="@JavafxRes/DesignSheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SmartRail.JavaFX">
+  <!--- Picture Credits: https://www.lazerhorse.org/wp-content/uploads/2014/07/North-Korea-Futuristic-Architecture-futuristic-train.jpg -->
     <children>
-        <Button fx:id="buildMap" layoutX="558.0" layoutY="314.0" mnemonicParsing="false" onAction="#clicked"
-                prefHeight="92.0" prefWidth="164.0" text="Build Map"/>
+        <Button fx:id="buildMap" layoutX="238.0" layoutY="134.0" mnemonicParsing="false" onAction="#clicked" prefHeight="92.0" prefWidth="164.0" styleClass="Button" stylesheets="@JavafxRes/DesignSheet.css" text="Build Map" />
     </children>
 </AnchorPane>

@@ -7,6 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.stage.Stage;
 
 
@@ -18,7 +20,9 @@ public class JavaFX extends Application
   }
 
   @FXML
-  Button buildMap;
+  private Button buildMap;
+  @FXML
+  private AnchorPane anchorPane;
 
   @FXML
   private void clicked() throws Exception
@@ -31,8 +35,10 @@ public class JavaFX extends Application
   private void welcomeScreen(Stage primaryStage) throws Exception
   {
     Parent welcomeScene = FXMLLoader.load(getClass().getResource("welcome.fxml"));
+    Scene s = new Scene(welcomeScene);
     primaryStage.setTitle("Welcome to Smart rail");
-    primaryStage.setScene(new Scene(welcomeScene));
+    primaryStage.setScene(s);
+
     primaryStage.show();
   }
 

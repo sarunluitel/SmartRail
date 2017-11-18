@@ -43,5 +43,11 @@ Spawning trains on the same side results in throwing Exception. <br>
 Adding more than two switches per layer results in unstable configuration.<br>
 if there Spawns a train on a station without another station. This will cause null pointer exception.
 as the algorithm searches for straight paths first. 
+
+#Citation
+https://www.lazerhorse.org/wp-content/uploads/2014/07/North-Korea-Futuristic-Architecture-futuristic-train.jpg
+: Picture in the welcome Screen<br>
+https://openclipart.org/tags/train: Train and Track Pictures
+
  
 
