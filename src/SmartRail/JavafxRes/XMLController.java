@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import sun.security.rsa.RSASignature;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,8 +158,10 @@ public class XMLController extends AnimationTimer
     int totalTrains = trainList.size();
 
     Train t = trainList.get("Train " + (totalTrains - 1));
-    if (t.getDirection().equals("left")) trainNCanvas.put(t.getTrainName(), new ImageView(trainImageflip));
-    if (t.getDirection().equals("right")) trainNCanvas.put(t.getTrainName(), new ImageView(trainImage));
+    if (t.getDirection().equals("left"))
+      trainNCanvas.put(t.getTrainName(), new ImageView(trainImageflip));
+    if (t.getDirection().equals("right"))
+      trainNCanvas.put(t.getTrainName(), new ImageView(trainImage));
     trainNCanvas.get(t.getTrainName()).setX(t.getXPos() * DISTANCE);
     trainNCanvas.get(t.getTrainName()).setY(DISTANCE * t.getYPos() + 10);
     trainNCanvas.get(t.getTrainName()).setId(t.getTrainName());
@@ -194,7 +197,7 @@ public class XMLController extends AnimationTimer
     Train train = null;
     ArrayList<Station> tempSpawn = new ArrayList<>();
     ArrayList<Station> tempDest = new ArrayList<>();
-    int GUIComp = 1;
+    int GUIComp = 0;
     for (Component c : (ArrayList<Component>) entireMap.get(trainSpawn / 100 - 1))
     {
       if (trainSpawn % 100 != 1) GUIComp++;
@@ -204,7 +207,9 @@ public class XMLController extends AnimationTimer
     for (Component c : (ArrayList<Component>) entireMap.get(trainDestination / 100 - 1))
     {
       if (c instanceof Station) tempDest.add((Station) c);
+
       if (trainDestination % 100 != 1) GUIComp++;
+      if (c instanceof Switch || c instanceof Light) GUIComp--;
     }
     Station begin = null;
     Station destination = null;
@@ -214,7 +219,7 @@ public class XMLController extends AnimationTimer
       //tells if the station is on left corner of board
       begin = tempSpawn.get(0);
       destination = tempDest.get(1);
-      train = new Train(destination, begin, 1, trainSpawn / 100);
+      train = new Train(destination, begin, 1, (trainSpawn / 100) );
     }
     if (trainDestination % 100 == 1)
     {
@@ -256,7 +261,7 @@ public class XMLController extends AnimationTimer
             break;
           }
 
-          trainNCanvas.get(name).setX(trainList.get(name).getXPos() * DISTANCE+(frameCounter/5)%88);
+          trainNCanvas.get(name).setX(trainList.get(name).getXPos() * DISTANCE);
           trainNCanvas.get(name).setY(trainList.get(name).getYPos() * DISTANCE);
           break;
         case "Light":
@@ -274,8 +279,10 @@ public class XMLController extends AnimationTimer
           break;
         case "Track":
 
-          if (trackList.get(name).isSecured()) trainNCanvas.get(name).setImage(trackImagesecure);
-          if (!trackList.get(name).isSecured()) trainNCanvas.get(name).setImage(trackImage);
+          if (trackList.get(name).isSecured())
+            trainNCanvas.get(name).setImage(trackImagesecure);
+          if (!trackList.get(name).isSecured())
+            trainNCanvas.get(name).setImage(trackImage);
 
 
           break;
