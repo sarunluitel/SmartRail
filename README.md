@@ -39,10 +39,10 @@ Underlying code is able to handle multiple instances of map layers and trains.
 #Known bugs, Limitations
 The Configuration files needs to be in a very specific format of tracks and Switches. (The Documentation
 in the file explains the format with examples.) <br>
-Spawning trains on the same side results in throwing Exception. <br>
+Trains spawned on the same side as its destination results in throwing Exception. <br>
 Adding more than two switches per layer results in unstable configuration.<br>
 if there Spawns a train on a station without another station. This will cause null pointer exception.
-as the algorithm searches for straight paths first. 
+as the algorithm searches for up paths first. 
 
 #Citation
 https://www.lazerhorse.org/wp-content/uploads/2014/07/North-Korea-Futuristic-Architecture-futuristic-train.jpg
